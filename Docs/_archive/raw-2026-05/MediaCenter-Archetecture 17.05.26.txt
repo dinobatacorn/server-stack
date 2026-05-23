@@ -1,0 +1,703 @@
+mediacenter@media:~$ tree -L 3 /media
+/media
+├── audiobooks
+│   ├── books
+│   └── podcasts
+├── books
+│   ├── comics
+│   ├── ebooks
+│   ├── manga
+│   ├── pdfs
+│   └── webtoons
+├── cache
+│   ├── metadata
+│   ├── tmp
+│   └── transcode
+├── cdrom
+├── downloads
+│   ├── complete
+│   ├── incomplete
+│   ├── manual
+│   └── unsorted
+├── library
+│   ├── anime
+│   ├── home-videos
+│   ├── incoming
+│   ├── movies
+│   ├── music
+│   ├── tv
+│   └── youtube
+├── mediacenter
+│   └── Storage
+│       ├── $RECYCLE.BIN
+│       ├── archive
+│       ├── backups
+│       ├── found.000
+│       ├── ingest
+│       ├── library
+│       ├── scratch
+│       └── System Volume Information
+├── music
+└── roms
+    ├── bios
+    ├── firmware
+    ├── mods
+    ├── saves
+    ├── screenshots
+    ├── shaders
+    └── states
+
+47 directories, 0 files
+
+mediacenter@media:~$ tree -L 4 /mnt/core/services/media
+/mnt/core/services/media
+├── acquisition
+│   ├── bazarr
+│   ├── lidarr
+│   ├── overseerr
+│   ├── prowlarr
+│   │   ├── asp
+│   │   │   └── key-3c9c86f6-2264-40bc-84fb-ae144123ce23.xml
+│   │   ├── config.xml
+│   │   ├── Definitions
+│   │   │   ├── 0daykiev.yml
+│   │   │   ├── 0magnet.yml
+│   │   │   ├── 1337x.yml
+│   │   │   ├── 13city.yml
+│   │   │   ├── 1ptbar.yml
+│   │   │   ├── 3changtrai.yml
+│   │   │   ├── 3dtorrents.yml
+│   │   │   ├── 4thd.yml
+│   │   │   ├── 52bt.yml
+│   │   │   ├── 52pt.yml
+│   │   │   ├── abnormal-api.yml
+│   │   │   ├── abtorrents.yml
+│   │   │   ├── acgrip.yml
+│   │   │   ├── acrossthetasman.yml
+│   │   │   ├── aftershock.yml
+│   │   │   ├── agsvpt.yml
+│   │   │   ├── aidoruonline.yml
+│   │   │   ├── aither-api.yml
+│   │   │   ├── alingpt.yml
+│   │   │   ├── amigosshare.yml
+│   │   │   ├── animebybelka.yml
+│   │   │   ├── animelayer.yml
+│   │   │   ├── animetorrentsro.yml
+│   │   │   ├── animeworld-api.yml
+│   │   │   ├── anisource.yml
+│   │   │   ├── anthelion-api.yml
+│   │   │   ├── arabafenice.yml
+│   │   │   ├── arabicsource-api.yml
+│   │   │   ├── arabp2p.yml
+│   │   │   ├── arabscene.yml
+│   │   │   ├── arabtorrents-com.yml
+│   │   │   ├── arabtorrents.yml
+│   │   │   ├── asiancinema.yml
+│   │   │   ├── asiandvdclub.yml
+│   │   │   ├── audiences.yml
+│   │   │   ├── audionews.yml
+│   │   │   ├── aura4k-api.yml
+│   │   │   ├── aussierules.yml
+│   │   │   ├── azusa.yml
+│   │   │   ├── backups.yml
+│   │   │   ├── bangumi-moe.yml
+│   │   │   ├── baozipt.yml
+│   │   │   ├── beload.yml
+│   │   │   ├── bestcore.yml
+│   │   │   ├── best-torrents.yml
+│   │   │   ├── bibliotik.yml
+│   │   │   ├── bigbbs.yml
+│   │   │   ├── bigcore.yml
+│   │   │   ├── bigfangroup.yml
+│   │   │   ├── bitbazis.yml
+│   │   │   ├── bitded.yml
+│   │   │   ├── bitgamer.yml
+│   │   │   ├── bithumen.yml
+│   │   │   ├── bitmagnet.yml
+│   │   │   ├── bitpalace.yml
+│   │   │   ├── bitporn.yml
+│   │   │   ├── Bittorrentfiles.yml
+│   │   │   ├── bitturk.yml
+│   │   │   ├── bjshare.yml
+│   │   │   ├── bluebird.yml
+│   │   │   ├── blueroms.yml
+│   │   │   ├── bluetorrents.yml
+│   │   │   ├── bluraytracker.yml
+│   │   │   ├── blutopia-api.yml
+│   │   │   ├── booktracker.yml
+│   │   │   ├── bootytape.yml
+│   │   │   ├── borgzelle.yml
+│   │   │   ├── boxingtorrents.yml
+│   │   │   ├── brasiltracker.yml
+│   │   │   ├── btarg.yml
+│   │   │   ├── btdirectory.yml
+│   │   │   ├── btetree.yml
+│   │   │   ├── btnext.yml
+│   │   │   ├── btschool.yml
+│   │   │   ├── btstate.yml
+│   │   │   ├── bwtorrents.yml
+│   │   │   ├── byrbt.yml
+│   │   │   ├── byrutor.yml
+│   │   │   ├── c411.yml
+│   │   │   ├── cangbaoge.yml
+│   │   │   ├── capybarabr.yml
+│   │   │   ├── carpathians.yml
+│   │   │   ├── carphunter.yml
+│   │   │   ├── carpt.yml
+│   │   │   ├── cathoderaytube.yml
+│   │   │   ├── catorrent.yml
+│   │   │   ├── ceskeforum.yml
+│   │   │   ├── cgpeers.yml
+│   │   │   ├── chdbits.yml
+│   │   │   ├── chilebt-api.yml
+│   │   │   ├── cinemageddon.yml
+│   │   │   ├── cinemamovies.yml
+│   │   │   ├── cinematik.yml
+│   │   │   ├── clearjav-api.yml
+│   │   │   ├── coastalcrew.yml
+│   │   │   ├── comicat.yml
+│   │   │   ├── concen.yml
+│   │   │   ├── concertos.yml
+│   │   │   ├── crabpt.yml
+│   │   │   ├── crackingpatching.yml
+│   │   │   ├── crazyspirits-api.yml
+│   │   │   ├── crnaberza2fa.yml
+│   │   │   ├── crnaberza.yml
+│   │   │   ├── crt2fa.yml
+│   │   │   ├── cspt.yml
+│   │   │   ├── cyanbug.yml
+│   │   │   ├── cyclingarchiveclub.yml
+│   │   │   ├── czteam-api.yml
+│   │   │   ├── damagnet.yml
+│   │   │   ├── darkpeers.yml
+│   │   │   ├── dasunerwartete-api.yml
+│   │   │   ├── dasunerwartete.yml
+│   │   │   ├── datascene-api.yml
+│   │   │   ├── deildu.yml
+│   │   │   ├── demonoid-clone.yml
+│   │   │   ├── desitorrents-api.yml
+│   │   │   ├── devil-torrents.yml
+│   │   │   ├── diablotorrent.yml
+│   │   │   ├── digitalcore-api.yml
+│   │   │   ├── dimeadozen.yml
+│   │   │   ├── discfan.yml
+│   │   │   ├── dmhy.yml
+│   │   │   ├── docspedia.yml
+│   │   │   ├── dreamingtree.yml
+│   │   │   ├── drugari.yml
+│   │   │   ├── ds-reloaded.yml
+│   │   │   ├── dubhe.yml
+│   │   │   ├── dxp.yml
+│   │   │   ├── ebookbay.yml
+│   │   │   ├── ebooks-shares.yml
+│   │   │   ├── ehentai.yml
+│   │   │   ├── electro-torrent.yml
+│   │   │   ├── elitetorrent-wf.yml
+│   │   │   ├── empornium2fa.yml
+│   │   │   ├── empornium.yml
+│   │   │   ├── emuwarez.yml
+│   │   │   ├── estone.yml
+│   │   │   ├── exitorrent-org.yml
+│   │   │   ├── exkinoray.yml
+│   │   │   ├── explosiv-world.yml
+│   │   │   ├── ex-torrenty.yml
+│   │   │   ├── extratorrent-st.yml
+│   │   │   ├── extremebits.yml
+│   │   │   ├── eztvl.yml
+│   │   │   ├── eztv.yml
+│   │   │   ├── f1carreras-api.yml
+│   │   │   ├── f1gp.yml
+│   │   │   ├── fanoin.yml
+│   │   │   ├── fappaizuri2fa.yml
+│   │   │   ├── fappaizuri.yml
+│   │   │   ├── femdomcult.yml
+│   │   │   ├── fenyarnyek-tracker.yml
+│   │   │   ├── filemood.yml
+│   │   │   ├── file-tracker.yml
+│   │   │   ├── finelite.yml
+│   │   │   ├── flood.yml
+│   │   │   ├── freefarm.yml
+│   │   │   ├── freejavtorrent.yml
+│   │   │   ├── funkytorrents.yml
+│   │   │   ├── funzone-api.yml
+│   │   │   ├── futuretorrent.yml
+│   │   │   ├── fuzer.yml
+│   │   │   ├── g3minitr4ck3r-api.yml
+│   │   │   ├── gamestorrents.yml
+│   │   │   ├── gaytorrentru.yml
+│   │   │   ├── gay-torrentsorg.yml
+│   │   │   ├── gay-torrents.yml
+│   │   │   ├── generationfree-api.yml
+│   │   │   ├── ggpt.yml
+│   │   │   ├── gigatorrents.yml
+│   │   │   ├── gimmepeers.yml
+│   │   │   ├── girotorrent.yml
+│   │   │   ├── haidan.yml
+│   │   │   ├── haitang.yml
+│   │   │   ├── happyfappy2fa.yml
+│   │   │   ├── happyfappy.yml
+│   │   │   ├── hawke-uno.yml
+│   │   │   ├── hdarea.yml
+│   │   │   ├── hdbao.yml
+│   │   │   ├── hdclone.yml
+│   │   │   ├── hd-club.yml
+│   │   │   ├── hdc.yml
+│   │   │   ├── hdcztorrent.yml
+│   │   │   ├── hddolby.yml
+│   │   │   ├── hdfans.yml
+│   │   │   ├── hdforever.yml
+│   │   │   ├── hdgalaktik.yml
+│   │   │   ├── hdhome.yml
+│   │   │   ├── hdkylin.yml
+│   │   │   ├── hdolimpo-api.yml
+│   │   │   ├── hdonly-api.yml
+│   │   │   ├── hdroute.yml
+│   │   │   ├── hdsky.yml
+│   │   │   ├── hdspace.yml
+│   │   │   ├── hdtime.yml
+│   │   │   ├── hdtorrentsit.yml
+│   │   │   ├── hdtorrents.yml
+│   │   │   ├── hdturk.yml
+│   │   │   ├── hd-unit3d-api.yml
+│   │   │   ├── hdu.yml
+│   │   │   ├── hdvideo.yml
+│   │   │   ├── hdzero.yml
+│   │   │   ├── hebits.yml
+│   │   │   ├── hellashut-api.yml
+│   │   │   ├── hellashut.yml
+│   │   │   ├── hellenic-hd-api.yml
+│   │   │   ├── helltorrents.yml
+│   │   │   ├── hhanclub.yml
+│   │   │   ├── hhd-api.yml
+│   │   │   ├── houseofdevil.yml
+│   │   │   ├── hqmusic.yml
+│   │   │   ├── hudbt.yml
+│   │   │   ├── huntorrent.yml
+│   │   │   ├── hxpt.yml
+│   │   │   ├── hydracker-api.yml
+│   │   │   ├── ilcorsaroblu.yml
+│   │   │   ├── immortuos.yml
+│   │   │   ├── indietorrents.yml
+│   │   │   ├── infinity-api.yml
+│   │   │   ├── infinityhd-api.yml
+│   │   │   ├── infire.yml
+│   │   │   ├── insanetracker.yml
+│   │   │   ├── internetarchive.yml
+│   │   │   ├── itatorrents.yml
+│   │   │   ├── jme-reunit3d-api.yml
+│   │   │   ├── joyhd.yml
+│   │   │   ├── jpopsuki.yml
+│   │   │   ├── jptv4us-api.yml
+│   │   │   ├── kamept.yml
+│   │   │   ├── karagarga.yml
+│   │   │   ├── keepfriends.yml
+│   │   │   ├── kelu.yml
+│   │   │   ├── kickasstorrents-to.yml
+│   │   │   ├── kickasstorrents-ws.yml
+│   │   │   ├── kinorun.yml
+│   │   │   ├── kinozal-magnet.yml
+│   │   │   ├── kinozal.yml
+│   │   │   ├── korsar.yml
+│   │   │   ├── krazyzone.yml
+│   │   │   ├── kufei.yml
+│   │   │   ├── kufirc2fa.yml
+│   │   │   ├── kufirc.yml
+│   │   │   ├── kunlun.yml
+│   │   │   ├── lacale-api.yml
+│   │   │   ├── lajidui.yml
+│   │   │   ├── lastdigitalunderground.yml
+│   │   │   ├── lastfiles.yml
+│   │   │   ├── lat-team-api.yml
+│   │   │   ├── learnflakes.yml
+│   │   │   ├── leech24.yml
+│   │   │   ├── lemonhd-net.yml
+│   │   │   ├── lesaloon.yml
+│   │   │   ├── letseed.yml
+│   │   │   ├── libranet.yml
+│   │   │   ├── limetorrents.yml
+│   │   │   ├── linkomanija.yml
+│   │   │   ├── linuxtracker.yml
+│   │   │   ├── locadora.yml
+│   │   │   ├── longpt.yml
+│   │   │   ├── losslessclub.yml
+│   │   │   ├── lp-bits.yml
+│   │   │   ├── lst.yml
+│   │   │   ├── luckpt.yml
+│   │   │   ├── luminarr-api.yml
+│   │   │   ├── mactorrentsdownload.yml
+│   │   │   ├── madsrevolution.yml
+│   │   │   ├── magico.yml
+│   │   │   ├── magnetcat.yml
+│   │   │   ├── magnetdownload.yml
+│   │   │   ├── magnetz.yml
+│   │   │   ├── majomparade.yml
+│   │   │   ├── makingoff.yml
+│   │   │   ├── malayabits-api.yml
+│   │   │   ├── march.yml
+│   │   │   ├── marinetracker.yml
+│   │   │   ├── matrix.yml
+│   │   │   ├── mazepa.yml
+│   │   │   ├── mdan.yml
+│   │   │   ├── megapeer.yml
+│   │   │   ├── mesevilag.yml
+│   │   │   ├── metalguru.yml
+│   │   │   ├── metaltracker.yml
+│   │   │   ├── midnightscene.yml
+│   │   │   ├── mikan.yml
+│   │   │   ├── milkie.yml
+│   │   │   ├── miobt.yml
+│   │   │   ├── mixtapetorrent.yml
+│   │   │   ├── mma-torrents.yml
+│   │   │   ├── mnv.yml
+│   │   │   ├── mojblink.yml
+│   │   │   ├── momentpt.yml
+│   │   │   ├── monikadesign-api.yml
+│   │   │   ├── mousebits.yml
+│   │   │   ├── moviesdvdr.yml
+│   │   │   ├── musebootlegs.yml
+│   │   │   ├── muxuege.yml
+│   │   │   ├── mvgroupforum.yml
+│   │   │   ├── mvgroupmain.yml
+│   │   │   ├── mypornclub.yml
+│   │   │   ├── myspleen.yml
+│   │   │   ├── nanyangpt.yml
+│   │   │   ├── ncore.yml
+│   │   │   ├── nekobt.yml
+│   │   │   ├── nethd.yml
+│   │   │   ├── newheaven.yml
+│   │   │   ├── newretro.yml
+│   │   │   ├── newstudiol.yml
+│   │   │   ├── newstudio.yml
+│   │   │   ├── new-team.yml
+│   │   │   ├── nexum-api.yml
+│   │   │   ├── nicept.yml
+│   │   │   ├── nipponsei.yml
+│   │   │   ├── nirvana.yml
+│   │   │   ├── njtupt.yml
+│   │   │   ├── nobs.yml
+│   │   │   ├── noname-clubl.yml
+│   │   │   ├── noname-club.yml
+│   │   │   ├── nordicbytes.yml
+│   │   │   ├── nordichd.yml
+│   │   │   ├── nordicquality.yml
+│   │   │   ├── nostradamus.yml
+│   │   │   ├── novahd.yml
+│   │   │   ├── nyaasi.yml
+│   │   │   ├── okpt.yml
+│   │   │   ├── oldgreektracker.yml
+│   │   │   ├── oldtoonsworld.yml
+│   │   │   ├── onejav.yml
+│   │   │   ├── onlyencodes-api.yml
+│   │   │   ├── opencd.yml
+│   │   │   ├── opensharing.yml
+│   │   │   ├── oshenpt.yml
+│   │   │   ├── ourbits.yml
+│   │   │   ├── p2pbg.yml
+│   │   │   ├── pandacd.yml
+│   │   │   ├── panda.yml
+│   │   │   ├── parabellumhd-api.yml
+│   │   │   ├── party-tracker.yml
+│   │   │   ├── pctorrent.yml
+│   │   │   ├── peeratiko.yml
+│   │   │   ├── peersfm.yml
+│   │   │   ├── phoenixproject.yml
+│   │   │   ├── pier720.yml
+│   │   │   ├── pignetwork.yml
+│   │   │   ├── pixelcove2fa.yml
+│   │   │   ├── pixelcove.yml
+│   │   │   ├── playletpt.yml
+│   │   │   ├── plugintorrent.yml
+│   │   │   ├── podzemlje.yml
+│   │   │   ├── polishtorrent.yml
+│   │   │   ├── polishtracker-api.yml
+│   │   │   ├── polskie-torrenty.yml
+│   │   │   ├── pornbay.yml
+│   │   │   ├── pornbytes-api.yml
+│   │   │   ├── pornolab.yml
+│   │   │   ├── pornotorrent.yml
+│   │   │   ├── pornrips.yml
+│   │   │   ├── portugas-api.yml
+│   │   │   ├── postman-api.yml
+│   │   │   ├── postman.yml
+│   │   │   ├── proaudiotorrents.yml
+│   │   │   ├── proporno.yml
+│   │   │   ├── ptcafe.yml
+│   │   │   ├── ptcc.yml
+│   │   │   ├── pterclub.yml
+│   │   │   ├── ptfans.yml
+│   │   │   ├── ptfiles.yml
+│   │   │   ├── ptgtk.yml
+│   │   │   ├── pthome.yml
+│   │   │   ├── ptitzmx.yml
+│   │   │   ├── ptlao.yml
+│   │   │   ├── ptlgs.yml
+│   │   │   ├── ptsbao.yml
+│   │   │   ├── ptskit.yml
+│   │   │   ├── pttey.yml
+│   │   │   ├── pttime.yml
+│   │   │   ├── ptying.yml
+│   │   │   ├── ptzone.yml
+│   │   │   ├── punkshorror.yml
+│   │   │   ├── puntotorrent.yml
+│   │   │   ├── pussytorrents.yml
+│   │   │   ├── putao.yml
+│   │   │   ├── pwtorrents.yml
+│   │   │   ├── qingwa.yml
+│   │   │   ├── r3vwtf.yml
+│   │   │   ├── racing4everyone-api.yml
+│   │   │   ├── racingforme.yml
+│   │   │   ├── railgunpt.yml
+│   │   │   ├── rainbowtracker.yml
+│   │   │   ├── rain.yml
+│   │   │   ├── rastastugan-api.yml
+│   │   │   ├── redstartorrent.yml
+│   │   │   ├── reelflix-api.yml
+│   │   │   ├── retromoviesclub-api.yml
+│   │   │   ├── retrotoon.yml
+│   │   │   ├── rgfootball.yml
+│   │   │   ├── rintornet.yml
+│   │   │   ├── rintor.yml
+│   │   │   ├── riperam.yml
+│   │   │   ├── rockbox.yml
+│   │   │   ├── rockethd.yml
+│   │   │   ├── romanianmetaltorrents.yml
+│   │   │   ├── rotorrent-api.yml
+│   │   │   ├── rousi-pro.yml
+│   │   │   ├── rudub.yml
+│   │   │   ├── rustorka.yml
+│   │   │   ├── rutor.yml
+│   │   │   ├── samaritano.yml
+│   │   │   ├── sbpt.yml
+│   │   │   ├── scenerush.yml
+│   │   │   ├── scenetime-api.yml
+│   │   │   ├── seedfile.yml
+│   │   │   ├── seedpool-api.yml
+│   │   │   ├── selezen.yml
+│   │   │   ├── sewerpt.yml
+│   │   │   ├── sextorrent-api.yml
+│   │   │   ├── sexypics.yml
+│   │   │   ├── shakaw.yml
+│   │   │   ├── shanaproject.yml
+│   │   │   ├── shareisland-api.yml
+│   │   │   ├── showrss.yml
+│   │   │   ├── siambit.yml
+│   │   │   ├── siqi.yml
+│   │   │   ├── skidrowrepack.yml
+│   │   │   ├── skipthecommercials-api.yml
+│   │   │   ├── sktorrent-org.yml
+│   │   │   ├── sktorrent.yml
+│   │   │   ├── slobitmedia-api.yml
+│   │   │   ├── snowpt.yml
+│   │   │   ├── sosulki.yml
+│   │   │   ├── soulvoice.yml
+│   │   │   ├── speedmasterhd.yml
+│   │   │   ├── spiritofrevolution.yml
+│   │   │   ├── sportscora.yml
+│   │   │   ├── sportscult.yml
+│   │   │   ├── springsunday.yml
+│   │   │   ├── sugoimusic.yml
+│   │   │   ├── sukebeinyaasi.yml
+│   │   │   ├── sunnypt.yml
+│   │   │   ├── superbits.yml
+│   │   │   ├── swarmazon-api.yml
+│   │   │   ├── tangpt.yml
+│   │   │   ├── tapochek.yml
+│   │   │   ├── tasmanit.yml
+│   │   │   ├── teamctgame.yml
+│   │   │   ├── teamflix.yml
+│   │   │   ├── teamhd.yml
+│   │   │   ├── teamos.yml
+│   │   │   ├── tekno3d.yml
+│   │   │   ├── thebrothers.yml
+│   │   │   ├── thecrazyones.yml
+│   │   │   ├── theempire.yml
+│   │   │   ├── thefallingangels.yml
+│   │   │   ├── thegeeks.yml
+│   │   │   ├── thekitchen.yml
+│   │   │   ├── theleachzone-api.yml
+│   │   │   ├── themixingbowl.yml
+│   │   │   ├── thenewfun.yml
+│   │   │   ├── theoccult.yml
+│   │   │   ├── theoldschool-api.yml
+│   │   │   ├── theparadiese.yml
+│   │   │   ├── thepiratebay.yml
+│   │   │   ├── theplace.yml
+│   │   │   ├── theshow.yml
+│   │   │   ├── thevault.yml
+│   │   │   ├── tjupt.yml
+│   │   │   ├── tlfbits.yml
+│   │   │   ├── tmghub.yml
+│   │   │   ├── tocashare.yml
+│   │   │   ├── tokyotosho.yml
+│   │   │   ├── tormac.yml
+│   │   │   ├── tornado.yml
+│   │   │   ├── torr9.yml
+│   │   │   ├── torrent9.yml
+│   │   │   ├── torrentbd.yml
+│   │   │   ├── torrentby.yml
+│   │   │   ├── torrentccf.yml
+│   │   │   ├── torrentcore.yml
+│   │   │   ├── torrentdd.yml
+│   │   │   ├── torrentdownloads.yml
+│   │   │   ├── torrentdownload.yml
+│   │   │   ├── torrenteros-api.yml
+│   │   │   ├── torrentgalaxyclone.yml
+│   │   │   ├── torrent-heaven.yml
+│   │   │   ├── torrenthr.yml
+│   │   │   ├── torrenting.yml
+│   │   │   ├── torrentkitty.yml
+│   │   │   ├── torrentleech-pl.yml
+│   │   │   ├── torrentleech.yml
+│   │   │   ├── torrentlt.yml
+│   │   │   ├── torrentmasters.yml
+│   │   │   ├── torrentoyunindir.yml
+│   │   │   ├── torrent-pirat.yml
+│   │   │   ├── torrentproject2.yml
+│   │   │   ├── torrentqq.yml
+│   │   │   ├── torrentsome.yml
+│   │   │   ├── torrenttip.yml
+│   │   │   ├── torrenttrader.yml
+│   │   │   ├── torrent-turk.yml
+│   │   │   ├── totheglory2fa.yml
+│   │   │   ├── totheglory.yml
+│   │   │   ├── trackermk.yml
+│   │   │   ├── trackerzero.yml
+│   │   │   ├── traht.yml
+│   │   │   ├── trancetraffic.yml
+│   │   │   ├── trezzorcookie.yml
+│   │   │   ├── trezzor.yml
+│   │   │   ├── tribalmixes.yml
+│   │   │   ├── turkseed-api.yml
+│   │   │   ├── turktorrent.yml
+│   │   │   ├── tvchaosuk.yml
+│   │   │   ├── u2.yml
+│   │   │   ├── u3c3.yml
+│   │   │   ├── ubits.yml
+│   │   │   ├── uindex.yml
+│   │   │   ├── ultrabits-api.yml
+│   │   │   ├── ultrahd.yml
+│   │   │   ├── unionfansub.yml
+│   │   │   ├── unlimitz.yml
+│   │   │   ├── uploadcx.yml
+│   │   │   ├── upscalevault.yml
+│   │   │   ├── utopia.yml
+│   │   │   ├── uztracker.yml
+│   │   │   ├── vault-network.yml
+│   │   │   ├── vietmediaf.yml
+│   │   │   ├── vsthouse.yml
+│   │   │   ├── vstorrent.yml
+│   │   │   ├── vsttorrents.yml
+│   │   │   ├── whiteangel.yml
+│   │   │   ├── wihd.yml
+│   │   │   ├── wintersakura.yml
+│   │   │   ├── world-of-tomorrow.yml
+│   │   │   ├── world-torrent.yml
+│   │   │   ├── xingtan.yml
+│   │   │   ├── xingwan.yml
+│   │   │   ├── xingyung.yml
+│   │   │   ├── xloli.yml
+│   │   │   ├── xtorrenty.yml
+│   │   │   ├── xtremebytes.yml
+│   │   │   ├── xwtclassics.yml
+│   │   │   ├── xwtorrents.yml
+│   │   │   ├── xxxclub.yml
+│   │   │   ├── xxxtor.yml
+│   │   │   ├── yts.yml
+│   │   │   ├── yuscene-api.yml
+│   │   │   ├── zamundarip.yml
+│   │   │   ├── zappateers.yml
+│   │   │   ├── zmpt.yml
+│   │   │   ├── zrpt.yml
+│   │   │   └── ztracker.yml
+│   │   ├── logs
+│   │   │   ├── prowlarr.debug.txt
+│   │   │   └── prowlarr.txt
+│   │   ├── logs.db
+│   │   ├── prowlarr.db
+│   │   ├── prowlarr.db-shm
+│   │   ├── prowlarr.db-wal
+│   │   ├── prowlarr.pid
+│   │   └── Sentry
+│   │       └── FDD003821460B16D4E0D4235129BD6BFAF29B751
+│   ├── qbittorrent
+│   │   └── qBittorrent
+│   │       ├── BT_backup
+│   │       ├── categories.json
+│   │       ├── GeoDB
+│   │       ├── ipc-socket
+│   │       ├── lockfile
+│   │       ├── logs
+│   │       ├── qBittorrent.conf
+│   │       ├── qBittorrent-data.conf
+│   │       ├── rss
+│   │       ├── watched_folders.json
+│   │       └── web_clientdata.json
+│   ├── radarr
+│   │   ├── asp
+│   │   │   └── key-a727546d-c180-4c79-9ebf-5856dacd3c57.xml
+│   │   ├── config.xml
+│   │   ├── logs
+│   │   │   ├── radarr.debug.txt
+│   │   │   └── radarr.txt
+│   │   ├── logs.db
+│   │   ├── logs.db-shm
+│   │   ├── logs.db-wal
+│   │   ├── radarr.db
+│   │   ├── radarr.db-shm
+│   │   ├── radarr.db-wal
+│   │   ├── radarr.pid
+│   │   └── Sentry
+│   │       └── E052B02F117E6BB423BE301CDA607148F4B3F8F6
+│   ├── readarr
+│   └── sonarr
+│       ├── asp
+│       │   └── key-d8dfd47e-b919-425f-9ed1-c4628b1d227c.xml
+│       ├── config.xml
+│       ├── logs
+│       │   ├── sonarr.debug.txt
+│       │   └── sonarr.txt
+│       ├── logs.db
+│       ├── logs.db-shm
+│       ├── logs.db-wal
+│       ├── Sentry
+│       │   └── 07ADDC43B5669C4F6DB64F2EF2B23B3FEEDFE865
+│       ├── sonarr.db
+│       ├── sonarr.db-shm
+│       ├── sonarr.db-wal
+│       └── sonarr.pid
+├── compose
+│   └── core
+│       └── docker-compose.yml
+├── monitoring
+│   ├── backups
+│   ├── compose
+│   ├── logs
+│   └── scripts
+├── processing
+│   ├── recyclarr
+│   └── tdarr
+├── reading
+│   ├── audiobookshelf
+│   ├── calibre
+│   └── kavita
+└── serving
+    ├── jellyfin
+    │   ├── cache
+    │   │   └── transcodes
+    │   ├── data
+    │   │   ├── data
+    │   │   ├── metadata
+    │   │   ├── plugins
+    │   │   ├── root
+    │   │   └── transcodes
+    │   ├── database.xml
+    │   ├── encoding.xml
+    │   ├── log
+    │   │   ├── log_20260516.log
+    │   │   └── log_20260517.log
+    │   ├── logging.default.json
+    │   ├── network.xml
+    │   └── system.xml
+    └── kodi
+
+54 directories, 595 files

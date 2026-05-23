@@ -1,0 +1,321 @@
+{
+  "meta": {
+    "schema": "v1",
+    "hostname": "media",
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "kernel": "6.12.88+deb13-amd64",
+    "timestamp": "2026-05-17T12:44:07-05:00"
+  },
+  "hardware": {
+    "cpu": {
+      "model": "Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz",
+      "cores": 8,
+      "threads": 8,
+      "architecture": "x86_64"
+    },
+    "memory": {
+      "total_gb": 15
+    },
+    "gpu": [
+      {
+        "model": "Intel Corporation CoffeeLake-S GT2 [UHD Graphics 630] [8086:3e98] (rev 02)"
+      },
+      {
+        "model": "NVIDIA Corporation GP106 [GeForce GTX 1060 3GB] [10de:1c02] (rev a1)"
+      }
+    ],
+    "storage": [
+      {
+        "name": "sda",
+        "model": "Samsung SSD 840 Series",
+        "size_gb": 232,
+        "type": "ssd"
+      },
+      {
+        "name": "sdb",
+        "model": "WDC WD20EFAX-68FB5N0",
+        "size_gb": 1863,
+        "type": "hdd"
+      },
+      {
+        "name": "sdc",
+        "model": "Expansion HDD",
+        "size_gb": 4657,
+        "type": "hdd"
+      }
+    ],
+    "motherboard": {}
+  },
+  "system": {
+    "kernel": "6.12.88+deb13-amd64",
+    "uptime_seconds": 440,
+    "loadavg": {
+      "1m": 0.28,
+      "5m": 0.68,
+      "15m": 0.44
+    }
+  },
+  "peripherals": {
+    "pci": [
+      {
+        "raw": "00:00.0 \"Host bridge\" \"Intel Corporation\" \"8th/9th Gen Core 8-core Desktop Processor Host Bridge/DRAM Registers [Coffee Lake S]\" -r0d -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:01.0 \"PCI bridge\" \"Intel Corporation\" \"6th-10th Gen Core Processor PCIe Controller (x16)\" -r0d -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:02.0 \"VGA compatible controller\" \"Intel Corporation\" \"CoffeeLake-S GT2 [UHD Graphics 630]\" -r02 -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:14.0 \"USB controller\" \"Intel Corporation\" \"Cannon Lake PCH USB 3.1 xHCI Host Controller\" -r10 -p30 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:14.2 \"RAM memory\" \"Intel Corporation\" \"Cannon Lake PCH Shared SRAM\" -r10 -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:16.0 \"Communication controller\" \"Intel Corporation\" \"Cannon Lake PCH HECI Controller\" -r10 -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:17.0 \"SATA controller\" \"Intel Corporation\" \"Cannon Lake PCH SATA AHCI Controller\" -r10 -p01 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:1b.0 \"PCI bridge\" \"Intel Corporation\" \"Cannon Lake PCH PCI Express Root Port #17\" -rf0 -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:1c.0 \"PCI bridge\" \"Intel Corporation\" \"Cannon Lake PCH PCI Express Root Port #1\" -rf0 -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:1c.7 \"PCI bridge\" \"Intel Corporation\" \"Cannon Lake PCH PCI Express Root Port #8\" -rf0 -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:1d.0 \"PCI bridge\" \"Intel Corporation\" \"Cannon Lake PCH PCI Express Root Port #9\" -rf0 -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:1f.0 \"ISA bridge\" \"Intel Corporation\" \"Z390 Chipset LPC/eSPI Controller\" -r10 -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:1f.3 \"Audio device\" \"Intel Corporation\" \"Cannon Lake PCH cAVS\" -r10 -p00 \"ASUSTeK Computer Inc.\" \"Device 8723\""
+      },
+      {
+        "raw": "00:1f.4 \"SMBus\" \"Intel Corporation\" \"Cannon Lake PCH SMBus Controller\" -r10 -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:1f.5 \"Serial bus controller\" \"Intel Corporation\" \"Cannon Lake PCH SPI Controller\" -r10 -p00 \"ASUSTeK Computer Inc.\" \"Device 8694\""
+      },
+      {
+        "raw": "00:1f.6 \"Ethernet controller\" \"Intel Corporation\" \"Ethernet Connection (7) I219-V\" -r10 -p00 \"ASUSTeK Computer Inc.\" \"Device 8672\""
+      },
+      {
+        "raw": "01:00.0 \"VGA compatible controller\" \"NVIDIA Corporation\" \"GP106 [GeForce GTX 1060 3GB]\" -ra1 -p00 \"ASUSTeK Computer Inc.\" \"Device 85b1\""
+      },
+      {
+        "raw": "01:00.1 \"Audio device\" \"NVIDIA Corporation\" \"GP106 High Definition Audio Controller\" -ra1 -p00 \"ASUSTeK Computer Inc.\" \"Device 85b1\""
+      },
+      {
+        "raw": "04:00.0 \"Network controller\" \"Intel Corporation\" \"Wireless 8260\" -r3a -p00 \"Intel Corporation\" \"Dual Band Wireless-AC 8260 [Snow Field Peak AC]\""
+      }
+    ],
+    "usb": [
+      {
+        "raw": "Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub"
+      },
+      {
+        "raw": "Bus 001 Device 002: ID 05e3:0610 Genesys Logic, Inc. Hub"
+      },
+      {
+        "raw": "Bus 001 Device 003: ID 046d:c52f Logitech, Inc. Nano Receiver"
+      },
+      {
+        "raw": "Bus 001 Device 004: ID 0b05:18a3 ASUSTek Computer, Inc. AURA MOTHERBOARD"
+      },
+      {
+        "raw": "Bus 001 Device 005: ID 8087:0a2b Intel Corp. Bluetooth wireless interface"
+      },
+      {
+        "raw": "Bus 001 Device 006: ID 25a7:fa61 Areson Technology Corp Elecom Co., Ltd MR-K013 Multicard Reader"
+      },
+      {
+        "raw": "Bus 001 Device 007: ID 258a:0001 SINO WEALTH USB KEYBOARD"
+      },
+      {
+        "raw": "Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub"
+      },
+      {
+        "raw": "Bus 002 Device 002: ID 0bc2:2037 Seagate RSS LLC Expansion HDD"
+      }
+    ]
+  },
+  "network": [
+    {
+      "name": "br-0c9c5f5f96f9",
+      "mac": "7a:d7:ae:e2:ce:8c",
+      "state": "up",
+      "type": "ether",
+      "addresses": []
+    },
+    {
+      "name": "docker0",
+      "mac": "8a:13:ae:23:7b:3d",
+      "state": "down",
+      "type": "ether",
+      "addresses": []
+    },
+    {
+      "name": "eno1",
+      "mac": "04:92:26:c0:c7:cd",
+      "state": "down",
+      "type": "ether",
+      "addresses": []
+    },
+    {
+      "name": "veth073adc4",
+      "mac": "16:bc:b9:81:1a:4f",
+      "state": "up",
+      "type": "ether",
+      "addresses": []
+    },
+    {
+      "name": "veth3f734b4",
+      "mac": "de:5a:6e:86:bb:b2",
+      "state": "up",
+      "type": "ether",
+      "addresses": []
+    },
+    {
+      "name": "veth5746e3f",
+      "mac": "4e:b5:c5:81:78:03",
+      "state": "up",
+      "type": "ether",
+      "addresses": []
+    },
+    {
+      "name": "veth7d87e19",
+      "mac": "5e:db:16:24:0d:17",
+      "state": "up",
+      "type": "ether",
+      "addresses": []
+    },
+    {
+      "name": "vethf90aa16",
+      "mac": "d6:0d:2a:d3:d8:7b",
+      "state": "up",
+      "type": "ether",
+      "addresses": []
+    },
+    {
+      "name": "wlp4s0",
+      "mac": "d0:c6:37:90:55:ab",
+      "state": "up",
+      "type": "ether",
+      "addresses": []
+    }
+  ],
+  "health": {
+    "smart": [],
+    "sensors": {
+      "coretemp-isa-0000": {
+        "Adapter": "ISA adapter",
+        "Package id 0": {
+          "temp1_input": 38.000000,
+          "temp1_max": 86.000000,
+          "temp1_crit": 100.000000,
+          "temp1_crit_alarm": 0.000000
+        },
+        "Core 0": {
+          "temp2_input": 36.000000,
+          "temp2_max": 86.000000,
+          "temp2_crit": 100.000000,
+          "temp2_crit_alarm": 0.000000
+        },
+        "Core 1": {
+          "temp3_input": 34.000000,
+          "temp3_max": 86.000000,
+          "temp3_crit": 100.000000,
+          "temp3_crit_alarm": 0.000000
+        },
+        "Core 2": {
+          "temp4_input": 36.000000,
+          "temp4_max": 86.000000,
+          "temp4_crit": 100.000000,
+          "temp4_crit_alarm": 0.000000
+        },
+        "Core 3": {
+          "temp5_input": 33.000000,
+          "temp5_max": 86.000000,
+          "temp5_crit": 100.000000,
+          "temp5_crit_alarm": 0.000000
+        },
+        "Core 4": {
+          "temp6_input": 35.000000,
+          "temp6_max": 86.000000,
+          "temp6_crit": 100.000000,
+          "temp6_crit_alarm": 0.000000
+        },
+        "Core 5": {
+          "temp7_input": 35.000000,
+          "temp7_max": 86.000000,
+          "temp7_crit": 100.000000,
+          "temp7_crit_alarm": 0.000000
+        },
+        "Core 6": {
+          "temp8_input": 36.000000,
+          "temp8_max": 86.000000,
+          "temp8_crit": 100.000000,
+          "temp8_crit_alarm": 0.000000
+        },
+        "Core 7": {
+          "temp9_input": 37.000000,
+          "temp9_max": 86.000000,
+          "temp9_crit": 100.000000,
+          "temp9_crit_alarm": 0.000000
+        }
+      },
+      "asusec-isa-000a": {
+        "Adapter": "ISA adapter",
+        "CPU_Opt": {
+          "fan1_input": 0.000000
+        },
+        "Chipset": {
+          "temp1_input": 35.000000
+        },
+        "T_Sensor": {
+          "temp2_input": -40.000000
+        },
+        "VRM": {
+          "temp3_input": 37.000000
+        }
+      },
+      "acpitz-acpi-0": {
+        "Adapter": "ACPI interface",
+        "temp1": {
+          "temp1_input": 27.800000
+        }
+      },
+      "iwlwifi_1-virtual-0": {
+        "Adapter": "Virtual device",
+        "temp1": {
+          "temp1_input": 29.000000
+        }
+      },
+      "nouveau-pci-0100": {
+        "Adapter": "PCI adapter",
+        "fan1": {
+          "fan1_input": 1498.000000
+        },
+        "temp1": {
+          "temp1_input": 34.000000,
+          "temp1_max": 95.000000,
+          "temp1_max_hyst": 3.000000,
+          "temp1_crit": 105.000000,
+          "temp1_crit_hyst": 5.000000,
+          "temp1_emergency": 135.000000,
+          "temp1_emergency_hyst": 5.000000
+        },
+        "pwm1": {
+          "pwm1": 50.000000,
+          "pwm1_enable": -1.000000
+        }
+      }
+    }
+  }
+}

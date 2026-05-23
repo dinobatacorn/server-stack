@@ -6,6 +6,8 @@ Source docs:
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md
 - User update on 2026-05-23: VPN port has been forwarded externally.
+- User update on 2026-05-23: WireGuard service is inactive and no UDP listener is present.
+- User update on 2026-05-23: `wg-quick@wg0` is enabled, `wg0` is up, and UDP `51820` is listening.
 Next action: Test WireGuard from a client that is not on the home LAN.
 
 ## Purpose
@@ -17,20 +19,28 @@ Prove that WireGuard still works correctly now that its UDP port is forwarded an
 - WireGuard runs in LXC 102.
 - The environment follows a VPN-first access model.
 - The WireGuard UDP port has been forwarded at the router.
-- The exact forwarded port, router destination IP, and peer endpoint still need to be recorded here.
+- Router forward target: `192.168.0.110`.
+- WireGuard LXC MAC: `bc:24:11:d2:6f:77`.
+- Forwarded/listen port: UDP `51820`.
+- WireGuard interface: `wg0`.
+- WireGuard gateway/tunnel address: `10.0.0.1/24`.
+- Known peer tunnel addresses: `10.0.0.2/32` through `10.0.0.10/32`.
+- Local service state is now good: `wg-quick@wg0` is enabled and active, `wg show` reports `wg0`, and `ss -lunp` shows UDP `51820`.
+- External endpoint or DDNS name still needs to be recorded.
 
 Fill in during validation:
 
 ```text
-Forwarded UDP port:
-Router forwards to:
-WireGuard LXC LAN IP:
-WireGuard interface:
-Tunnel subnet:
+Forwarded UDP port: 51820/udp
+Router forwards to: 192.168.0.110
+WireGuard LXC LAN IP: 192.168.0.110
+WireGuard LXC MAC: bc:24:11:d2:6f:77
+WireGuard interface: wg0
+Tunnel subnet: 10.0.0.1/24 server, peers 10.0.0.2/32 through 10.0.0.10/32
 External endpoint or DDNS name:
 Test client:
 Test date:
-Result:
+Result: Local service fixed on 2026-05-23; external client test still pending.
 ```
 
 ## Do Not Change Yet
@@ -43,14 +53,88 @@ Result:
 ## Validation Steps
 
 1. Confirm the router forward points UDP traffic on the chosen public port to the WireGuard LXC LAN IP and WireGuard listen port.
-2. On the WireGuard LXC, confirm the service is running and listening on UDP.
-3. Confirm the LXC firewall, host firewall, and router firewall allow the forwarded UDP port.
-4. Confirm the client peer config uses the current external endpoint and forwarded port.
-5. Test from outside the LAN, such as a phone hotspot or mobile-data client. Do not test only from home Wi-Fi.
-6. Bring up the client tunnel and confirm the server sees a recent handshake.
-7. From the VPN client, test the WireGuard gateway, Pi-hole/DNS if routed through VPN, and one internal service.
-8. Confirm split tunnel or full tunnel behavior matches intent.
-9. Record the result in this file or a dated validation note.
+2. On the WireGuard LXC, start and enable `wg-quick@wg0`.
+3. Confirm the service is running and listening on UDP `51820`.
+4. Confirm the LXC firewall, host firewall, and router firewall allow the forwarded UDP port.
+5. Confirm the client peer config uses the current external endpoint and forwarded port.
+6. Test from outside the LAN, such as a phone hotspot or mobile-data client. Do not test only from home Wi-Fi.
+7. Bring up the client tunnel and confirm the server sees a recent handshake.
+8. From the VPN client, test the WireGuard gateway, Pi-hole/DNS if routed through VPN, and one internal service.
+9. Confirm split tunnel or full tunnel behavior matches intent.
+10. Record the result in this file or a dated validation note.
+
+## Laptop Hotspot Test Procedure
+
+Use this when the laptop has to leave the home LAN to prove external access. Keep this file open locally before switching networks, because the browser, editor, or remote terminal may temporarily disconnect.
+
+Before leaving LAN:
+
+1. Save any open files.
+2. Keep this runbook open in the editor.
+3. Open the WireGuard client app but do not connect yet.
+4. Confirm the selected peer uses the public endpoint or DDNS name plus UDP `51820`, not the LAN IP `192.168.0.110`.
+5. Prepare a terminal for client-side tests:
+
+```bash
+ping 10.0.0.1
+ping 192.168.0.110
+ping <another-internal-lan-ip>
+```
+
+External test:
+
+1. Disconnect the laptop from home LAN/Wi-Fi.
+2. Connect the laptop to the phone hotspot.
+3. Wait for basic internet to work on the hotspot.
+4. Connect the WireGuard VPN.
+5. Confirm the WireGuard client shows traffic sent/received or an active tunnel.
+6. Run `ping 10.0.0.1`.
+7. Run `ping 192.168.0.110`.
+8. Run `ping <another-internal-lan-ip>`.
+9. If the pings work, optionally test one internal service in a browser.
+10. Record which tests passed or failed.
+
+Return to normal:
+
+1. Disconnect the WireGuard VPN.
+2. Reconnect the laptop to home LAN/Wi-Fi.
+3. Turn off or ignore the phone hotspot.
+4. Refresh the browser/editor if the session did not reconnect automatically.
+5. On the WireGuard LXC, run `sudo wg show` and look for a recent handshake on the tested peer.
+6. Update this runbook with the test client, test date, and result.
+
+If the Codex/browser window does not come back immediately, reconnect to LAN first, then reload the page. The workspace files are local to the repo and the runbook changes are not dependent on the browser staying connected during the network switch.
+
+## Local Service Startup Result
+
+Observed on 2026-05-23:
+
+```text
+wg-quick@wg0.service: inactive (dead)
+wg show: no interfaces reported
+ss -lunp: no UDP listeners reported
+```
+
+Interpretation: the router could forward traffic, but the WireGuard LXC was not accepting it.
+
+Fix applied:
+
+```bash
+sudo systemctl enable --now wg-quick@wg0
+sudo systemctl status wg-quick@wg0
+sudo wg show
+sudo ss -lunp
+```
+
+Result:
+
+- `wg-quick@wg0` is enabled.
+- `wg-quick@wg0` is active.
+- `wg0` has server tunnel address `10.0.0.1/24`.
+- `wg show` reports listening port `51820`.
+- `ss -lunp` shows UDP `51820` listening on `0.0.0.0` and `[::]`.
+
+Next gate: external client handshake from outside the LAN.
 
 ## Useful Manual Checks
 

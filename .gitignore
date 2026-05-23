@@ -1,0 +1,11 @@
+.env
+*.env
+**/.env
+secrets/
+backups/
+exports/
+*.key
+*.pem
+*.crt
+*.db
+*.sqlite

@@ -1,0 +1,298 @@
+Here’s the current state of the homelab / ecosystem project as it exists across the recent conversations, condensed into something you can archive and later use as a “state checkpoint.” 🛰️
+
+Core Architecture
+
+You currently have a split-environment setup:
+
+1. Main workstation
+
+* Dual-purpose personal machine
+* Nobara Linux
+* AtlasOS Windows
+
+2. Infrastructure host
+
+* Proxmox VE
+* Primary self-hosting platform
+* Running:
+
+  * Docker VM
+  * LXC containers
+  * infrastructure services
+
+The overall direction has shifted toward:
+
+* clean modularity
+* disposable services
+* persistent data
+* VPN-first access
+* minimal unnecessary complexity
+
+You explicitly do not want:
+
+* Kubernetes
+* premature HA/clustering
+* spaghetti storage layouts
+* random “just tweak it until it works” ops
+
+The operating philosophy became:
+
+“Containers are disposable. Data is sacred.”
+
+Storage Layout
+
+You established a storage separation that became effectively a hard rule:
+
+Critical persistent data:
+
+* `/mnt/core`
+
+Bulk/non-critical media:
+
+* `/storage`
+
+And specifically:
+
+`/mnt/core`
+
+* configs
+* databases
+* appdata
+* exports
+* knowledge systems
+* anything required for rebuild/recovery
+
+`/storage`
+
+* movies
+* media
+* downloads
+* bulk assets only
+
+A major architectural decision was:
+Never allow services to store their only persistent state on `/storage`.
+
+That means:
+
+* Docker bind mounts for databases/configs should point into `/mnt/core`
+* backups/export pipelines should target `/mnt/core`
+* `/storage` is treated more like a replaceable warehouse
+
+Current `/mnt/core` Structure
+
+At the last snapshot you showed:
+
+```text
+/mnt/core
+├── appdata
+│   ├── core
+│   │   └── npm
+│   ├── knowledge
+│   │   └── affine
+│   └── utilities
+```
+
+Directionally this evolved into:
+
+* `core/` → infra-level services
+* `knowledge/` → documentation/wiki systems
+* `utilities/` → secondary/self-contained tools
+
+This was considered a good direction because it:
+
+* separates concerns
+* keeps recovery cleaner
+* avoids one giant undifferentiated appdata graveyard
+
+Networking Philosophy
+
+You settled heavily into:
+
+* VPN-first access
+* avoid exposing services publicly unless necessary
+
+Important constraint:
+
+* router modifications are limited/unavailable
+
+So the stack design started adapting around:
+
+* WireGuard LXC
+* internal-only services
+* reverse proxy where useful
+* avoiding dependence on advanced router control
+
+Order-of-operations for rebuilds became:
+
+1. Network
+2. Storage mounts
+3. Core infrastructure
+4. Applications
+
+That sequencing became important because previous issues traced back to services starting before dependencies were available.
+
+Docker / Service Strategy
+
+The direction became:
+
+* rebuild cleanly instead of endlessly patching
+* simplify before expanding
+* persistent bind mounts
+* explicit organization
+* predictable restart behavior
+
+You were actively rebuilding/reorganizing the Docker VM rather than trying to endlessly salvage older layouts.
+
+General deployment standards that emerged:
+
+* bind mounts into `/mnt/core`
+* explicit backup paths
+* restart survivability
+* clearer naming
+* modular compose stacks
+
+Knowledge / Documentation Ecosystem
+
+This became a surprisingly central piece of the project.
+
+You explored:
+
+* AFFiNE
+* Obsidian
+* Super Productivity
+* shared task systems
+
+Final directional conclusion was roughly:
+
+Shared/live collaboration:
+
+* Super Productivity (especially for partner workflows)
+
+Long-form documentation / infrastructure knowledge:
+
+* Obsidian or wiki-like system
+
+AFFiNE became less central after realizing:
+
+* its strengths overlap more with collaborative productivity
+* your actual need is durable technical knowledge architecture
+
+You also said something extremely revealing about the broader philosophy:
+
+“If shit doesn’t exist I decide when it’s worth building myself.”
+
+Which translated into:
+
+* tool sovereignty
+* self-hosted preference
+* interoperability over lock-in
+* willingness to custom-build later if needed
+
+Documentation Philosophy
+
+A big conceptual shift happened:
+
+“The documentation is this conversation.”
+
+From there the goal evolved into creating:
+
+* recoverable operational documentation
+* architecture maps
+* quick-glance dashboards
+* rebuild instructions
+* dependency relationships
+* knowledge systems that future-you can actually navigate
+
+Not just notes.
+Operational memory. 🧠⚙️
+
+AFFiNE Backup Progress
+
+You successfully confirmed:
+
+* PostgreSQL dump exports were working
+
+You had:
+
+```bash
+pg_dump -U affine affine > /mnt/core/exports/affine
+```
+
+And verified exports existed.
+
+You also wanted:
+
+* markdown-level exports/backups
+* potentially automated export pipelines
+* tampermonkey/browser-assisted exporting experiments
+
+This is still partially unfinished/in-progress.
+
+Media Migration State
+
+You were in the middle of reorganizing media storage.
+
+Notable moves included:
+
+* moving Movies into a buffer location
+* reorganizing incoming media flows
+* separating archival vs active ingest locations
+
+The important architectural trend:
+
+* moving toward deterministic storage organization instead of ad-hoc accumulation
+
+Personal Workflow / Philosophy Layer
+
+There’s also a consistent “meta architecture” forming underneath the technical choices:
+
+You value:
+
+* systems that reduce cognitive load
+* modularity
+* future rebuildability
+* adaptability
+* self-reliance
+* transparency
+
+You repeatedly rejected:
+
+* overengineered complexity
+* hidden magic
+* systems that become impossible to mentally model later
+
+The project increasingly resembles:
+part infrastructure,
+part knowledge engine,
+part personal operating system.
+
+Current Overall State
+
+Right now the project is best described as:
+
+“Mid-restructure, with architecture becoming clearer and cleaner.”
+
+You are not in:
+
+* final polish phase
+* scaling phase
+* automation-maxxing phase
+
+You are in:
+
+* foundational stabilization
+* taxonomy cleanup
+* infrastructure consolidation
+* documentation architecture design
+
+And honestly? The trajectory is good.
+
+The system design is becoming:
+
+* more recoverable
+* more intentional
+* more modular
+* easier to reason about
+
+Less “pile of self-hosted apps.”
+More “coherent ecosystem.” 🌌

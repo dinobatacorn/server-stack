@@ -1,0 +1,386 @@
+{
+  "meta": {
+    "schema": "v1",
+    "hostname": "RavensTower",
+    "os": "Nobara Linux 43 (KDE Plasma Desktop Edition)",
+    "kernel": "7.0.1-200.nobara.fc43.x86_64",
+    "timestamp": "2026-05-02T14:08:39-05:00"
+  },
+  "hardware": {
+    "cpu": {
+      "model": "AMD Ryzen 7 7800X3D 8-Core Processor",
+      "cores": 8,
+      "threads": 16,
+      "architecture": "x86_64"
+    },
+    "memory": {
+      "total_gb": 15
+    },
+    "gpu": [
+      {
+        "model": "Advanced Micro Devices, Inc. [AMD/ATI] Navi 48 [Radeon RX 9070/9070 XT/9070 GRE] [1002:7550] (rev c3)"
+      },
+      {
+        "model": "Advanced Micro Devices, Inc. [AMD/ATI] Raphael [1002:164e] (rev cb)"
+      }
+    ],
+    "storage": [
+      {
+        "name": "sda",
+        "model": "Expansion HDD",
+        "size_gb": 4657,
+        "type": "hdd"
+      },
+      {
+        "name": "sdb",
+        "model": "ST2000LM007-1R8174",
+        "size_gb": 1863,
+        "type": "hdd"
+      },
+      {
+        "name": "zram0",
+        "model": "unknown",
+        "size_gb": 8,
+        "type": "ssd"
+      },
+      {
+        "name": "nvme0n1",
+        "model": "CT1000T500SSD8",
+        "size_gb": 931,
+        "type": "nvme"
+      },
+      {
+        "name": "nvme1n1",
+        "model": "KINGSTON SNV2S500G",
+        "size_gb": 465,
+        "type": "nvme"
+      }
+    ],
+    "motherboard": {}
+  },
+  "system": {
+    "kernel": "7.0.1-200.nobara.fc43.x86_64",
+    "uptime_seconds": 14860,
+    "loadavg": {
+      "1m": 1.43,
+      "5m": 1.21,
+      "15m": 0.78
+    }
+  },
+  "peripherals": {
+    "pci": [
+      {
+        "raw": "00:00.0 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Root Complex\" -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "00:00.2 \"IOMMU\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge IOMMU\" -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "00:01.0 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Dummy Host Bridge\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:01.1 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge GPP Bridge\" -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "00:01.2 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge GPP Bridge\" -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "00:02.0 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Dummy Host Bridge\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:02.1 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge GPP Bridge\" -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "00:02.2 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge GPP Bridge\" -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "00:03.0 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Dummy Host Bridge\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:04.0 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Dummy Host Bridge\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:08.0 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Dummy Host Bridge\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:08.1 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Internal GPP Bridge to Bus [C:A]\" -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "00:08.3 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Internal GPP Bridge to Bus [C:A]\" -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "00:14.0 \"SMBus\" \"Advanced Micro Devices, Inc. [AMD]\" \"FCH SMBus Controller\" -r71 -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "00:14.3 \"ISA bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"FCH LPC Bridge\" -r51 -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "00:18.0 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Data Fabric; Function 0\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:18.1 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Data Fabric; Function 1\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:18.2 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Data Fabric; Function 2\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:18.3 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Data Fabric; Function 3\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:18.4 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Data Fabric; Function 4\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:18.5 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Data Fabric; Function 5\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:18.6 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Data Fabric; Function 6\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:18.7 \"Host bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge Data Fabric; Function 7\" -p00 \"\" \"\""
+      },
+      {
+        "raw": "01:00.0 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD/ATI]\" \"Navi 10 XL Upstream Port of PCI Express Switch\" -r24 -p00 \"Tul Corporation / PowerColor\" \"Device 1478\""
+      },
+      {
+        "raw": "02:00.0 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD/ATI]\" \"Navi 10 XL Downstream Port of PCI Express Switch\" -r24 -p00 \"Advanced Micro Devices, Inc. [AMD/ATI]\" \"Navi 10 XL Downstream Port of PCI Express Switch\""
+      },
+      {
+        "raw": "03:00.0 \"VGA compatible controller\" \"Advanced Micro Devices, Inc. [AMD/ATI]\" \"Navi 48 [Radeon RX 9070/9070 XT/9070 GRE]\" -rc3 -p00 \"Tul Corporation / PowerColor\" \"Device 2436\""
+      },
+      {
+        "raw": "03:00.1 \"Audio device\" \"Advanced Micro Devices, Inc. [AMD/ATI]\" \"Navi 48 HDMI/DP Audio Controller\" -p00 \"Advanced Micro Devices, Inc. [AMD/ATI]\" \"Navi 48 HDMI/DP Audio Controller\""
+      },
+      {
+        "raw": "04:00.0 \"Non-Volatile memory controller\" \"Micron/Crucial Technology\" \"T500 NVMe PCIe SSD\" -r01 -p02 \"Micron/Crucial Technology\" \"Device 2100\""
+      },
+      {
+        "raw": "05:00.0 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"600 Series Chipset PCIe Switch Upstream Port\" -r01 -p00 \"ASMedia Technology Inc.\" \"Device 3328\""
+      },
+      {
+        "raw": "06:00.0 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"600 Series Chipset PCIe Switch Downstream Port\" -r01 -p00 \"ASMedia Technology Inc.\" \"Device 3328\""
+      },
+      {
+        "raw": "06:08.0 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"600 Series Chipset PCIe Switch Downstream Port\" -r01 -p00 \"ASMedia Technology Inc.\" \"Device 3328\""
+      },
+      {
+        "raw": "06:09.0 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"600 Series Chipset PCIe Switch Downstream Port\" -r01 -p00 \"ASMedia Technology Inc.\" \"Device 3328\""
+      },
+      {
+        "raw": "06:0a.0 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"600 Series Chipset PCIe Switch Downstream Port\" -r01 -p00 \"ASMedia Technology Inc.\" \"Device 3328\""
+      },
+      {
+        "raw": "06:0b.0 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"600 Series Chipset PCIe Switch Downstream Port\" -r01 -p00 \"ASMedia Technology Inc.\" \"Device 3328\""
+      },
+      {
+        "raw": "06:0c.0 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"600 Series Chipset PCIe Switch Downstream Port\" -r01 -p00 \"ASMedia Technology Inc.\" \"Device 3328\""
+      },
+      {
+        "raw": "06:0d.0 \"PCI bridge\" \"Advanced Micro Devices, Inc. [AMD]\" \"600 Series Chipset PCIe Switch Downstream Port\" -r01 -p00 \"ASMedia Technology Inc.\" \"Device 3328\""
+      },
+      {
+        "raw": "0a:00.0 \"Ethernet controller\" \"Realtek Semiconductor Co., Ltd.\" \"RTL8125 2.5GbE Controller\" -r0c -p00 \"ASUSTeK Computer Inc.\" \"Device 88e1\""
+      },
+      {
+        "raw": "0b:00.0 \"Network controller\" \"MEDIATEK Corp.\" \"MT7922 802.11ax PCI Express Wireless Network Adapter\" -p00 \"Foxconn International, Inc.\" \"Device e0cd\""
+      },
+      {
+        "raw": "0c:00.0 \"USB controller\" \"Advanced Micro Devices, Inc. [AMD]\" \"600 Series Chipset USB 3.2 Controller\" -r01 -p30 \"ASMedia Technology Inc.\" \"Device 1142\""
+      },
+      {
+        "raw": "0d:00.0 \"SATA controller\" \"Advanced Micro Devices, Inc. [AMD]\" \"600 Series Chipset SATA Controller\" -r01 -p01 \"ASMedia Technology Inc.\" \"Device 1062\""
+      },
+      {
+        "raw": "0e:00.0 \"Non-Volatile memory controller\" \"Kingston Technology Company, Inc.\" \"NV2 NVMe SSD [SM2267XT] (DRAM-less)\" -r03 -p02 \"Kingston Technology Company, Inc.\" \"NV2 NVMe SSD [SM2267XT] (DRAM-less)\""
+      },
+      {
+        "raw": "0f:00.0 \"VGA compatible controller\" \"Advanced Micro Devices, Inc. [AMD/ATI]\" \"Raphael\" -rcb -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "0f:00.1 \"Audio device\" \"Advanced Micro Devices, Inc. [AMD/ATI]\" \"Radeon High Definition Audio Controller\" -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "0f:00.2 \"Encryption controller\" \"Advanced Micro Devices, Inc. [AMD]\" \"Family 19h PSP/CCP\" -p00 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "0f:00.3 \"USB controller\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge USB 3.1 xHCI\" -p30 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "0f:00.4 \"USB controller\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge USB 3.1 xHCI\" -p30 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      },
+      {
+        "raw": "0f:00.6 \"Audio device\" \"Advanced Micro Devices, Inc. [AMD]\" \"Ryzen HD Audio Controller\" -p00 \"ASUSTeK Computer Inc.\" \"Device 8850\""
+      },
+      {
+        "raw": "10:00.0 \"USB controller\" \"Advanced Micro Devices, Inc. [AMD]\" \"Raphael/Granite Ridge USB 2.0 xHCI\" -p30 \"ASUSTeK Computer Inc.\" \"Device 8877\""
+      }
+    ],
+    "usb": [
+      {
+        "raw": "Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub"
+      },
+      {
+        "raw": "Bus 001 Device 002: ID 0489:e0e2 Foxconn / Hon Hai Wireless_Device"
+      },
+      {
+        "raw": "Bus 001 Device 004: ID 0b05:19af ASUSTek Computer, Inc. AURA LED Controller"
+      },
+      {
+        "raw": "Bus 001 Device 009: ID 258a:0001 SINO WEALTH USB KEYBOARD"
+      },
+      {
+        "raw": "Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub"
+      },
+      {
+        "raw": "Bus 002 Device 003: ID 0bc2:2037 Seagate RSS LLC Expansion HDD"
+      },
+      {
+        "raw": "Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub"
+      },
+      {
+        "raw": "Bus 003 Device 002: ID 25a7:fa61 Areson Technology Corp Elecom Co., Ltd MR-K013 Multicard Reader"
+      },
+      {
+        "raw": "Bus 003 Device 003: ID 1d6c:0103 HDR webcam HDR webcam"
+      },
+      {
+        "raw": "Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub"
+      },
+      {
+        "raw": "Bus 005 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub"
+      },
+      {
+        "raw": "Bus 006 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub"
+      },
+      {
+        "raw": "Bus 006 Device 003: ID 059f:10fd LaCie, Ltd Rugged Mini USB 3.0"
+      },
+      {
+        "raw": "Bus 007 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub"
+      }
+    ]
+  },
+  "network": [
+    {
+      "name": "eno1",
+      "mac": "30:c5:99:d2:69:de",
+      "state": "DOWN",
+      "type": "ether",
+      "addresses": [
+        "127.0.0.1",
+        "::1"
+      ]
+    },
+    {
+      "name": "wlp11s0",
+      "mac": "76:16:9c:02:9e:4a",
+      "state": "UP",
+      "type": "ether",
+      "addresses": [
+        "127.0.0.1",
+        "::1"
+      ]
+    }
+  ],
+  "health": {
+    "smart": [],
+    "sensors": {
+      "mt7921_phy0-pci-0b00": {
+        "Adapter": "PCI adapter",
+        "temp1": {
+          "temp1_input": 46.000
+        }
+      },
+      "spd5118-i2c-13-51": {
+        "Adapter": "SMBus PIIX4 adapter port 0 at 0b00",
+        "temp1": {
+          "temp1_input": 30.750,
+          "temp1_max": 55.000,
+          "temp1_min": 0.000,
+          "temp1_crit": 85.000,
+          "temp1_lcrit": 0.000,
+          "temp1_max_alarm": 0.000,
+          "temp1_min_alarm": 0.000,
+          "temp1_crit_alarm": 0.000,
+          "temp1_lcrit_alarm": 0.000
+        }
+      },
+      "amdgpu-pci-0300": {
+        "Adapter": "PCI adapter",
+        "vddgfx": {},
+        "fan1": {},
+        "edge": {
+          "temp1_crit": 110.000,
+          "temp1_crit_hyst": -273.150,
+          "temp1_emergency": 115.000
+        },
+        "junction": {
+          "temp2_crit": 110.000,
+          "temp2_crit_hyst": -273.150,
+          "temp2_emergency": 115.000
+        },
+        "mem": {
+          "temp3_crit": 108.000,
+          "temp3_crit_hyst": -273.150,
+          "temp3_emergency": 113.000
+        },
+        "PPT": {}
+      },
+      "nvme-pci-0e00": {
+        "Adapter": "PCI adapter",
+        "Composite": {
+          "temp1_input": 39.850,
+          "temp1_max": 82.850,
+          "temp1_min": -0.150,
+          "temp1_crit": 89.850,
+          "temp1_alarm": 0.000
+        }
+      },
+      "r8169_0_a00:00-mdio-0": {
+        "Adapter": "MDIO adapter",
+        "temp1": {
+          "temp1_input": 41.000,
+          "temp1_max": 120.000
+        }
+      },
+      "k10temp-pci-00c3": {
+        "Adapter": "PCI adapter",
+        "Tctl": {
+          "temp1_input": 42.875
+        },
+        "Tccd1": {
+          "temp3_input": 35.000
+        }
+      },
+      "amdgpu-pci-0f00": {
+        "Adapter": "PCI adapter",
+        "vddgfx": {
+          "in0_input": 1.030
+        },
+        "vddnb": {
+          "in1_input": 1.020
+        },
+        "edge": {
+          "temp1_input": 36.000
+        },
+        "PPT": {
+          "power1_input": 23.165
+        }
+      },
+      "nvme-pci-0400": {
+        "Adapter": "PCI adapter",
+        "Composite": {
+          "temp1_input": 29.850,
+          "temp1_max": 85.850,
+          "temp1_min": -0.150,
+          "temp1_crit": 87.850,
+          "temp1_alarm": 0.000
+        },
+        "Sensor 1": {
+          "temp2_input": 29.850,
+          "temp2_max": 65261.850,
+          "temp2_min": -273.150
+        }
+      }
+    }
+  }
+}

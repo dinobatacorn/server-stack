@@ -1,14 +1,14 @@
 # VPN External Access Validation
 
 Status: Current
-Last reviewed: 2026-05-23
+Last reviewed: 2026-07-06
 Source docs:
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md
 - User update on 2026-05-23: VPN port has been forwarded externally.
 - User update on 2026-05-23: WireGuard service is inactive and no UDP listener is present.
 - User update on 2026-05-23: `wg-quick@wg0` is enabled, `wg0` is up, and UDP `51820` is listening.
-Next action: Test WireGuard from a client that is not on the home LAN.
+Next action: Record the final external endpoint and a dated known-good client test when convenient.
 
 ## Purpose
 
@@ -18,6 +18,9 @@ Prove that WireGuard still works correctly now that its UDP port is forwarded an
 
 - WireGuard runs in LXC 102.
 - The environment follows a VPN-first access model.
+- WireGuard is operational and split tunneling has been restored.
+- Proxy addresses have been verified working.
+- The original failure mode was not conclusively identified; service resumed after portions of the configuration were rebuilt.
 - The WireGuard UDP port has been forwarded at the router.
 - Router forward target: `192.168.0.110`.
 - WireGuard LXC MAC: `bc:24:11:d2:6f:77`.
@@ -26,7 +29,7 @@ Prove that WireGuard still works correctly now that its UDP port is forwarded an
 - WireGuard gateway/tunnel address: `10.0.0.1/24`.
 - Known peer tunnel addresses: `10.0.0.2/32` through `10.0.0.10/32`.
 - Local service state is now good: `wg-quick@wg0` is enabled and active, `wg show` reports `wg0`, and `ss -lunp` shows UDP `51820`.
-- External endpoint or DDNS name still needs to be recorded.
+- External endpoint or DDNS name still needs to be recorded in this runbook.
 
 Fill in during validation:
 
@@ -40,7 +43,7 @@ Tunnel subnet: 10.0.0.1/24 server, peers 10.0.0.2/32 through 10.0.0.10/32
 External endpoint or DDNS name:
 Test client:
 Test date:
-Result: Local service fixed on 2026-05-23; external client test still pending.
+Result: WireGuard operational as of 2026-07-06; split tunneling restored and proxy addresses verified. Final endpoint and dated client details remain to be recorded here.
 ```
 
 ## Do Not Change Yet

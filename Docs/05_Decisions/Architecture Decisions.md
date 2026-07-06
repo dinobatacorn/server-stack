@@ -1,7 +1,7 @@
 # Architecture Decisions
 
 Status: Current
-Last reviewed: 2026-05-23
+Last reviewed: 2026-07-06
 Source docs:
 - Archive_Plan 05.05.26.txt
 - Server Plan 21.05.26.md
@@ -25,9 +25,20 @@ Decision: services should be internal-first and exposed through VPN unless there
 Implications:
 
 - WireGuard is the remote access entrypoint.
-- The WireGuard UDP port has been forwarded externally; the next step is validation from outside the LAN, not exposing apps directly.
+- WireGuard is operational; applications remain internal unless explicitly approved for exposure.
 - Reverse proxy is useful where needed, but public exposure should be minimized.
 - Router limitations should shape the design instead of forcing brittle workarounds.
+
+## Client DNS Under Router Constraints
+
+Decision: clients that require local records must use Pi-hole directly when adapter precedence makes WireGuard DNS unreliable.
+
+Implications:
+
+- The router remains on ISP DNS because its DNS configuration cannot be changed.
+- Pi-hole at `192.168.0.120` is authoritative for local `*.dustynest.com` records.
+- The Windows desktop Wi-Fi adapter uses `192.168.0.120` as its DNS server.
+- A successful `nslookup` against Pi-hole does not prove normal Windows applications are using Pi-hole; validate through the system resolver as documented in the runbook.
 
 ## Storage Separation
 
@@ -42,13 +53,29 @@ Implications:
 
 ## Stabilize Before Expanding
 
-Decision: the media node must pass stabilization before adding more services.
+Decision: prove each ecosystem layer before expanding it. The original core-media stabilization gate was satisfied by 2026-07-06.
 
 Implications:
 
-- qBittorrent, Prowlarr, Sonarr, Radarr, Jellyfin, and Kodi are the active stabilization scope.
-- Bazarr and Overseerr wait until import and playback behavior is proven.
-- Lidarr, Readarr, books, audiobooks, music, and emulator work wait for layout and backup decisions.
+- qBittorrent, Prowlarr, Sonarr, Radarr, Jellyfin, Kodi, and Seerr form the operational media core.
+- Seerr is the primary request interface; routine users should rarely need Sonarr or Radarr directly.
+- Lidarr, Bazarr, Readarr, Audiobookshelf, and Kavita are the immediate expansion scope.
+- SoulSync will complement Lidarr: SoulSync supports discovery while Lidarr handles acquisition.
+- Emulator work remains later than the current music and reading expansion.
+
+## Media Frontend And Backend
+
+Decision: Jellyfin is the central media backend and Kodi is the living-room frontend.
+
+Implications:
+
+- Kodi uses Arctic Fuse 3.
+- Kodi UI polishing waits until the remaining ecosystem is deployed.
+- Jellyfin remains responsible for the central libraries and media serving.
+
+## Knowledge Authoring
+
+Decision: Obsidian replaces AFFiNE as the primary technical knowledge environment, while GitHub remains the canonical version-controlled repository.
 
 ## Documentation Is Infrastructure
 

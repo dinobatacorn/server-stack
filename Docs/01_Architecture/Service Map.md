@@ -1,12 +1,12 @@
 # Service Map
 
 Status: Current
-Last reviewed: 2026-05-23
+Last reviewed: 2026-07-06
 Source docs:
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md
 - Media Stack Stabilization 23.05.26.md
-Next action: Convert this into a dependency diagram after stabilization checks are complete.
+Next action: Add music and reading services to the proven media pipeline as they are deployed.
 
 ## Infrastructure Dependencies
 
@@ -24,13 +24,15 @@ Rebuild and validation order:
 
 - Pi-hole LXC depends on Proxmox networking and stable host startup.
 - WireGuard LXC depends on Proxmox networking and is the VPN-first access entrypoint.
-- The WireGuard UDP port is now forwarded externally; validate remote access before relying on it for administration.
+- WireGuard is operational and is the preferred remote administration path.
+- VPN and selected LAN clients depend on Pi-hole (`192.168.0.120`) for local `*.dustynest.com` resolution.
+- The Windows desktop Wi-Fi adapter uses Pi-hole directly because Windows may prefer that adapter's DNS over WireGuard DNS.
 - Core Services Docker VM depends on storage mounts and Docker startup.
 - Home Assistant OS VM depends on Proxmox VM startup and its own backup plan.
 
-## Core Docker VM Services
+## Core Docker VM Planned Architecture
 
-Current or planned service groups:
+These groups describe the intended architecture; they do not imply every service is deployed:
 
 - Infrastructure/security: Nginx Proxy Manager, Authelia, Vaultwarden, Homepage, Restic.
 - Productivity/knowledge: Paperless-ngx, AnythingLLM, n8n, Baserow, Nextcloud.
@@ -38,9 +40,9 @@ Current or planned service groups:
 
 Operational rule: persistent app state and databases belong under `/mnt/core`, not bulk media storage.
 
-## Media Node Core
+## Media Node Deployed State
 
-Active stabilization services:
+Configured and operational:
 
 - qBittorrent
 - Prowlarr
@@ -48,28 +50,39 @@ Active stabilization services:
 - Radarr
 - Jellyfin
 - Kodi
+- Seerr
 
-Core media flow:
+Proven media flow:
 
 ```text
-Prowlarr -> Sonarr/Radarr search
-Sonarr/Radarr -> qBittorrent download client
+Seerr -> Sonarr/Radarr request
+Sonarr/Radarr -> Prowlarr indexer search
+Sonarr/Radarr -> qBittorrent download
 qBittorrent -> /media/downloads
-Sonarr/Radarr -> /media/library
-Jellyfin/Kodi -> /media/library playback
+Sonarr/Radarr -> /media/library import
+Jellyfin -> library scan and serving
+Kodi -> Jellyfin-backed living-room playback
 ```
 
-## Expansion Services
+## Next Media Milestones
 
-Allowed only after the stabilization runbook passes:
+Immediate deployment:
 
-- Bazarr after Sonarr/Radarr imports and Jellyfin playback are stable.
-- Overseerr after request flow can safely target stable Sonarr/Radarr profiles and root folders.
+- Lidarr for music acquisition.
+- Bazarr for subtitles.
+- Readarr for books.
+- Audiobookshelf for audiobooks.
+- Kavita for ebooks, manga, and comics.
 
-Blocked for now:
+After core deployment:
 
-- Lidarr and Readarr until music/books layouts are finalized.
-- Kavita, Audiobookshelf, and Calibre/Calibre-Web until reading/audiobook layouts and backups are finalized.
-- RetroArch and standalone emulators until core media and backups are stable.
-- Recyclarr and automated quality management until manual profiles are proven.
-- Tdarr and GTX 1060 optimization until direct play and Intel QuickSync are stable.
+- SoulSync for music discovery alongside Lidarr.
+- Kodi UI customization.
+- External media drive import and normalization.
+- Automated backups.
+
+Longer-term planned architecture:
+
+- Calibre or Calibre-Web after evaluation.
+- RetroArch, standalone emulators, preservation assets, and Kodi launcher integration.
+- Recyclarr and Tdarr if their operational value justifies them.

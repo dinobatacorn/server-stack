@@ -1,7 +1,7 @@
 # Backup And Restore
 
 Status: Draft
-Last reviewed: 2026-05-23
+Last reviewed: 2026-07-06
 Source docs:
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md

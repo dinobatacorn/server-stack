@@ -1,12 +1,12 @@
 # Media Stack Stabilization
 
-Status: Current
-Last reviewed: 2026-05-23
+Status: Completed baseline; retained as a validation runbook
+Last reviewed: 2026-07-06
 Source docs:
 - Media Stack Stabilization 23.05.26.md
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md
-Next action: Create a known-good checkpoint before changing imports, permissions, or legacy media paths.
+Next action: Use these checks for regression testing and create a fresh known-good checkpoint before risky changes.
 
 ## Purpose
 
@@ -150,6 +150,8 @@ Required visibility:
 
 Pass condition: an operator can answer "is the media stack healthy?" from documented checks.
 
-## Expansion Gate
+## Baseline Result And Continued Use
 
-Do not add Bazarr, Overseerr, Lidarr, Readarr, Kavita, Audiobookshelf, Calibre, emulator work, Recyclarr, Tdarr, or GTX 1060 optimization until the core media stack passes the stabilization phases.
+As of 2026-07-06, the core qBittorrent, Prowlarr, Sonarr, Radarr, Jellyfin, Kodi, and Seerr pipeline is operational. The original expansion gate has been satisfied.
+
+Retain this runbook for regression checks, rebuild validation, permission audits, backup testing, and controlled changes to legacy media paths. Current expansion priorities are tracked in [Media Backlog](../04_Backlog/Media%20Backlog.md).

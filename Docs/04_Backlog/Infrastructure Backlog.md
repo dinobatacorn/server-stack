@@ -1,20 +1,17 @@
 # Infrastructure Backlog
 
 Status: Current
-Last reviewed: 2026-05-23
+Last reviewed: 2026-07-06
 Source docs:
 - to-do list 17.05.26.md
 - Server Plan 21.05.26.md
-Next action: Finish documentation consolidation and dependency mapping before broad service expansion.
+Next action: Harden backups and documentation while media ecosystem expansion continues.
 
 ## Active Blockers
 
-- Validate WireGuard external access after router port forwarding.
-- Document the forwarded VPN UDP port, router target, WireGuard LXC IP, endpoint, and tested client.
 - Consolidate operational documentation.
 - Finalize dependency mapping between services.
-- Verify DNS reliability across reboots.
-- Verify VPN remote access workflows.
+- Revalidate Windows Wi-Fi DNS after material Windows, adapter, or Pi-hole changes.
 - Verify `/mnt/core` permissions consistency.
 - Audit UID/GID mappings.
 - Document ownership standards.
@@ -27,6 +24,8 @@ Completed:
 
 - VPN-first philosophy established.
 - WireGuard port forwarding completed at the router.
+- WireGuard restored and operational with split tunneling.
+- Windows desktop Wi-Fi configured to use Pi-hole (`192.168.0.120`) directly.
 - Persistent vs bulk storage separation established.
 - `/mnt/core` standardized as source of truth.
 - Rebuild-order and disposable-container philosophy established.
@@ -72,8 +71,8 @@ Utilities:
 
 Knowledge architecture:
 
-- Decide long-term wiki/knowledge platform.
-- Create operational documentation vault.
+- Establish Obsidian as the primary technical authoring environment.
+- Keep GitHub as the canonical version-controlled documentation repository.
 - Create inventory pages.
 - Create rebuild procedures.
 - Create troubleshooting docs.
@@ -81,7 +80,8 @@ Knowledge architecture:
 
 ## Deferred
 
-- Monitoring/dashboard stack.
+- Complete the Homepage administrative dashboard.
+- Deploy Uptime Kuma, Grafana, and Prometheus.
 - Disk alerts.
 - SMART alerts.
 - Backup failure alerts.

@@ -1,93 +1,65 @@
 # Media Backlog
 
 Status: Current
-Last reviewed: 2026-05-23
+Last reviewed: 2026-07-06
 Source docs:
-- to-do list 17.05.26.md
 - Media Stack Stabilization 23.05.26.md
-Next action: Complete media stack stabilization before adding remaining media services.
+- Current State of the Homelab (July 2026)
+Next action: Deploy Lidarr, Bazarr, Readarr, Audiobookshelf, and Kavita.
 
-## Active Blockers
+## Completed Foundation
 
-- Create known-good checkpoint.
+- Debian 13, SSH, Docker, and persistent mounts configured.
+- `/mnt/core` mounted and `/media` taxonomy created.
+- qBittorrent and Prowlarr configured.
+- Sonarr fully configured; downloads, imports, and Jellyfin notifications verified with *Firefly* and *Galavant*.
+- Radarr fully configured and connected to Prowlarr, qBittorrent, Jellyfin, and Seerr.
+- Jellyfin libraries, imports, and playback verified.
+- Kodi installed with Arctic Fuse 3 as the living-room frontend to Jellyfin.
+- Seerr fully configured as the primary request interface.
+- End-to-end Seerr-to-Kodi media workflow proven operational.
+
+## Immediate Deployment
+
+- Deploy Lidarr for music acquisition.
+- Deploy Bazarr for subtitles.
+- Deploy Readarr for book acquisition.
+- Deploy Audiobookshelf for audiobooks.
+- Deploy Kavita for ebooks, manga, and comics.
+
+## After Core Deployment
+
+- Integrate SoulSync for music discovery alongside Lidarr.
+- Polish the Kodi interface.
+- Import and normalize the external media drive.
+- Configure automated media-service backups.
+- Add media services to Homepage.
+
+## Operational Hardening
+
+- Create a current known-good checkpoint.
 - Verify reboot persistence.
-- Document mount relationships.
+- Document live mount and device relationships.
 - Verify SMART monitoring.
-- Configure automatic updates policy.
-- Verify permissions and UID/GID behavior.
-- Verify qBittorrent completed/incomplete/category behavior.
-- Configure Sonarr/Radarr root folders, profiles, import behavior, and recycle bins.
-- Test Jellyfin direct play and Intel QuickSync transcoding.
-- Test at least one backup restore.
+- Document automatic-update policy.
+- Confirm and document shared UID/GID behavior.
+- Test at least one service restore.
 
-## Completed Or Partially Complete
+## Reading And Archival Decisions
 
-Completed:
+- Evaluate whether Calibre or Calibre-Web adds value alongside Kavita.
+- Keep optimized interfaces for ebooks, manga/comics, and audiobooks rather than forcing all formats into Jellyfin.
+- Finalize music, book, audiobook, and archival naming conventions.
 
-- Debian 13 installed.
-- SSH configured.
-- Docker configured.
-- Persistent mounts configured.
-- `/mnt/core` mounted.
-- `/media` taxonomy established.
-- qBittorrent deployed.
-- Prowlarr deployed.
-- Sonarr deployed.
-- Radarr deployed.
-- Jellyfin deployed.
+## Emulator And Preservation Layer
 
-In progress:
-
-- Reboot persistence validation.
-- Duplicate/legacy directory overlap cleanup.
-- qBittorrent category strategy.
-- qBittorrent completed/incomplete behavior.
-- Prowlarr working indexers.
-- Kodi local playback.
-- Existing movie/TV/anime organization.
-
-## Expansion Blocked Until Stabilization Passes
-
-Acquisition:
-
-- Lidarr
-- Readarr
-- Bazarr
-- Overseerr
-
-Reading and archival:
-
-- Kavita
-- Audiobookshelf
-- Calibre or Calibre-Web
-
-Emulator and ROM layer:
-
-- Restore ROM collections.
-- Restore BIOS files.
-- Configure RetroArch.
-- Configure standalone emulators.
-- Configure controller mappings.
-- Configure shader packs.
-- Configure save-state backups.
-- Configure metadata scraping.
+- Restore ROM collections and BIOS files.
+- Configure RetroArch and required standalone emulators.
+- Configure controller mappings, shaders, metadata, screenshots, and save-state backups.
 - Integrate emulator launching into Kodi.
 
-Optional/future:
+## Optional Future Work
 
-- Recyclarr
-- Tdarr
-- GTX 1060 transcoding optimization
-- Automated media quality management
-- Custom dashboard ecosystem
-
-## Data Migration
-
-Do only after backups and imports are proven:
-
-- Finalize archival layout.
-- Organize music library.
-- Organize audiobook library.
-- Normalize naming conventions.
-- Import existing media into Sonarr/Radarr.
-- Preserve subtitles, artwork, NFO files, and watched-state metadata where possible.
+- Recyclarr and automated quality management.
+- Tdarr and GTX 1060 transcoding optimization.
+- Preserve subtitles, artwork, NFO files, and watched-state metadata during migrations.

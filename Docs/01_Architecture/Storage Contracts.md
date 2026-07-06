@@ -1,7 +1,7 @@
 # Storage Contracts
 
 Status: Current
-Last reviewed: 2026-05-23
+Last reviewed: 2026-07-06
 Source docs:
 - Server Plan 21.05.26.md
 - Media Stack Stabilization 23.05.26.md

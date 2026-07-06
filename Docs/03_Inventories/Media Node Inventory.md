@@ -1,7 +1,7 @@
 # Media Node Inventory
 
 Status: Current
-Last reviewed: 2026-05-23
+Last reviewed: 2026-07-06
 Source docs:
 - media_2026-05-17_12-44-07.json
 - MediaCenter-Archetecture 17.05.26.txt
@@ -89,11 +89,11 @@ Captured under `/mnt/core/services/media`:
 - `serving/jellyfin`
 - `serving/kodi`
 
-This snapshot shows some future-service directories already exist. Directory presence does not mean the service is approved for expansion; use the stabilization gate before enabling or relying on them.
+This path snapshot predates some July deployments. Directory presence alone still does not prove a service is running; the deployed-state list below is authoritative.
 
-## Active Media Services
+## Deployed Media Services
 
-Stabilization scope:
+Configured and operational:
 
 - qBittorrent
 - Prowlarr
@@ -101,14 +101,28 @@ Stabilization scope:
 - Radarr
 - Jellyfin
 - Kodi
+- Seerr
 
-Planned after stabilization:
+Verified behavior:
+
+- Sonarr downloads, imports, and Jellyfin notifications work; *Firefly* and *Galavant* were successful tests.
+- Radarr is connected to Prowlarr, qBittorrent, Jellyfin, and Seerr.
+- Jellyfin library import and playback work.
+- Kodi uses Arctic Fuse 3 as the living-room frontend; Jellyfin is the backend.
+- Seerr drives the proven request-to-playback pipeline.
+
+## Next Milestones
+
+Immediate:
 
 - Bazarr
-- Overseerr
 - Lidarr
 - Readarr
 - Kavita
 - Audiobookshelf
+
+Later:
+
+- SoulSync
 - Calibre or Calibre-Web
 - Emulator stack

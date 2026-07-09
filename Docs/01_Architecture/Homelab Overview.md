@@ -1,15 +1,33 @@
 # Homelab Overview
 
 Status: Current
-Last reviewed: 2026-07-06
+Last reviewed: 2026-07-09
 Source docs:
 - Server Plan 21.05.26.md
 - Archive_Plan 05.05.26.txt
+- pve-output_09072026.txt
+- vm100-output_09072026.txt
+- medianode-output_09072026.txt
 Next action: Create or update diagrams after the service dependency chart is stable.
 
 ## Architecture Summary
 
-The environment is split into a workstation, a Proxmox infrastructure host, and a dedicated media node. The guiding rule is simple: service state belongs on persistent storage, while replaceable media and cache data belong on bulk storage.
+The environment is split into a workstation, a Proxmox infrastructure host, and a dedicated media node. The important architectural split is two application domains: VM100 is the core services platform, and the media node is a specialized media appliance. The guiding rule is simple: service state belongs on persistent storage, while replaceable media and cache data belong on bulk storage.
+
+```text
+                    Proxmox
+                       |
+        +--------------+--------------+
+        |                             |
+   VM100 Core Services           Media Node
+        |                             |
+ Infrastructure               Media Ecosystem
+ Knowledge                    Acquisition
+ Utilities                    Consumption
+ Security                     Discovery
+ Automation                   Reading
+ Monitoring                   Preservation
+```
 
 ## Main Workstation
 
@@ -46,30 +64,68 @@ Known layout:
 - VM 100: Core Services Docker Host.
 - VM 104: Home Assistant OS.
 
-## Core Services Docker Host Planned Architecture
+## VM100 Core Services Platform
 
-The following groups describe the intended service architecture, not the current deployment status. Consult [Homelab Status](../00_STATUS.md) for what is running.
+Host: `services`
 
-Infrastructure and security services:
+Purpose:
+
+- Infrastructure
+- Knowledge
+- Utilities
+- Security
+- Automation
+- Monitoring
+- Personal cloud services
+
+Deployed containers:
 
 - Nginx Proxy Manager
+- Syncthing
+- iSponsorBlockTV
+
+The following groups describe the intended service architecture. Consult [Homelab Status](../00_STATUS.md) for what is running.
+
+Core:
+
+- Nginx Proxy Manager
+- Homepage
+
+Security:
+
 - Authelia
 - Vaultwarden
-- Homepage
-- Restic
+- CrowdSec, if later justified
 
-Productivity and knowledge services:
+Knowledge:
 
+- Obsidian LiveSync, if self-hosted
 - Paperless-ngx
-- AnythingLLM
-- n8n
-- Baserow
 - Nextcloud
+- Baserow
+- AnythingLLM
+
+Automation:
+
+- n8n
 
 Utilities:
 
+- Syncthing
 - RustDesk
 - iSponsorBlockTV
+
+Monitoring:
+
+- Uptime Kuma
+- Grafana
+- Prometheus
+- Node Exporter
+- cAdvisor, if useful
+
+Backup:
+
+- Restic
 
 ## Dedicated Media Node
 
@@ -83,11 +139,13 @@ Purpose:
 - Archival
 - Future emulator/media-serving workloads
 
-Known hardware:
+Known hardware and current storage notes:
 
 - CPU: Intel i7-9700K
 - GPU: Intel UHD 630 and NVIDIA GTX 1060 3GB
-- Storage: 232GB SSD, 2TB HDD, 5TB HDD
+- Storage visible in July 9 snapshot: 232GB system disk and 1.8TB disk.
+- `/mnt/core` mounted from `192.168.0.75:/mnt/core`.
+- `/media` exists but was not shown as a separate mount in the July 9 `df` output.
 - OS: Debian GNU/Linux 13 Trixie
 
 Deployed media services:
@@ -101,6 +159,8 @@ Deployed media services:
 - Seerr
 
 The Seerr-to-Sonarr/Radarr-to-qBittorrent-to-Jellyfin-to-Kodi pipeline is operational. Music, reading, and preservation services remain expansion milestones.
+
+Current caution: verify the media node's `/media` backing device before large imports or normalization work. The July 9 inventory shows the root filesystem at 89% used and does not show `/media` as its own mounted filesystem.
 
 ## Rebuild Order
 

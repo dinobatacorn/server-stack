@@ -1,11 +1,13 @@
 # Infrastructure Backlog
 
 Status: Current
-Last reviewed: 2026-07-06
+Last reviewed: 2026-07-09
 Source docs:
 - to-do list 17.05.26.md
 - Server Plan 21.05.26.md
-Next action: Harden backups and documentation while media ecosystem expansion continues.
+- pve-output_09072026.txt
+- vm100-output_09072026.txt
+Next action: Normalize VM100 service layout, then harden backups and documentation while media ecosystem expansion continues.
 
 ## Active Blockers
 
@@ -13,6 +15,7 @@ Next action: Harden backups and documentation while media ecosystem expansion co
 - Finalize dependency mapping between services.
 - Revalidate Windows Wi-Fi DNS after material Windows, adapter, or Pi-hole changes.
 - Verify `/mnt/core` permissions consistency.
+- Retire legacy VM100 `/mnt/core/stacks` definitions into `/mnt/core/services`.
 - Audit UID/GID mappings.
 - Document ownership standards.
 - Configure and verify backup retention policies.
@@ -32,9 +35,11 @@ Completed:
 - Pi-hole LXC deployed.
 - WireGuard LXC deployed.
 - Docker VM deployed.
+- VM100 currently running Nginx Proxy Manager, Syncthing, and iSponsorBlockTV.
 - Home Assistant OS VM deployed.
-- Homepage deployed.
 - iSponsorBlockTV deployed.
+- Nginx Proxy Manager deployed.
+- Syncthing deployed.
 
 In progress:
 
@@ -43,6 +48,7 @@ In progress:
 - Scheduled snapshots.
 - Static IP and internal DNS naming conventions.
 - Compose stack reorganization.
+- Homepage deployment or redeployment.
 - Bind mount normalization.
 - Environment variable handling.
 - Compose deployment conventions.
@@ -52,8 +58,10 @@ In progress:
 
 Infrastructure/security:
 
+- Homepage
 - Authelia
 - Vaultwarden
+- CrowdSec, if later justified
 - Restic integration
 - SSL/certificate strategy documentation
 
@@ -68,6 +76,7 @@ Productivity/knowledge:
 Utilities:
 
 - RustDesk
+- Confirm whether Syncthing belongs permanently on VM100 or should also exist on selected clients.
 
 Knowledge architecture:
 

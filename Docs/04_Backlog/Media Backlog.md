@@ -1,11 +1,12 @@
 # Media Backlog
 
 Status: Current
-Last reviewed: 2026-07-06
+Last reviewed: 2026-07-09
 Source docs:
 - Media Stack Stabilization 23.05.26.md
 - Current State of the Homelab (July 2026)
-Next action: Deploy Lidarr, Bazarr, Readarr, Audiobookshelf, and Kavita.
+- medianode-output_09072026.txt
+Next action: Confirm `/media` backing storage, then deploy Lidarr, Bazarr, Readarr, Audiobookshelf, and Kavita.
 
 ## Completed Foundation
 
@@ -21,6 +22,7 @@ Next action: Deploy Lidarr, Bazarr, Readarr, Audiobookshelf, and Kavita.
 
 ## Immediate Deployment
 
+- Confirm `/media` is backed by the intended media disk before large downloads or imports.
 - Deploy Lidarr for music acquisition.
 - Deploy Bazarr for subtitles.
 - Deploy Readarr for book acquisition.
@@ -39,7 +41,8 @@ Next action: Deploy Lidarr, Bazarr, Readarr, Audiobookshelf, and Kavita.
 
 - Create a current known-good checkpoint.
 - Verify reboot persistence.
-- Document live mount and device relationships.
+- Document live mount and device relationships, especially `/media`.
+- Mount or otherwise account for the visible 1.8 TB disk if it is intended to hold media content.
 - Verify SMART monitoring.
 - Document automatic-update policy.
 - Confirm and document shared UID/GID behavior.

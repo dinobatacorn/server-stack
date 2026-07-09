@@ -1,12 +1,13 @@
 # Media Stack Stabilization
 
 Status: Completed baseline; retained as a validation runbook
-Last reviewed: 2026-07-06
+Last reviewed: 2026-07-09
 Source docs:
 - Media Stack Stabilization 23.05.26.md
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md
-Next action: Use these checks for regression testing and create a fresh known-good checkpoint before risky changes.
+- medianode-output_09072026.txt
+Next action: Confirm `/media` backing storage, then use these checks for regression testing and create a fresh known-good checkpoint before risky changes.
 
 ## Purpose
 
@@ -49,13 +50,15 @@ Goal: the media node survives reboot and exposes expected storage before applica
 Validate:
 
 - `/mnt/core` is mounted before Docker-dependent service state is needed.
-- `/media` is mounted before acquisition/playback containers start.
+- `/media` is mounted or otherwise backed by the intended media storage before acquisition/playback containers start.
 - Docker starts after required mounts are available.
 - Containers with restart policies recover cleanly after reboot.
 - Disk capacity is visible for root, `/mnt/core`, and `/media`.
 - SMART visibility exists for internal disks, with USB limitations documented.
 
 Pass condition: after one reboot, `/mnt/core`, `/media`, Docker, and existing media containers recover without manual intervention.
+
+July 9 note: `/mnt/core` is mounted from `192.168.0.75:/mnt/core`, but the captured `df` output does not show `/media` as a separate filesystem. Root is 89% used and `sda` is visible without a mountpoint. Resolve this before large imports or downloads.
 
 ## Phase 2: Permissions And UID/GID
 
@@ -152,6 +155,6 @@ Pass condition: an operator can answer "is the media stack healthy?" from docume
 
 ## Baseline Result And Continued Use
 
-As of 2026-07-06, the core qBittorrent, Prowlarr, Sonarr, Radarr, Jellyfin, Kodi, and Seerr pipeline is operational. The original expansion gate has been satisfied.
+As of 2026-07-09, the core qBittorrent, Prowlarr, Sonarr, Radarr, Jellyfin, Kodi, and Seerr pipeline is operational. The original expansion gate has been satisfied, but `/media` backing storage should be confirmed before larger expansion work.
 
 Retain this runbook for regression checks, rebuild validation, permission audits, backup testing, and controlled changes to legacy media paths. Current expansion priorities are tracked in [Media Backlog](../04_Backlog/Media%20Backlog.md).

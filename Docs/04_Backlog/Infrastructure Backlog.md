@@ -1,13 +1,14 @@
 # Infrastructure Backlog
 
 Status: Current
-Last reviewed: 2026-07-09
+Last reviewed: 2026-07-10
 Source docs:
 - to-do list 17.05.26.md
 - Server Plan 21.05.26.md
 - pve-output_09072026.txt
 - vm100-output_09072026.txt
-Next action: Normalize VM100 service layout, then harden backups and documentation while media ecosystem expansion continues.
+- User-provided Baserow deployment summary, 2026-07-10
+Next action: Organize Baserow workspaces and permissions, then harden backups and documentation while media ecosystem expansion continues.
 
 ## Active Blockers
 
@@ -39,7 +40,9 @@ Completed:
 - Home Assistant OS VM deployed.
 - iSponsorBlockTV deployed.
 - Nginx Proxy Manager deployed.
+- SSL/certificate strategy documented.
 - Syncthing deployed.
+- Baserow deployed on VM100 with PostgreSQL, bind-mounted persistence, reverse proxy, wildcard TLS, and restart persistence validation.
 
 In progress:
 
@@ -63,15 +66,20 @@ Infrastructure/security:
 - Vaultwarden
 - CrowdSec, if later justified
 - Restic integration
-- SSL/certificate strategy documentation
 
 Productivity/knowledge:
 
 - Paperless-ngx
 - AnythingLLM
 - n8n
-- Baserow
 - Nextcloud
+
+Baserow follow-up:
+
+- Create a personal non-administrator account.
+- Organize workspaces and permissions.
+- Migrate relevant databases from the hosted Baserow instance.
+- Add routine PostgreSQL dumps to the backup workflow.
 
 Utilities:
 

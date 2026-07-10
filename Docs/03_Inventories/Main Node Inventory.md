@@ -1,10 +1,11 @@
 # Main Node Inventory
 
 Status: Current
-Last reviewed: 2026-07-09
+Last reviewed: 2026-07-10
 Source docs:
 - pve-output_09072026.txt
 - vm100-output_09072026.txt
+- User-provided Baserow deployment summary, 2026-07-10
 Next action: Normalize legacy VM100 `/mnt/core/stacks` compose projects into `/mnt/core/services`.
 
 ## Role
@@ -52,6 +53,7 @@ Running containers:
 - `npm`: Nginx Proxy Manager
 - `syncthing`: Syncthing
 - `isponsorblocktv`: iSponsorBlockTV
+- `baserow`: Baserow
 
 ## VM100 Storage Snapshot
 
@@ -75,12 +77,14 @@ Active mount patterns:
 - Nginx Proxy Manager data: `/mnt/core/appdata/core/npm/data -> /data`
 - Nginx Proxy Manager certificates: `/mnt/core/appdata/core/npm/letsencrypt -> /etc/letsencrypt`
 - iSponsorBlockTV data: `/mnt/core/appdata/utilities/isponsorblocktv -> /app/data`
+- Baserow data: `/mnt/core/appdata/knowledge/baserow`
 
 ## Current Compose Locations
 
 Current state includes both normalized and legacy locations:
 
 - `/mnt/core/services/media/compose/core/docker-compose.yml`
+- `/mnt/core/services/knowledge/baserow/docker-compose.yml`
 - `/mnt/core/services/syncthing/compose.yml`
 - `/mnt/core/stacks/core/npm/docker-compose.yml`
 - `/mnt/core/stacks/knowledge/affine/docker-compose.yml`
@@ -114,7 +118,6 @@ Knowledge:
 - Obsidian LiveSync, if self-hosted
 - Paperless-ngx
 - Nextcloud
-- Baserow
 - AnythingLLM
 
 Automation:

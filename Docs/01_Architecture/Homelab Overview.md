@@ -1,14 +1,17 @@
 # Homelab Overview
 
 Status: Current
-Last reviewed: 2026-07-09
+Last reviewed: 2026-07-10
 Source docs:
 - Server Plan 21.05.26.md
 - Archive_Plan 05.05.26.txt
 - pve-output_09072026.txt
 - vm100-output_09072026.txt
 - medianode-output_09072026.txt
+- User-provided Baserow deployment summary, 2026-07-10
 Next action: Create or update diagrams after the service dependency chart is stable.
+
+Reference: [IP, Port, And Proxy Assignments](IP%20Port%20Proxy%20Assignments.md) records documented IPs, ports, proxy hostnames, and open assignment gaps.
 
 ## Architecture Summary
 
@@ -83,6 +86,7 @@ Deployed containers:
 - Nginx Proxy Manager
 - Syncthing
 - iSponsorBlockTV
+- Baserow
 
 The following groups describe the intended service architecture. Consult [Homelab Status](../00_STATUS.md) for what is running.
 
@@ -100,9 +104,9 @@ Security:
 Knowledge:
 
 - Obsidian LiveSync, if self-hosted
+- Baserow
 - Paperless-ngx
 - Nextcloud
-- Baserow
 - AnythingLLM
 
 Automation:

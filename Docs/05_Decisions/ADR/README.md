@@ -1,7 +1,7 @@
 # Architecture Decision Records
 
 Status: Current
-Last reviewed: 2026-07-09
+Last reviewed: 2026-07-10
 Source docs:
 - Architecture Decisions.md
 - July 2026 Homelab Checkpoint
@@ -40,6 +40,7 @@ Each ADR should answer:
 | [0013](0013-rebuild-automate-document.md) | Rebuild, automate, document |
 | [0014](0014-nextcloud-role.md) | Nextcloud role |
 | [0015](0015-syncthing-and-nextcloud.md) | Syncthing and Nextcloud coexistence |
+| [0016](0016-docker-networking-strategy.md) | Docker networking strategy |
 
 ## Open Decisions
 

@@ -1,7 +1,7 @@
 # Service Map
 
 Status: Current
-Last reviewed: 2026-07-09
+Last reviewed: 2026-07-10
 Source docs:
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md
@@ -9,7 +9,10 @@ Source docs:
 - pve-output_09072026.txt
 - vm100-output_09072026.txt
 - medianode-output_09072026.txt
-Next action: Normalize VM100 service definitions, then add music and reading services to the proven media pipeline as they are deployed.
+- User-provided Baserow deployment summary, 2026-07-10
+Next action: Organize Baserow workspaces and permissions, then continue media and knowledge-service expansion.
+
+Reference: [IP, Port, And Proxy Assignments](IP%20Port%20Proxy%20Assignments.md) records documented IPs, service ports, proxy hostnames, and open assignment gaps.
 
 ## Infrastructure Dependencies
 
@@ -48,17 +51,24 @@ Currently running:
 - Nginx Proxy Manager
 - Syncthing
 - iSponsorBlockTV
+- Baserow
 
 Planned or pending groups:
 
 - Core: Homepage.
 - Security: Vaultwarden, Authelia, optional CrowdSec.
-- Knowledge: Obsidian LiveSync if self-hosted, Paperless-ngx, Nextcloud, Baserow, AnythingLLM.
+- Knowledge: Obsidian LiveSync if self-hosted, Paperless-ngx, Nextcloud, AnythingLLM.
 - Automation: n8n.
 - Monitoring: Uptime Kuma, Grafana, Prometheus, Node Exporter, optional cAdvisor.
 - Backup: Restic.
 
 Operational rule: persistent app state and databases belong under `/mnt/core`, not bulk media storage.
+
+Baserow deployment path:
+
+```text
+Client -> Pi-hole -> Nginx Proxy Manager -> proxy Docker network -> Baserow -> PostgreSQL
+```
 
 ## Media Node Deployed State
 

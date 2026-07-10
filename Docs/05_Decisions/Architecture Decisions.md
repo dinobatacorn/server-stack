@@ -1,7 +1,7 @@
 # Architecture Decisions
 
 Status: Current
-Last reviewed: 2026-07-09
+Last reviewed: 2026-07-10
 Source docs:
 - Archive_Plan 05.05.26.txt
 - Server Plan 21.05.26.md
@@ -33,6 +33,7 @@ Current ADRs:
 - [ADR 0013: Rebuild, Automate, Document](ADR/0013-rebuild-automate-document.md)
 - [ADR 0014: Nextcloud Role](ADR/0014-nextcloud-role.md)
 - [ADR 0015: Syncthing And Nextcloud Coexistence](ADR/0015-syncthing-and-nextcloud.md)
+- [ADR 0016: Docker Networking Strategy](ADR/0016-docker-networking-strategy.md)
 
 ## Persistent Data Is Sacred
 
@@ -54,6 +55,20 @@ Implications:
 - WireGuard is operational; applications remain internal unless explicitly approved for exposure.
 - Reverse proxy is useful where needed, but public exposure should be minimized.
 - Router limitations should shape the design instead of forcing brittle workarounds.
+
+## Docker Networking Strategy
+
+Decision: use a shared Docker bridge network named `proxy` for services that must be reachable by Nginx Proxy Manager or other user-facing infrastructure. Use a single wildcard Let's Encrypt certificate for `*.dustynest.com` unless a service has a specific technical requirement for its own certificate.
+
+Implications:
+
+- Reverse proxy rules should prefer container names on the `proxy` network over VM IP addresses when both containers share that network.
+- Compose-created default networks remain acceptable for private stack-internal communication.
+- The `proxy` network supplements project-specific networks; it does not replace isolation between tightly coupled internal services.
+- Nginx Proxy Manager owns wildcard certificate renewal for `*.dustynest.com`.
+- New Proxy Hosts should use functional subdomains such as `db.dustynest.com`, `cloud.dustynest.com`, `media.dustynest.com`, or `requests.dustynest.com`.
+- New user-facing deployments should join `proxy` from the outset.
+- Existing services can be migrated opportunistically during routine maintenance.
 
 ## Client DNS Under Router Constraints
 
@@ -127,6 +142,17 @@ Implications:
 ## Knowledge Authoring
 
 Decision: Obsidian replaces AFFiNE as the primary technical knowledge environment, while GitHub remains the canonical version-controlled repository.
+
+## Baserow Structured Data
+
+Decision: Baserow is the canonical home for structured relational data in the knowledge ecosystem.
+
+Implications:
+
+- The Admin Workspace tracks operational metadata such as infrastructure inventory, service registry, backup management, architecture, SSL/domains, and credential references.
+- The Personal Workspace tracks day-to-day personal data such as theatre attendance, convention planning, collections, media tracking, projects, reading lists, and writing projects.
+- Credentials may be referenced by name and Vaultwarden location, but passwords remain in Vaultwarden.
+- Future shared workspaces should have explicit permissions and stay separate from server administration data.
 
 ## Documentation Is Infrastructure
 

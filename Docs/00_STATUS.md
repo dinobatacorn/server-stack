@@ -1,14 +1,15 @@
 # Homelab Status
 
 Status: Current
-Last reviewed: 2026-07-09
+Last reviewed: 2026-07-10
 Source docs:
 - Current State of the Homelab (July 2026)
 - pve-output_09072026.txt
 - vm100-output_09072026.txt
 - medianode-output_09072026.txt
+- User-provided Baserow deployment summary, 2026-07-10
 - Canonical architecture, runbook, inventory, and backlog documents in this repository
-Next action: Normalize VM100 service layout while expanding the operational media ecosystem with music and reading services.
+Next action: Organize Baserow workspaces and permissions while continuing media ecosystem expansion.
 
 ## How To Read This Status
 
@@ -22,6 +23,8 @@ Next action: Normalize VM100 service layout while expanding the operational medi
 - Rebuildability is preferred over patching unclear state.
 - Access is VPN-first and services are internal-first.
 - Services remain modular; Kubernetes and HA are out of scope without a demonstrated need.
+- User-facing Docker services should join the shared `proxy` bridge network for reverse proxy access and internal service discovery.
+- Nginx Proxy Manager uses the shared wildcard `*.dustynest.com` certificate for routine service Proxy Hosts.
 - The homelab is split into two application domains: VM100 for core services and the media node for media workloads.
 - VM100 is the core services platform for infrastructure, knowledge, utilities, security, automation, and monitoring.
 - The media node is a specialized appliance for acquisition, organization, discovery, serving, playback, reading, and preservation.
@@ -53,12 +56,17 @@ Operational VM100 containers:
 - Nginx Proxy Manager.
 - Syncthing.
 - iSponsorBlockTV.
+- Baserow.
 
 VM100 layout notes:
 
-- Active state exists under `/mnt/core/appdata/core/npm`, `/mnt/core/appdata/utilities/isponsorblocktv`, and `/mnt/core/data/sync`.
+- Active state exists under `/mnt/core/appdata/core/npm`, `/mnt/core/appdata/utilities/isponsorblocktv`, `/mnt/core/data/sync`, and `/mnt/core/appdata/knowledge/baserow`.
 - Active service definitions exist under both `/mnt/core/services` and legacy `/mnt/core/stacks`.
 - Current normalization target is `/mnt/core/services` for deployment definitions and `/mnt/core/appdata` for persistent app state.
+
+Operational knowledge services:
+
+- Baserow is deployed on VM100 at `/mnt/core/services/knowledge/baserow`, proxied as `db.dustynest.com`, and uses persistent bind mounts under `/mnt/core/appdata/knowledge/baserow`.
 
 Operational media services:
 
@@ -112,7 +120,7 @@ After core deployment:
 Longer term:
 
 - Restore the ROM collection and emulator/preservation layer.
-- Deploy the VM100 knowledge ecosystem: Obsidian LiveSync if self-hosted, Nextcloud, Paperless-ngx, Baserow, AnythingLLM, and n8n.
+- Continue the VM100 knowledge ecosystem: Obsidian LiveSync if self-hosted, Nextcloud, Paperless-ngx, AnythingLLM, and n8n.
 - Deploy monitoring, including Uptime Kuma, Grafana, Prometheus, SMART, disk, and backup alerts.
 - Deploy Vaultwarden, Authelia, and optional CrowdSec.
 - Validate backups and disaster recovery.
@@ -134,7 +142,7 @@ The router must retain ISP DNS. Pi-hole provides local `*.dustynest.com` records
 | Media consumption | 70% |
 | Music ecosystem | 10% |
 | Reading ecosystem | 0% |
-| Knowledge ecosystem | Planned |
+| Knowledge ecosystem | Partial |
 | Security | Partial |
 | Monitoring | Planned |
 | Home automation | Base deployed |

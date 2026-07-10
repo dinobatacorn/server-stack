@@ -30,6 +30,9 @@ This vault is the operational memory for the homelab and media ecosystem. It sho
 - Architecture overview: [Homelab Overview](Docs/01_Architecture/Homelab%20Overview.md)
 - Storage rules: [Storage Contracts](Docs/01_Architecture/Storage%20Contracts.md)
 - Service relationships: [Service Map](Docs/01_Architecture/Service%20Map.md)
+- IP, port, and proxy assignments: [IP, Port, And Proxy Assignments](Docs/01_Architecture/IP%20Port%20Proxy%20Assignments.md)
+- Reverse proxy standard: [Nginx Proxy Manager](Docs/02_Runbooks/Nginx%20Proxy%20Manager.md)
+- Baserow deployment: [Baserow](Docs/02_Runbooks/Baserow.md)
 - VPN validation: [VPN External Access Validation](Docs/02_Runbooks/VPN%20External%20Access%20Validation.md)
 - Windows desktop DNS: [Windows Desktop DNS](Docs/02_Runbooks/Windows%20Desktop%20DNS.md)
 - Current media gate: [Media Stack Stabilization](Docs/02_Runbooks/Media%20Stack%20Stabilization.md)
@@ -45,6 +48,7 @@ This vault is the operational memory for the homelab and media ecosystem. It sho
 - Containers are disposable.
 - Prefer rebuildability over patching.
 - Prefer VPN-first and internal-first access.
+- Use Nginx Proxy Manager with the shared `proxy` Docker network and wildcard `*.dustynest.com` certificate for user-facing services.
 - Treat VM100 and the media node as separate application domains, not competing replacements.
 - Do not add services while base storage, backups, imports, and playback are unstable.
 - Documentation is infrastructure.

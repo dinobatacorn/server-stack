@@ -1,7 +1,7 @@
 # Ops Vault Start Here
 
 Status: Current
-Last reviewed: 2026-07-09
+Last reviewed: 2026-07-25
 Canonical entrypoint: this file
 
 Source docs:
@@ -12,8 +12,11 @@ Source docs:
 - pve-output_09072026.txt
 - vm100-output_09072026.txt
 - medianode-output_09072026.txt
+- Syncthing Recovery and Architecture Update, 2026-07-25
+- MediaCenter maintenance/update summary, 2026-07-25
+- Homelab Documentation Update Handoff, 2026-07-25
 
-Next action: Normalize the main-node service layout while expanding the proven media core with music and reading services.
+Next action: Remove obsolete Syncthing `SirBranteSaves`, verify MediaCenter display-blanking persistence, and continue planned service normalization/automation work.
 
 ## Purpose
 
@@ -33,6 +36,9 @@ This vault is the operational memory for the homelab and media ecosystem. It sho
 - IP, port, and proxy assignments: [IP, Port, And Proxy Assignments](Docs/01_Architecture/IP%20Port%20Proxy%20Assignments.md)
 - Reverse proxy standard: [Nginx Proxy Manager](Docs/02_Runbooks/Nginx%20Proxy%20Manager.md)
 - Baserow deployment: [Baserow](Docs/02_Runbooks/Baserow.md)
+- Syncthing deployment and recovery: [Syncthing](Docs/02_Runbooks/Syncthing.md)
+- MediaCenter maintenance: [MediaCenter Maintenance](Docs/02_Runbooks/MediaCenter%20Maintenance.md)
+- Docker and Compose safety: [Docker Compose Operations](Docs/02_Runbooks/Docker%20Compose%20Operations.md)
 - VPN validation: [VPN External Access Validation](Docs/02_Runbooks/VPN%20External%20Access%20Validation.md)
 - Windows desktop DNS: [Windows Desktop DNS](Docs/02_Runbooks/Windows%20Desktop%20DNS.md)
 - Current media gate: [Media Stack Stabilization](Docs/02_Runbooks/Media%20Stack%20Stabilization.md)
@@ -56,15 +62,18 @@ This vault is the operational memory for the homelab and media ecosystem. It sho
 
 ## Current Priority
 
-The foundation, WireGuard, VM100 core services platform, and core media request-to-playback pipeline are operational. The project is now in the ecosystem-expansion phase.
+The foundation, WireGuard, VM100 core services platform, Syncthing recovery, and MediaCenter media stack are operational after the 2026-07-25 maintenance work. The project is now in the stabilization-to-expansion phase.
 
-1. Normalize VM100 service definitions from legacy `/mnt/core/stacks` into `/mnt/core/services`.
-2. Keep persistent application state under `/mnt/core/appdata`.
-3. Deploy Lidarr and Bazarr on the media node.
-4. Deploy Readarr, Audiobookshelf, and Kavita on the media node.
-5. Integrate SoulSync, then polish Kodi.
-6. Import and normalize the external media drive.
-7. Automate backups and build the Homepage dashboard.
+1. Observe the repaired Syncthing deployment and verify peer synchronization remains healthy.
+2. Remove obsolete Syncthing `SirBranteSaves`.
+3. Verify MediaCenter X11 screensaver/DPMS disablement survives logout and reboot.
+4. Keep the validated Syncthing rescue and Baserow dump until retention/rollback requirements are met.
+5. Normalize VM100 service definitions from legacy `/mnt/core/stacks` into `/mnt/core/services`.
+6. Keep persistent application state under `/mnt/core/appdata`.
+7. Plan UID/GID migrations for Syncthing and Nginx Proxy Manager instead of changing them casually.
+8. Decide whether Baserow should use PostgreSQL with pgvector support.
+9. Review dormant Vaultwarden before any future deployment.
+10. Build guarded n8n maintenance/update automation.
 
 ## Archive Policy
 

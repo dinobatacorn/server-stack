@@ -1,7 +1,7 @@
 # Storage Contracts
 
 Status: Current
-Last reviewed: 2026-07-09
+Last reviewed: 2026-07-25
 Source docs:
 - Server Plan 21.05.26.md
 - Media Stack Stabilization 23.05.26.md
@@ -9,15 +9,26 @@ Source docs:
 - pve-output_09072026.txt
 - vm100-output_09072026.txt
 - medianode-output_09072026.txt
-Next action: Normalize legacy `/mnt/core/stacks` service definitions into `/mnt/core/services`.
+- Syncthing Recovery and Architecture Update, 2026-07-25
+- Homelab Documentation Update Handoff, 2026-07-25
+Next action: Normalize legacy `/mnt/core/stacks` service definitions into `/mnt/core/services` and document workload ownership for shared Compose files.
 
 ## Hard Rule
 
 Critical operational state must never exist only on bulk media storage.
 
+Do not treat a directory existing at a mountpoint as proof that the intended filesystem is mounted. Verify critical filesystems with `findmnt -T`.
+
 ## `/mnt/core`
 
 Role: persistent infrastructure storage and source of truth.
+
+Expected backing filesystem where mounted on VM100 and MediaCenter:
+
+```text
+192.168.0.75:/mnt/core -> /mnt/core
+Filesystem: NFSv4
+```
 
 Use for:
 
@@ -80,6 +91,73 @@ appdata/
 
 Legacy note: `/mnt/core/stacks` exists on VM100 and currently holds some Compose projects. Retire it gradually into `/mnt/core/services`; do not create new service definitions under `stacks`.
 
+## Mountpoint Safety
+
+Failure mode discovered on MediaCenter, 2026-07-25: Docker could operate while the real `/mnt/core` NFS filesystem was absent. Because `/mnt/core` still existed locally as a mountpoint directory, applications could write into the underlying local filesystem. When NFS later returned, those local files became hidden beneath the real mount.
+
+Recovery created and validated:
+
+```text
+/var/backups/mediacenter/core-ghost-2026-07-25.tar.gz
+```
+
+The ghost local `/mnt/core/services` tree was removed only after Docker was stopped and the backup was tested. The real NFS-backed media configuration tree then became visible again at:
+
+```text
+/mnt/core/services/media
+```
+
+Operational checks:
+
+```bash
+findmnt -T /mnt/core
+findmnt -T /mnt/core/path/to/data
+```
+
+Do not use successful `ls /mnt/core` output as mount verification. Before destructive cleanup involving a mountpoint, identify the actual mounted filesystem first.
+
+## Docker Bind Mount And Container Path Rules
+
+Docker applications must be configured with paths visible from inside their containers.
+
+A host path such as `/mnt/core/data/...` is valid inside application configuration only if that same path is explicitly mounted into the container at that same location. Otherwise, the application must use the container path from the Compose bind mount.
+
+Persistent application data must land on documented bind mounts under `/mnt/core`. Docker writable layers are never acceptable storage for persistent state.
+
+Document persistent container mounts as:
+
+```text
+host source -> container destination
+```
+
+Do not document only the host path. A host pathname does not automatically exist at the same pathname inside a container.
+
+For Syncthing:
+
+| Host / NFS path | Container / Syncthing path |
+| --- | --- |
+| `/mnt/core/data/sync/github` | `/sync/github` |
+| `/mnt/core/data/sync/obsidian` | `/sync/obsidian` |
+| `/mnt/core/data/sync/school` | `/sync/school` |
+| `/mnt/core/data/sync/config` | `/config` |
+
+Syncthing's Compose file is:
+
+```text
+/mnt/core/services/syncthing/compose.yml
+```
+
+Its persistent mounts are:
+
+```text
+/mnt/core/data/sync/config -> /config
+/mnt/core/data/sync        -> /sync
+```
+
+`SirBranteSaves` is obsolete and should be removed from Syncthing configuration. Do not create an empty persistent directory merely to silence that folder error.
+
+Recovery note: `/var/backups/syncthing-rescue/misplaced-data-2026-07-25.tar.gz` is invalid and must not be treated as a usable backup. The validated temporary rescue is `/var/backups/syncthing-rescue/overlay-direct`; retain it, along with old OverlayFS evidence, until Syncthing has been observed stable and peer synchronization has been verified.
+
 ## `/media`
 
 Role: active media-node storage layout.
@@ -134,9 +212,18 @@ Current-state exception: media service config and database state currently lives
 
 ## `/storage`
 
-Status: historical or architecture-level bulk-storage concept.
+Status: architecture-level bulk/media storage category.
 
-The older docs use `/storage` for replaceable media and ingest storage. On the current media node, treat `/media` as the active path unless a future migration explicitly creates or restores `/storage`.
+The fundamental storage split remains:
+
+```text
+/mnt/core = critical persistent application state
+/storage  = bulk/media data
+```
+
+On the current MediaCenter deployment, the active media service paths are exposed under `/media`. Treat `/media` as the current implementation path for bulk libraries, downloads, and cache unless a future migration explicitly creates or restores `/storage`.
+
+Critical configuration, databases, application state, and important synchronized documents must not exist solely on `/storage` or `/media`.
 
 ## Container Path Rule
 

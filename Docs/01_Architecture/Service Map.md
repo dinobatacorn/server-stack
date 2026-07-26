@@ -1,7 +1,7 @@
 # Service Map
 
 Status: Current
-Last reviewed: 2026-07-10
+Last reviewed: 2026-07-25
 Source docs:
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md
@@ -10,7 +10,10 @@ Source docs:
 - vm100-output_09072026.txt
 - medianode-output_09072026.txt
 - User-provided Baserow deployment summary, 2026-07-10
-Next action: Organize Baserow workspaces and permissions, then continue media and knowledge-service expansion.
+- Syncthing Recovery and Architecture Update, 2026-07-25
+- MediaCenter maintenance/update summary, 2026-07-25
+- Homelab Documentation Update Handoff, 2026-07-25
+Next action: Remove obsolete Syncthing folder, verify MediaCenter display-blanking persistence, then continue Baserow organization and media/knowledge-service expansion.
 
 Reference: [IP, Port, And Proxy Assignments](IP%20Port%20Proxy%20Assignments.md) records documented IPs, service ports, proxy hostnames, and open assignment gaps.
 
@@ -44,14 +47,19 @@ The media node is the media appliance. It owns acquisition, processing, discover
 
 Do not migrate VM100 away merely because the media node exists. They are separate domains.
 
+Shared `/mnt/core` visibility does not imply workload ownership. Before running `docker compose up`, `down`, `pull`, or other host-specific operations against Compose files on shared storage, verify the current host with `hostname`.
+
 ## VM100 Core Services
 
-Currently running:
+Currently running after 2026-07-25 maintenance:
 
-- Nginx Proxy Manager
-- Syncthing
-- iSponsorBlockTV
-- Baserow
+- `syncthing`
+- `baserow`
+- `baserow-postgres`
+- `npm`
+- `isponsorblocktv`
+
+All were running with restart count 0 at final verification.
 
 Planned or pending groups:
 
@@ -64,23 +72,71 @@ Planned or pending groups:
 
 Operational rule: persistent app state and databases belong under `/mnt/core`, not bulk media storage.
 
+Docker path rule: application configuration must use paths visible inside the container. Host paths are valid inside the application only if they are explicitly mounted at the same path.
+
+Syncthing deployment:
+
+```text
+Host:    services
+Compose: /mnt/core/services/syncthing/compose.yml
+Config:  /mnt/core/data/sync/config -> /config
+Data:    /mnt/core/data/sync        -> /sync
+Version: Syncthing v2.1.2
+```
+
+Syncthing folder paths:
+
+```text
+Github   /mnt/core/data/sync/github   -> /sync/github
+Obsidian /mnt/core/data/sync/obsidian -> /sync/obsidian
+school   /mnt/core/data/sync/school   -> /sync/school
+```
+
+The canonical Syncthing runtime belongs on VM100 `services`, not MediaCenter. `SirBranteSaves` is obsolete and should be removed from configuration.
+
 Baserow deployment path:
 
 ```text
 Client -> Pi-hole -> Nginx Proxy Manager -> proxy Docker network -> Baserow -> PostgreSQL
 ```
 
+Baserow/PostgreSQL persistent mounts:
+
+```text
+/mnt/core/appdata/knowledge/baserow/media    -> /baserow/data
+/mnt/core/appdata/knowledge/baserow/postgres -> /var/lib/postgresql/data
+```
+
+Nginx Proxy Manager persistent mounts:
+
+```text
+/mnt/core/appdata/core/npm/data        -> /data
+/mnt/core/appdata/core/npm/letsencrypt -> /etc/letsencrypt
+```
+
+NPM currently uses `/data/database.sqlite`.
+
 ## Media Node Deployed State
 
-Configured and operational:
+Configured and operational after the 2026-07-25 mount repair and media-stack update:
 
 - qBittorrent, exposed on `8080` and `6881`.
 - Prowlarr, exposed on `9696`.
 - Sonarr, exposed on `8989`.
 - Radarr, exposed on `7878`.
 - Jellyfin, exposed on `8096`.
-- Seerr, exposed on `5055`.
+- Seerr, exposed on `5055`, returned successfully after the `/mnt/core` repair and reported `Server ready on port 5055`; HTTP returned `307 -> /login`.
 - Kodi, native living-room frontend rather than a Docker container.
+- RustDesk 1.4.9, native Debian package, enabled and active for unattended remote administration.
+- Onboard, installed as local on-screen keyboard fallback.
+
+MediaCenter appliance policy:
+
+- System sleep, suspend, hibernate, and hybrid sleep are masked through systemd.
+- X11 screensaver and DPMS are disabled in the current live graphical session to prevent display blanking during Jellyfin/Firefox playback.
+- Verify X11 display policy persistence across logout and reboot.
+- `/mnt/core` is an NFSv4 mount from `192.168.0.75:/mnt/core`; verify with `findmnt -T /mnt/core` before starting or recreating containers.
+- Boot-order verification showed `/mnt/core` mounted before `docker.service` became active. Do not confuse earlier `docker.socket` activation with Docker workloads starting.
 
 Proven media flow:
 
@@ -119,6 +175,6 @@ Longer-term planned architecture:
 
 ## Current Media-Node Storage Caution
 
-The July 9 media-node snapshot shows `/mnt/core` mounted from the Proxmox host and the `/media` taxonomy present, but it does not show `/media` as a separate mounted filesystem. The root filesystem is 89% used and a 1.8 TB disk appears as `sda` without a mountpoint in the captured `lsblk` output.
+The July 9 media-node snapshot showed `/mnt/core` mounted from the Proxmox host and the `/media` taxonomy present, but it did not show `/media` as a separate mounted filesystem. The root filesystem was 89% used and a 1.8 TB disk appeared as `sda` without a mountpoint in the captured `lsblk` output.
 
 Before large downloads, imports, or external-drive normalization, confirm where `/media` is physically backed and whether the 1.8 TB disk should be mounted there.

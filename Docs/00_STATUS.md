@@ -1,15 +1,18 @@
 # Homelab Status
 
 Status: Current
-Last reviewed: 2026-07-10
+Last reviewed: 2026-07-25
 Source docs:
 - Current State of the Homelab (July 2026)
 - pve-output_09072026.txt
 - vm100-output_09072026.txt
 - medianode-output_09072026.txt
 - User-provided Baserow deployment summary, 2026-07-10
+- Syncthing Recovery and Architecture Update, 2026-07-25
+- MediaCenter maintenance/update summary, 2026-07-25
+- Homelab Documentation Update Handoff, 2026-07-25
 - Canonical architecture, runbook, inventory, and backlog documents in this repository
-Next action: Organize Baserow workspaces and permissions while continuing media ecosystem expansion.
+Next action: Remove obsolete Syncthing `SirBranteSaves`, verify MediaCenter display-blanking persistence, and plan remaining technical-debt items from the July 25 maintenance.
 
 ## How To Read This Status
 
@@ -29,6 +32,10 @@ Next action: Organize Baserow workspaces and permissions while continuing media 
 - VM100 is the core services platform for infrastructure, knowledge, utilities, security, automation, and monitoring.
 - The media node is a specialized appliance for acquisition, organization, discovery, serving, playback, reading, and preservation.
 - `/mnt/core` is authoritative for deployment definitions, application state, configs, backups, exports, documentation, and shared operational data.
+- `/storage` is the doctrine-level bulk/media data category; the current MediaCenter media paths are exposed under `/media`.
+- Docker applications must use paths visible inside their containers; host paths are valid inside an app only when explicitly mounted at the same location.
+- Shared `/mnt/core` visibility does not define workload ownership; verify `hostname` before manipulating Compose workloads.
+- Verify `/mnt/core` with `findmnt -T /mnt/core`, not by directory existence or `ls`.
 - `/mnt/core/services` contains how services are deployed.
 - `/mnt/core/appdata` contains persistent application state.
 - `/mnt/core/data` contains shared user or operational data.
@@ -53,37 +60,61 @@ Infrastructure:
 
 Operational VM100 containers:
 
-- Nginx Proxy Manager.
-- Syncthing.
-- iSponsorBlockTV.
-- Baserow.
+- `syncthing`, image `lscr.io/linuxserver/syncthing:latest`, Syncthing v2.1.2 / LinuxServer v2.1.2-ls226.
+- `baserow`, image `baserow/baserow:latest`, healthy.
+- `baserow-postgres`, image `postgres:16`, healthy.
+- `npm`, image `jc21/nginx-proxy-manager:latest`.
+- `isponsorblocktv`, image `ghcr.io/dmunozv04/isponsorblocktv:latest`.
+
+All VM100 containers were running with restart count 0 after the 2026-07-25 maintenance.
 
 VM100 layout notes:
 
 - Active state exists under `/mnt/core/appdata/core/npm`, `/mnt/core/appdata/utilities/isponsorblocktv`, `/mnt/core/data/sync`, and `/mnt/core/appdata/knowledge/baserow`.
+- Syncthing compose lives at `/mnt/core/services/syncthing/compose.yml`.
+- Syncthing maps `/mnt/core/data/sync/config` to `/config` and `/mnt/core/data/sync` to `/sync`.
+- Syncthing's active folders are `/sync/github`, `/sync/obsidian`, and `/sync/school`, backed by `/mnt/core/data/sync/...`.
+- `SirBranteSaves` is obsolete and should be removed from Syncthing rather than repaired.
 - Active service definitions exist under both `/mnt/core/services` and legacy `/mnt/core/stacks`.
 - Current normalization target is `/mnt/core/services` for deployment definitions and `/mnt/core/appdata` for persistent app state.
+- VM100 `/mnt/core` was verified as NFSv4 from `192.168.0.75:/mnt/core`, mounted read-write.
+- Final observed VM100 storage: root 63 GB total, 15 GB used, 46 GB available; `/mnt/core` 916 GB total, 11 GB used, 859 GB available.
 
 Operational knowledge services:
 
 - Baserow is deployed on VM100 at `/mnt/core/services/knowledge/baserow`, proxied as `db.dustynest.com`, and uses persistent bind mounts under `/mnt/core/appdata/knowledge/baserow`.
+- A Baserow PostgreSQL dump was created before the July 25 update at `/mnt/core/backups/baserow/2026-07-25/baserow.dump`, approximately 12 MB, and validated with `pg_restore --list`.
+- Baserow/PostgreSQL were updated and remained healthy; PostgreSQL used the existing database directory and Baserow completed `157/157` template sync tasks.
+- Baserow pgvector support is currently missing from the `postgres:16` image; this is an optional capability/future decision, not a current outage.
 
 Operational media services:
 
-- qBittorrent and Prowlarr are configured and running.
-- Sonarr is fully configured and running; downloads, imports, and Jellyfin notifications were verified with *Firefly* and *Galavant*.
-- Radarr is fully configured and running, connected to Prowlarr, qBittorrent, Jellyfin, and Seerr.
+- qBittorrent, Prowlarr, Sonarr, Radarr, Jellyfin, and Seerr are running after the MediaCenter `/mnt/core` mount repair and media-stack update.
+- Seerr returned successfully with restart count 0, logged `Server ready on port 5055`, and HTTP returned the expected `307 -> /login`.
 - Jellyfin is fully configured and running with established libraries, verified imports, and playback.
 - Kodi is installed with Arctic Fuse 3 and serves as the living-room frontend to Jellyfin.
-- Seerr is fully configured and running as the primary request interface and is connected to Jellyfin, Sonarr, and Radarr.
+- RustDesk 1.4.9 is enabled and active as a native Debian package on `media`, with unattended permanent-password access configured.
+- Onboard is installed as the emergency on-screen keyboard for local mouse-only operation.
 
 Media node storage notes:
 
-- `/mnt/core` is mounted from `192.168.0.75:/mnt/core`.
+- `/mnt/core` is an NFSv4 mount from `192.168.0.75:/mnt/core`.
+- A local ghost `/mnt/core/services` tree was discovered under the mountpoint after Docker had run while the real NFS mount was absent.
+- The ghost tree was backed up to `/var/backups/mediacenter/core-ghost-2026-07-25.tar.gz`, the backup was tested, and the local ghost source was removed only after validation.
+- Real `/mnt/core/services/media` became visible again after the NFS mount was restored; observed size was approximately 238 MB.
 - `/media` taxonomy exists, but the July 9 `df` output does not show `/media` as a separate mount.
 - The media node root filesystem is 89% used in the July 9 snapshot.
 - A 1.8 TB disk is visible as `sda` but is not shown mounted in the July 9 `lsblk` output.
 - Confirm `/media` backing storage before large imports, downloads, or external-drive normalization.
+
+Media node appliance notes:
+
+- `sleep.target`, `suspend.target`, `hibernate.target`, and `hybrid-sleep.target` are masked so the computer does not automatically sleep.
+- X11 screensaver and DPMS are disabled in the current live session to prevent display blanking during Jellyfin/Firefox playback.
+- Verify whether the X11 `xset s off` and `xset -dpms` changes persist across logout and reboot.
+- The July 25 approximately 15:20 reboot was manually initiated during troubleshooting and should not be treated as an unexplained spontaneous reboot.
+- Later boot-order verification showed `/mnt/core` mounted at 16:25:58, `docker.service` began starting at 16:25:58, and `docker.service` became active at 16:26:01. The critical NFS mount was available before Docker workloads used it.
+- `docker.socket` may become active earlier than `docker.service`; socket activation alone is not evidence that Docker workloads started before `/mnt/core`.
 
 Proven workflow:
 
@@ -102,12 +133,15 @@ Seerr
 
 Immediate:
 
-1. Normalize VM100 deployment definitions from `/mnt/core/stacks` to `/mnt/core/services`.
-2. Deploy Lidarr.
-3. Deploy Bazarr.
-4. Deploy Readarr.
-5. Deploy Audiobookshelf.
-6. Deploy Kavita.
+1. Remove obsolete `SirBranteSaves` from Syncthing.
+2. Verify or persist MediaCenter X11 screensaver/DPMS disablement.
+3. Retain validated Syncthing rescue and Baserow dump until rollback/retention requirements are met.
+4. Normalize VM100 deployment definitions from `/mnt/core/stacks` to `/mnt/core/services`.
+5. Deploy Lidarr.
+6. Deploy Bazarr.
+7. Deploy Readarr.
+8. Deploy Audiobookshelf.
+9. Deploy Kavita.
 
 After core deployment:
 
@@ -124,6 +158,7 @@ Longer term:
 - Deploy monitoring, including Uptime Kuma, Grafana, Prometheus, SMART, disk, and backup alerts.
 - Deploy Vaultwarden, Authelia, and optional CrowdSec.
 - Validate backups and disaster recovery.
+- Build guarded n8n maintenance automation with host, mount, backup, health, restart-count, and rollback checks.
 - Maintain per-session ADR updates when architecture decisions are accepted.
 
 ## DNS Constraint

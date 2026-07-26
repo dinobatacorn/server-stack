@@ -1,13 +1,16 @@
 # Architecture Decision Records
 
 Status: Current
-Last reviewed: 2026-07-10
+Last reviewed: 2026-07-25
 Source docs:
 - Architecture Decisions.md
 - July 2026 Homelab Checkpoint
 - pve-output_09072026.txt
 - vm100-output_09072026.txt
 - medianode-output_09072026.txt
+- Syncthing Recovery and Architecture Update, 2026-07-25
+- MediaCenter maintenance/update summary, 2026-07-25
+- Homelab Documentation Update Handoff, 2026-07-25
 Next action: Add a new ADR whenever a decision changes architecture, recovery strategy, service responsibility, or source-of-truth ownership.
 
 ## Purpose
@@ -41,12 +44,21 @@ Each ADR should answer:
 | [0014](0014-nextcloud-role.md) | Nextcloud role |
 | [0015](0015-syncthing-and-nextcloud.md) | Syncthing and Nextcloud coexistence |
 | [0016](0016-docker-networking-strategy.md) | Docker networking strategy |
+| [0018](0018-container-visible-paths-for-docker.md) | Docker container paths must match container mounts |
+| [0019](0019-shared-storage-workload-ownership-and-mount-verification.md) | Shared storage requires workload ownership and mount verification |
+
+## Proposed ADRs
+
+| ADR | Decision |
+| --- | --- |
+| [0017](0017-public-onboarding-and-member-maintenance-portals.md) | Public onboarding portal and member maintenance portal |
 
 ## Open Decisions
 
 Track unresolved questions separately from accepted architecture:
 
 - Authentication scope: which services require Authelia and MFA?
+- Portal architecture: public onboarding portal and member maintenance portal are proposed in ADR 0017.
 - Monitoring stack: final alerting strategy, retained metrics, and dashboard responsibilities.
 - Backup policy: retention, off-site strategy, restore cadence, and ownership.
 - Knowledge ecosystem: final AFFiNE archival/decommissioning role relative to Obsidian.

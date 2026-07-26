@@ -27,6 +27,8 @@ Seerr -> Sonarr/Radarr -> Prowlarr -> qBittorrent -> Import -> Jellyfin -> Kodi
 
 Sonarr and Radarr become configuration and automation tools, not routine user interfaces. This simplifies normal media use.
 
+Operational note: during 2026-07-25 maintenance, Seerr was found in a crash/restart loop with `exitCode=1` and more than 21,000 restarts observed. After the MediaCenter `/mnt/core` mount repair and media-stack restart, Seerr returned with restart count 0, reported `Server ready on port 5055`, and HTTP returned `307 -> /login`.
+
 ## Alternatives Considered
 
 - Use Sonarr and Radarr directly. Rejected for routine use because it exposes too many implementation details.

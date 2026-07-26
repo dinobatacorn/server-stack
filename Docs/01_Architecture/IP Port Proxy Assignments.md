@@ -1,7 +1,7 @@
 # IP, Port, And Proxy Assignments
 
 Status: Current
-Last reviewed: 2026-07-10
+Last reviewed: 2026-07-25
 Source docs:
 - Main Node Inventory.md
 - Media Node Inventory.md
@@ -9,6 +9,8 @@ Source docs:
 - Nginx Proxy Manager.md
 - ADR 0016: Docker Networking Strategy
 - User-provided Baserow deployment summary, 2026-07-10
+- MediaCenter maintenance/update summary, 2026-07-25
+- Homelab Documentation Update Handoff, 2026-07-25
 Next action: Fill in Baserow's documented internal forward port and missing media-node IP as assignments are confirmed.
 
 ## Purpose
@@ -59,8 +61,9 @@ This page distinguishes deployed values from planned naming standards. It does n
 | Sonarr | `media` | `8989` | Not documented | TBD after media-node proxy path is documented. |
 | Radarr | `media` | `7878` | Not documented | TBD after media-node proxy path is documented. |
 | Jellyfin | `media` | `8096` | `media.dustynest.com` standard | TBD after media-node proxy path is documented. |
-| Seerr | `media` | `5055` | `requests.dustynest.com` standard | TBD after media-node proxy path is documented. |
+| Seerr | `media` | `5055` | `requests.dustynest.com` standard | Intended request service; returned successfully after 2026-07-25 mount repair. |
 | Kodi | `media` | Native app | Not applicable | Not a Docker reverse-proxy target. |
+| RustDesk | `media` | Not documented | Not applicable | Native remote administration service; enabled and active. |
 
 ## Planned Proxy Hostname Standards
 

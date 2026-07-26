@@ -17,9 +17,13 @@ Treat the homelab as separate application domains:
 
 VM100 is not being phased out. It is the platform services node.
 
+The media node is an appliance. It should remain reachable for SSH, Docker, Jellyfin playback, and RustDesk remote administration, and it should not automatically suspend or hibernate during normal operation.
+
 ## Consequences
 
 The media node can be rebuilt independently without impacting core knowledge or infrastructure services. VM100 remains application-light toward media, but central for platform services.
+
+System sleep policy and graphical display policy are separate layers: systemd sleep-target masks keep the computer awake, while X11 screensaver/DPMS settings keep the display visible during living-room playback.
 
 ## Alternatives Considered
 

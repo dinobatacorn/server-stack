@@ -1,7 +1,7 @@
 # Homelab Overview
 
 Status: Current
-Last reviewed: 2026-07-10
+Last reviewed: 2026-07-25
 Source docs:
 - Server Plan 21.05.26.md
 - Archive_Plan 05.05.26.txt
@@ -9,13 +9,16 @@ Source docs:
 - vm100-output_09072026.txt
 - medianode-output_09072026.txt
 - User-provided Baserow deployment summary, 2026-07-10
-Next action: Create or update diagrams after the service dependency chart is stable.
+- Syncthing Recovery and Architecture Update, 2026-07-25
+- MediaCenter maintenance/update summary, 2026-07-25
+- Homelab Documentation Update Handoff, 2026-07-25
+Next action: Verify display-blanking disablement persists, then create or update diagrams after the service dependency chart is stable.
 
 Reference: [IP, Port, And Proxy Assignments](IP%20Port%20Proxy%20Assignments.md) records documented IPs, ports, proxy hostnames, and open assignment gaps.
 
 ## Architecture Summary
 
-The environment is split into a workstation, a Proxmox infrastructure host, and a dedicated media node. The important architectural split is two application domains: VM100 is the core services platform, and the media node is a specialized media appliance. The guiding rule is simple: service state belongs on persistent storage, while replaceable media and cache data belong on bulk storage.
+The environment is split into a workstation, a Proxmox infrastructure host, and a dedicated media node. The important architectural split is two application domains: VM100 is the core services platform, and the media node is a specialized media appliance. The guiding rule is simple: service state belongs on persistent storage, while replaceable media and cache data belong on bulk storage. Docker applications must use container-visible paths for mounted persistent data, and shared `/mnt/core` visibility does not define workload ownership.
 
 ```text
                     Proxmox
@@ -84,9 +87,10 @@ Purpose:
 Deployed containers:
 
 - Nginx Proxy Manager
-- Syncthing
+- Syncthing, with `/mnt/core/data/sync` mounted as `/sync`
 - iSponsorBlockTV
 - Baserow
+- Baserow PostgreSQL
 
 The following groups describe the intended service architecture. Consult [Homelab Status](../00_STATUS.md) for what is running.
 
@@ -142,13 +146,14 @@ Purpose:
 - Playback
 - Archival
 - Future emulator/media-serving workloads
+- Remote living-room administration through RustDesk
 
 Known hardware and current storage notes:
 
 - CPU: Intel i7-9700K
 - GPU: Intel UHD 630 and NVIDIA GTX 1060 3GB
 - Storage visible in July 9 snapshot: 232GB system disk and 1.8TB disk.
-- `/mnt/core` mounted from `192.168.0.75:/mnt/core`.
+- `/mnt/core` is an NFSv4 mount from `192.168.0.75:/mnt/core`; verify with `findmnt -T /mnt/core`.
 - `/media` exists but was not shown as a separate mount in the July 9 `df` output.
 - OS: Debian GNU/Linux 13 Trixie
 
@@ -162,9 +167,13 @@ Deployed media services:
 - Kodi with Arctic Fuse 3
 - Seerr
 
-The Seerr-to-Sonarr/Radarr-to-qBittorrent-to-Jellyfin-to-Kodi pipeline is operational. Music, reading, and preservation services remain expansion milestones.
+The Seerr-to-Sonarr/Radarr-to-qBittorrent-to-Jellyfin-to-Kodi pipeline was proven during the July 9 baseline and restored during the July 25 MediaCenter mount repair. Seerr reported `Server ready on port 5055` and HTTP returned `307 -> /login` after repair. Music, reading, and preservation services remain expansion milestones.
 
 Current caution: verify the media node's `/media` backing device before large imports or normalization work. The July 9 inventory shows the root filesystem at 89% used and does not show `/media` as its own mounted filesystem.
+
+Mount caution: MediaCenter previously wrote a local ghost `/mnt/core/services` tree while NFS was absent. Do not rely on the existence of `/mnt/core`; verify the mounted filesystem before Docker or cleanup operations.
+
+Living-room appliance policy: MediaCenter should remain reachable over SSH, Docker, Jellyfin, and RustDesk. System sleep and hibernate targets are masked. X11 screensaver/DPMS blanking is disabled in the live session and should be made persistent if it does not survive reboot.
 
 ## Rebuild Order
 

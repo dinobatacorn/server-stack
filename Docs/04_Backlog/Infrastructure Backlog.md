@@ -1,14 +1,17 @@
 # Infrastructure Backlog
 
 Status: Current
-Last reviewed: 2026-07-10
+Last reviewed: 2026-07-25
 Source docs:
 - to-do list 17.05.26.md
 - Server Plan 21.05.26.md
 - pve-output_09072026.txt
 - vm100-output_09072026.txt
 - User-provided Baserow deployment summary, 2026-07-10
-Next action: Organize Baserow workspaces and permissions, then harden backups and documentation while media ecosystem expansion continues.
+- Syncthing Recovery and Architecture Update, 2026-07-25
+- MediaCenter maintenance/update summary, 2026-07-25
+- Homelab Documentation Update Handoff, 2026-07-25
+Next action: Remove obsolete Syncthing folder, retain validated recovery material, and plan guarded maintenance automation.
 
 ## Active Blockers
 
@@ -17,7 +20,12 @@ Next action: Organize Baserow workspaces and permissions, then harden backups an
 - Revalidate Windows Wi-Fi DNS after material Windows, adapter, or Pi-hole changes.
 - Verify `/mnt/core` permissions consistency.
 - Retire legacy VM100 `/mnt/core/stacks` definitions into `/mnt/core/services`.
-- Audit UID/GID mappings.
+- Observe Syncthing recovery for several days and verify peer synchronization before cleanup.
+- Retain `/var/backups/syncthing-rescue/overlay-direct` and old OverlayFS evidence until the Syncthing recovery is confirmed stable.
+- Retain `/var/backups/mediacenter/core-ghost-2026-07-25.tar.gz` until MediaCenter rollback requirements have passed.
+- Retain `/mnt/core/backups/baserow/2026-07-25/baserow.dump` according to backup-retention policy.
+- Remove obsolete `SirBranteSaves` from Syncthing configuration.
+- Audit UID/GID mappings, including Syncthing's current `PUID=0`/`PGID=0` and NPM's UID/GID 0 deployment.
 - Document ownership standards.
 - Configure and verify backup retention policies.
 - Test full and partial restore workflows.
@@ -42,7 +50,10 @@ Completed:
 - Nginx Proxy Manager deployed.
 - SSL/certificate strategy documented.
 - Syncthing deployed.
+- Syncthing recovered on 2026-07-25 after container-path misconfiguration; data was restored to `/mnt/core/data/sync`, checksum-verified, and reconfigured to `/sync/...` container paths.
 - Baserow deployed on VM100 with PostgreSQL, bind-mounted persistence, reverse proxy, wildcard TLS, and restart persistence validation.
+- VM100 containers updated on 2026-07-25; `syncthing`, `baserow`, `baserow-postgres`, `npm`, and `isponsorblocktv` were running with restart count 0.
+- MediaCenter `/mnt/core` ghost tree repaired and media stack restored with zero restart counts.
 
 In progress:
 
@@ -56,6 +67,7 @@ In progress:
 - Environment variable handling.
 - Compose deployment conventions.
 - Update workflow documentation.
+- Guarded n8n maintenance automation design.
 
 ## Service Backlog
 
@@ -80,11 +92,13 @@ Baserow follow-up:
 - Organize workspaces and permissions.
 - Migrate relevant databases from the hosted Baserow instance.
 - Add routine PostgreSQL dumps to the backup workflow.
+- Decide whether to use PostgreSQL with pgvector support for optional assistant/embedding functionality.
 
 Utilities:
 
 - RustDesk
-- Confirm whether Syncthing belongs permanently on VM100 or should also exist on selected clients.
+- Keep the canonical Syncthing deployment on VM100 `services`; selected clients remain Syncthing peers, not alternate server deployments.
+- Migrate Syncthing from root `PUID=0` / `PGID=0` to an unprivileged UID/GID after recovery stability is confirmed.
 
 Knowledge architecture:
 
@@ -104,3 +118,5 @@ Knowledge architecture:
 - Backup failure alerts.
 - New machine bootstrap procedure.
 - Disaster recovery checklist.
+- Docker image pruning from the July 25 update window until rollback requirements have passed.
+- Vaultwarden redeployment until its relative `./data:/data` persistence is reviewed and normalized.

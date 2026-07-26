@@ -11,9 +11,13 @@ The media stack needs a clear split between library serving and living-room expe
 
 Jellyfin is the central media backend and server. Kodi is the primary couch/living-room frontend and user experience.
 
+When Jellyfin is used directly in Firefox on MediaCenter, active playback must also remain visible. X11 screensaver and DPMS display blanking should not interrupt living-room playback.
+
 ## Consequences
 
 Jellyfin should focus on libraries, metadata, serving, integrations, and playback backend behavior. Kodi can be polished as the actual living-room interface without forcing Jellyfin to be the primary couch UI.
+
+MediaCenter display blanking is a graphical-session issue, not the same as system suspend. Disabling system sleep does not by itself prevent the physical display from powering down.
 
 ## Alternatives Considered
 

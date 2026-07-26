@@ -1,11 +1,12 @@
 # Nginx Proxy Manager
 
 Status: Current
-Last reviewed: 2026-07-10
+Last reviewed: 2026-07-25
 Source docs:
 - ADR 0016: Docker Networking Strategy
 - to-do list 17.05.26.md
 - vm100-output_09072026.txt
+- Homelab Documentation Update Handoff, 2026-07-25
 Next action: Apply this standard as new user-facing services are deployed or existing Proxy Hosts are touched.
 
 ## Purpose
@@ -15,6 +16,41 @@ Nginx Proxy Manager is the primary reverse proxy for user-facing homelab service
 It provides HTTP(S) entrypoints, central TLS certificate handling, and proxy routing to containers attached to the shared Docker `proxy` network.
 
 ## Deployment Standard
+
+Canonical host:
+
+```text
+VM100 services
+```
+
+Compose location:
+
+```text
+/mnt/core/stacks/core/npm/docker-compose.yml
+```
+
+Image:
+
+```text
+jc21/nginx-proxy-manager:latest
+```
+
+Persistent mounts:
+
+```text
+/mnt/core/appdata/core/npm/data        -> /data
+/mnt/core/appdata/core/npm/letsencrypt -> /etc/letsencrypt
+```
+
+NPM uses:
+
+```text
+/data/database.sqlite
+```
+
+The database was present after the July 25 update and was approximately 124 KB at verification time.
+
+NPM currently runs with UID/GID 0. Treat this as technical debt and do not change permissions casually.
 
 Use [IP, Port, And Proxy Assignments](../01_Architecture/IP%20Port%20Proxy%20Assignments.md) as the assignment reference when choosing hostnames, ports, and forward targets.
 
@@ -94,6 +130,15 @@ After adding or changing a Proxy Host:
 - Confirm Nginx Proxy Manager can reach the service by container name on the `proxy` network.
 - Confirm HTTPS uses the wildcard `*.dustynest.com` certificate.
 - Confirm the service remains internal-first unless public exposure has been explicitly approved.
+
+July 25 update validation:
+
+- NPM started successfully.
+- Backend and nginx initialized.
+- Cloudflare Certbot plugin installed.
+- Certificate renewal initialized.
+- Backend reported listening on port 3000.
+- No obvious application errors were observed.
 
 ## Related Decisions
 

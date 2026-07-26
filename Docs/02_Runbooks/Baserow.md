@@ -1,13 +1,14 @@
 # Baserow
 
 Status: Completed and operational
-Last reviewed: 2026-07-10
+Last reviewed: 2026-07-25
 Source docs:
 - User-provided Baserow deployment summary, 2026-07-10
+- Homelab Documentation Update Handoff, 2026-07-25
 - ADR 0009: Knowledge Ecosystem Roles
 - ADR 0016: Docker Networking Strategy
 - Nginx Proxy Manager.md
-Next action: Create a personal non-administrator account, organize workspaces and permissions, then migrate relevant databases from the hosted Baserow instance.
+Next action: Create a personal non-administrator account, organize workspaces and permissions, then decide whether pgvector support is needed.
 
 ## Purpose
 
@@ -54,6 +55,20 @@ redis/   reserved if used later
 ```
 
 Application state resides under `/mnt/core`. No Docker named volumes are used.
+
+Bind mounts:
+
+```text
+/mnt/core/appdata/knowledge/baserow/media    -> /baserow/data
+/mnt/core/appdata/knowledge/baserow/postgres -> /var/lib/postgresql/data
+```
+
+Current images:
+
+```text
+baserow/baserow:latest
+postgres:16
+```
 
 ## Architecture
 
@@ -128,6 +143,38 @@ Deployment validation:
 - Data persistence after restart.
 
 Persistence was confirmed by restarting the stack and verifying previously created data remained intact.
+
+July 25 update validation:
+
+- PostgreSQL dump created before update: `/mnt/core/backups/baserow/2026-07-25/baserow.dump`.
+- Dump size: approximately 12 MB.
+- Dump validation: `pg_restore --list` exited 0.
+- Archive metadata: database `baserow`, custom format, PostgreSQL source version 16.14, pg_dump version 16.14, 19,757 TOC entries.
+- Images were pulled and containers recreated only after backup validation.
+- Final state: `baserow` healthy, restart count 0.
+- Final state: `baserow-postgres` healthy, restart count 0.
+- PostgreSQL recognized the existing database directory and skipped initialization.
+- Baserow completed startup migrations/tasks and synchronized `157/157` templates.
+
+## pgvector Note
+
+Baserow attempted:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS vector;
+```
+
+The current `postgres:16` image does not provide pgvector, so PostgreSQL logged:
+
+```text
+extension "vector" is not available
+```
+
+Baserow also reported assistant knowledge-base synchronization was skipped because `BASEROW_EMBEDDINGS_API_URL` was not configured and/or PostgreSQL did not provide pgvector.
+
+The core Baserow deployment remained healthy. Treat pgvector as an optional missing capability and future architecture decision, not a current outage.
+
+Do not change the PostgreSQL image merely to eliminate the warning without first planning and backing up the database migration.
 
 ## Operational Standard Established
 

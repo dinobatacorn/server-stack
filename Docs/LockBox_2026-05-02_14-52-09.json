@@ -1,0 +1,323 @@
+{
+  "meta": {
+    "schema": "v1",
+    "hostname": "LockBox",
+    "os": "Garuda Linux",
+    "kernel": "6.18.13-zen1-1-zen",
+    "timestamp": "2026-05-02T14:52:09-05:00"
+  },
+  "hardware": {
+    "cpu": {
+      "model": "12th Gen Intel(R) Core(TM) i7-12700K",
+      "cores": 12,
+      "threads": 20,
+      "architecture": "x86_64"
+    },
+    "memory": {
+      "total_gb": 15
+    },
+    "gpu": [
+      {
+        "model": "Intel Corporation Alder Lake-S GT1 [UHD Graphics 770] [8086:4680] (rev 0c)"
+      },
+      {
+        "model": "NVIDIA Corporation GA102 [GeForce RTX 3080 Ti] [10de:2208] (rev a1)"
+      }
+    ],
+    "storage": [
+      {
+        "name": "nvme0n1",
+        "model": "WDC WDS200T2B0C-00PXH0",
+        "size_gb": 1863,
+        "type": "nvme"
+      },
+      {
+        "name": "nvme1n1",
+        "model": "CT2000P3PSSD8",
+        "size_gb": 1863,
+        "type": "nvme"
+      },
+      {
+        "name": "sda",
+        "model": "ST2000LM007-1R8174",
+        "size_gb": 1863,
+        "type": "hdd"
+      },
+      {
+        "name": "zram0",
+        "model": "unknown",
+        "size_gb": 15,
+        "type": "ssd"
+      }
+    ],
+    "motherboard": {}
+  },
+  "system": {
+    "kernel": "6.18.13-zen1-1-zen",
+    "uptime_seconds": 214,
+    "loadavg": {
+      "1m": 1.31,
+      "5m": 0.77,
+      "15m": 0.33
+    }
+  },
+  "peripherals": {
+    "pci": [
+      {
+        "raw": "00:00.0 \"Host bridge\" \"Intel Corporation\" \"12th Gen Core Processor Host Bridge/DRAM Registers\" -r02 -p00 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "00:02.0 \"Display controller\" \"Intel Corporation\" \"Alder Lake-S GT1 [UHD Graphics 770]\" -r0c -p00 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "00:06.0 \"PCI bridge\" \"Intel Corporation\" \"12th Gen Core Processor PCI Express x4 Controller #0\" -r02 -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:08.0 \"System peripheral\" \"Intel Corporation\" \"12th Gen Core Processor Gaussian & Neural Accelerator\" -r02 -p00 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "00:0a.0 \"Signal processing controller\" \"Intel Corporation\" \"Platform Monitoring Technology\" -r01 -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:14.0 \"USB controller\" \"Intel Corporation\" \"Alder Lake-S PCH USB 3.2 Gen 2x2 XHCI Controller\" -r11 -p30 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "00:14.2 \"RAM memory\" \"Intel Corporation\" \"Alder Lake-S PCH Shared SRAM\" -r11 -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:14.3 \"Network controller\" \"Intel Corporation\" \"Alder Lake-S PCH CNVi WiFi\" -r11 -p00 \"Intel Corporation\" \"Device 0074\""
+      },
+      {
+        "raw": "00:16.0 \"Communication controller\" \"Intel Corporation\" \"Alder Lake-S PCH HECI Controller #1\" -r11 -p00 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "00:17.0 \"SATA controller\" \"Intel Corporation\" \"Alder Lake-S PCH SATA Controller [AHCI Mode]\" -r11 -p01 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "00:1a.0 \"PCI bridge\" \"Intel Corporation\" \"Alder Lake-S PCH PCI Express Root Port #25\" -r11 -p00 \"nCipher Security\" \"Device 001a\""
+      },
+      {
+        "raw": "00:1c.0 \"PCI bridge\" \"Intel Corporation\" \"Alder Lake-S PCH PCI Express Root Port #1\" -r11 -p00 \"\" \"\""
+      },
+      {
+        "raw": "00:1c.2 \"PCI bridge\" \"Intel Corporation\" \"Alder Lake-S PCH PCI Express Root Port #3\" -r11 -p00 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "00:1c.4 \"PCI bridge\" \"Intel Corporation\" \"Alder Lake-S PCH PCI Express Root Port #5\" -r11 -p00 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "00:1f.0 \"ISA bridge\" \"Intel Corporation\" \"B660 Chipset LPC/eSPI Controller\" -r11 -p00 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "00:1f.3 \"Audio device\" \"Intel Corporation\" \"Alder Lake-S HD Audio Controller\" -r11 -p00 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 9d43\""
+      },
+      {
+        "raw": "00:1f.4 \"SMBus\" \"Intel Corporation\" \"Alder Lake-S PCH SMBus Controller\" -r11 -p00 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "00:1f.5 \"Serial bus controller\" \"Intel Corporation\" \"Alder Lake-S PCH SPI Controller\" -r11 -p00 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "01:00.0 \"Non-Volatile memory controller\" \"Micron/Crucial Technology\" \"P3 Plus NVMe PCIe SSD (DRAM-less)\" -r01 -p02 \"Micron/Crucial Technology\" \"Device 5021\""
+      },
+      {
+        "raw": "02:00.0 \"Non-Volatile memory controller\" \"Sandisk Corp\" \"WD Blue SN550 NVMe SSD 2TB (DRAM-less)\" -r01 -p02 \"Sandisk Corp\" \"WD Blue SN550 NVMe SSD 2TB (DRAM-less)\""
+      },
+      {
+        "raw": "04:00.0 \"Ethernet controller\" \"Realtek Semiconductor Co., Ltd.\" \"RTL8125 2.5GbE Controller\" -r05 -p00 \"Micro-Star International Co., Ltd. [MSI]\" \"Device 7d43\""
+      },
+      {
+        "raw": "05:00.0 \"VGA compatible controller\" \"NVIDIA Corporation\" \"GA102 [GeForce RTX 3080 Ti]\" -ra1 -p00 \"Gigabyte Technology Co., Ltd\" \"Device 4088\""
+      },
+      {
+        "raw": "05:00.1 \"Audio device\" \"NVIDIA Corporation\" \"GA102 High Definition Audio Controller\" -ra1 -p00 \"Gigabyte Technology Co., Ltd\" \"Device 4088\""
+      }
+    ],
+    "usb": [
+      {
+        "raw": "Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub"
+      },
+      {
+        "raw": "Bus 001 Device 002: ID 258a:0001 SINO WEALTH USB KEYBOARD"
+      },
+      {
+        "raw": "Bus 001 Device 003: ID 093a:2521 Pixart Imaging, Inc. Optical Mouse"
+      },
+      {
+        "raw": "Bus 001 Device 004: ID 1462:7d43 Micro Star International MYSTIC LIGHT "
+      },
+      {
+        "raw": "Bus 001 Device 005: ID 174c:2074 ASMedia Technology Inc. ASM1074 High-Speed hub"
+      },
+      {
+        "raw": "Bus 001 Device 006: ID 05e3:0608 Genesys Logic, Inc. Hub"
+      },
+      {
+        "raw": "Bus 001 Device 007: ID 8087:0026 Intel Corp. AX201 Bluetooth"
+      },
+      {
+        "raw": "Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub"
+      },
+      {
+        "raw": "Bus 002 Device 002: ID 174c:3074 ASMedia Technology Inc. ASM1074 SuperSpeed hub"
+      },
+      {
+        "raw": "Bus 002 Device 003: ID 059f:10fd LaCie, Ltd Rugged Mini USB 3.0"
+      }
+    ]
+  },
+  "network": [
+    {
+      "name": "enp4s0",
+      "mac": "04:7c:16:06:74:be",
+      "state": "down",
+      "type": "ether",
+      "addresses": []
+    },
+    {
+      "name": "wlo1",
+      "mac": "c6:b9:dd:c7:d5:5a",
+      "state": "down",
+      "type": "ether",
+      "addresses": []
+    }
+  ],
+  "health": {
+    "smart": [],
+    "sensors": {
+      "coretemp-isa-0000": {
+        "Adapter": "ISA adapter",
+        "Package id 0": {
+          "temp1_input": 27.000000,
+          "temp1_max": 80.000000,
+          "temp1_crit": 100.000000,
+          "temp1_crit_alarm": 0.000000
+        },
+        "Core 0": {
+          "temp2_input": 24.000000,
+          "temp2_max": 80.000000,
+          "temp2_crit": 100.000000,
+          "temp2_crit_alarm": 0.000000
+        },
+        "Core 4": {
+          "temp6_input": 22.000000,
+          "temp6_max": 80.000000,
+          "temp6_crit": 100.000000,
+          "temp6_crit_alarm": 0.000000
+        },
+        "Core 8": {
+          "temp10_input": 20.000000,
+          "temp10_max": 80.000000,
+          "temp10_crit": 100.000000,
+          "temp10_crit_alarm": 0.000000
+        },
+        "Core 12": {
+          "temp14_input": 21.000000,
+          "temp14_max": 80.000000,
+          "temp14_crit": 100.000000,
+          "temp14_crit_alarm": 0.000000
+        },
+        "Core 16": {
+          "temp18_input": 21.000000,
+          "temp18_max": 80.000000,
+          "temp18_crit": 100.000000,
+          "temp18_crit_alarm": 0.000000
+        },
+        "Core 20": {
+          "temp22_input": 20.000000,
+          "temp22_max": 80.000000,
+          "temp22_crit": 100.000000,
+          "temp22_crit_alarm": 0.000000
+        },
+        "Core 24": {
+          "temp26_input": 20.000000,
+          "temp26_max": 80.000000,
+          "temp26_crit": 100.000000,
+          "temp26_crit_alarm": 0.000000
+        },
+        "Core 28": {
+          "temp30_input": 24.000000,
+          "temp30_max": 80.000000,
+          "temp30_crit": 100.000000,
+          "temp30_crit_alarm": 0.000000
+        },
+        "Core 36": {
+          "temp38_input": 21.000000,
+          "temp38_max": 80.000000,
+          "temp38_crit": 100.000000,
+          "temp38_crit_alarm": 0.000000
+        },
+        "Core 37": {
+          "temp39_input": 21.000000,
+          "temp39_max": 80.000000,
+          "temp39_crit": 100.000000,
+          "temp39_crit_alarm": 0.000000
+        },
+        "Core 38": {
+          "temp40_input": 21.000000,
+          "temp40_max": 80.000000,
+          "temp40_crit": 100.000000,
+          "temp40_crit_alarm": 0.000000
+        },
+        "Core 39": {
+          "temp41_input": 21.000000,
+          "temp41_max": 80.000000,
+          "temp41_crit": 100.000000,
+          "temp41_crit_alarm": 0.000000
+        }
+      },
+      "nvme-pci-0100": {
+        "Adapter": "PCI adapter",
+        "Composite": {
+          "temp1_input": 38.850000,
+          "temp1_max": 84.850000,
+          "temp1_min": -0.150000,
+          "temp1_crit": 94.850000,
+          "temp1_alarm": 0.000000
+        },
+        "Sensor 1": {
+          "temp2_input": 38.850000,
+          "temp2_max": 65261.850000,
+          "temp2_min": -273.150000
+        },
+        "Sensor 2": {
+          "temp3_input": 55.850000,
+          "temp3_max": 65261.850000,
+          "temp3_min": -273.150000
+        },
+        "Sensor 8": {
+          "temp9_input": 38.850000,
+          "temp9_max": 65261.850000,
+          "temp9_min": -273.150000
+        }
+      },
+      "acpitz-acpi-0": {
+        "Adapter": "ACPI interface",
+        "temp1": {
+          "temp1_input": 27.800000
+        }
+      },
+      "iwlwifi_1-virtual-0": {
+        "Adapter": "Virtual device",
+        "temp1": {}
+      },
+      "r8169_0_400:00-mdio-0": {
+        "Adapter": "MDIO adapter",
+        "temp1": {
+          "temp1_input": 28.500000,
+          "temp1_max": 120.000000
+        }
+      },
+      "nvme-pci-0200": {
+        "Adapter": "PCI adapter",
+        "Composite": {
+          "temp1_input": 29.850000,
+          "temp1_max": 79.850000,
+          "temp1_min": -5.150000,
+          "temp1_crit": 84.850000,
+          "temp1_alarm": 0.000000
+        }
+      }
+    }
+  }
+}

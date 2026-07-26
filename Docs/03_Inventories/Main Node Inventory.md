@@ -1,12 +1,14 @@
 # Main Node Inventory
 
 Status: Current
-Last reviewed: 2026-07-10
+Last reviewed: 2026-07-25
 Source docs:
 - pve-output_09072026.txt
 - vm100-output_09072026.txt
 - User-provided Baserow deployment summary, 2026-07-10
-Next action: Normalize legacy VM100 `/mnt/core/stacks` compose projects into `/mnt/core/services`.
+- Syncthing Recovery and Architecture Update, 2026-07-25
+- Homelab Documentation Update Handoff, 2026-07-25
+Next action: Remove obsolete Syncthing `SirBranteSaves`, review UID/GID technical debt, and normalize legacy VM100 `/mnt/core/stacks` compose projects into `/mnt/core/services`.
 
 ## Role
 
@@ -45,17 +47,41 @@ Host: `services`
 
 - OS: Debian GNU/Linux 13 Trixie
 - Kernel: `6.12.88+deb13-amd64`
-- Disk: 64 GB root disk, 8% used at inventory time
+- Disk after July 25 maintenance: 63 GB total, 15 GB used, 46 GB available, 24% used
 - Role: core services platform
 
-Running containers:
+Running containers after July 25 maintenance:
 
-- `npm`: Nginx Proxy Manager
-- `syncthing`: Syncthing
-- `isponsorblocktv`: iSponsorBlockTV
-- `baserow`: Baserow
+- `syncthing`: `lscr.io/linuxserver/syncthing:latest`
+- `baserow`: `baserow/baserow:latest`, healthy
+- `baserow-postgres`: `postgres:16`, healthy
+- `npm`: `jc21/nginx-proxy-manager:latest`
+- `isponsorblocktv`: `ghcr.io/dmunozv04/isponsorblocktv:latest`
+
+All had status running and restart count 0 at final verification.
 
 ## VM100 Storage Snapshot
+
+On VM100 `services`, `/mnt/core` is an NFSv4 mount from:
+
+```text
+192.168.0.75:/mnt/core
+```
+
+Final observed `/mnt/core` utilization after July 25 maintenance:
+
+```text
+916 GB total
+11 GB used
+859 GB available
+2% used
+```
+
+Verify before maintenance:
+
+```bash
+findmnt -T /mnt/core
+```
 
 Top-level `/mnt/core` usage at inventory time:
 
@@ -77,19 +103,42 @@ Active mount patterns:
 - Nginx Proxy Manager data: `/mnt/core/appdata/core/npm/data -> /data`
 - Nginx Proxy Manager certificates: `/mnt/core/appdata/core/npm/letsencrypt -> /etc/letsencrypt`
 - iSponsorBlockTV data: `/mnt/core/appdata/utilities/isponsorblocktv -> /app/data`
-- Baserow data: `/mnt/core/appdata/knowledge/baserow`
+- Baserow media: `/mnt/core/appdata/knowledge/baserow/media -> /baserow/data`
+- Baserow PostgreSQL: `/mnt/core/appdata/knowledge/baserow/postgres -> /var/lib/postgresql/data`
+
+Syncthing current state:
+
+- Canonical host: VM100 `services`.
+- Compose: `/mnt/core/services/syncthing/compose.yml`.
+- Active version: Syncthing v2.1.2.
+- Image: `lscr.io/linuxserver/syncthing:latest`.
+- Current folders: `/sync/github`, `/sync/obsidian`, and `/sync/school`.
+- Host-backed folders: `/mnt/core/data/sync/github`, `/mnt/core/data/sync/obsidian`, and `/mnt/core/data/sync/school`.
+- Configuration backup from path repair: `/mnt/core/data/sync/config/config.xml.pre-path-fix-2026-07-25`.
+- Validated temporary rescue: `/var/backups/syncthing-rescue/overlay-direct`.
+- Obsolete folder: `SirBranteSaves`, to be removed from Syncthing configuration.
+- Technical debt: Syncthing currently runs with `PUID=0` and `PGID=0`; migrate to an unprivileged UID/GID after recovery stability is confirmed.
 
 ## Current Compose Locations
 
 Current state includes both normalized and legacy locations:
 
-- `/mnt/core/services/media/compose/core/docker-compose.yml`
+- `/mnt/core/services/media`
 - `/mnt/core/services/knowledge/baserow/docker-compose.yml`
 - `/mnt/core/services/syncthing/compose.yml`
 - `/mnt/core/stacks/core/npm/docker-compose.yml`
 - `/mnt/core/stacks/knowledge/affine/docker-compose.yml`
 - `/mnt/core/stacks/utilities/isponsorblocktv/docker-compose.yml`
 - `/mnt/core/stacks/utilities/vaultwarden/docker-compose.yml`
+
+Ownership notes:
+
+- `/mnt/core/services/media` belongs to MediaCenter `media`, not VM100.
+- `/mnt/core/stacks/knowledge/affine/docker-compose.yml` is intentionally deployed on VM200 for temporary/current use by Raven's partner; do not deploy Affine on VM100.
+- Affine inspected from VM100 without the right environment produced missing variable warnings for `DB_DATA_LOCATION`, `DB_USERNAME`, `DB_PASSWORD`, `UPLOAD_LOCATION`, and `CONFIG_LOCATION`, ending with `invalid spec: :/root/.affine/storage: empty section between colons`. This indicates missing VM100 invocation configuration, not that the VM200 deployment is broken.
+- `/mnt/core/stacks/utilities/vaultwarden/docker-compose.yml` is dormant; no Vaultwarden container currently exists on VM100.
+- Vaultwarden currently uses `./data:/data` and should be reviewed before deployment because current architecture prefers explicit `/mnt/core/appdata/...` persistence.
+- Vaultwarden also contains obsolete top-level `version: "3"`; remove it when that deployment is next maintained.
 
 Normalization target:
 
@@ -146,4 +195,6 @@ Backup:
 
 - VM200 is running and named `services`; document its intended purpose or rename/decommission it.
 - Decide whether the legacy AFFiNE export and stack should remain archived only now that Obsidian is the knowledge direction.
-- Confirm whether Vaultwarden has any active data that needs preservation before redeploying under the normalized service layout.
+- Review dormant Vaultwarden before redeploying under the normalized service layout.
+- Decide whether Baserow should eventually use a PostgreSQL image/build with pgvector support.
+- Plan migrations away from UID/GID 0 for Syncthing and Nginx Proxy Manager after NFS permissions are understood.

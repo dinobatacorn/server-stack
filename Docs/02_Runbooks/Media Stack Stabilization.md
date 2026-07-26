@@ -1,13 +1,15 @@
 # Media Stack Stabilization
 
 Status: Completed baseline; retained as a validation runbook
-Last reviewed: 2026-07-09
+Last reviewed: 2026-07-25
 Source docs:
 - Media Stack Stabilization 23.05.26.md
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md
 - medianode-output_09072026.txt
-Next action: Confirm `/media` backing storage, then use these checks for regression testing and create a fresh known-good checkpoint before risky changes.
+- MediaCenter maintenance/update summary, 2026-07-25
+- Homelab Documentation Update Handoff, 2026-07-25
+Next action: Confirm `/media` backing storage, verify display-blanking persistence, then create a fresh known-good checkpoint before risky changes.
 
 ## Purpose
 
@@ -28,6 +30,8 @@ Before risky changes, create a dated checkpoint under `/mnt/core/exports/media-s
 
 Capture:
 
+- Current `hostname`.
+- `findmnt -T /mnt/core` and `findmnt -T /media`.
 - Compose files, compose project names, and `.env` files.
 - Config directories for qBittorrent, Prowlarr, Sonarr, Radarr, Jellyfin, and Kodi.
 - Container inventory, images, restart policies, bind mounts, and networks.
@@ -47,9 +51,16 @@ Stop if a checkpoint cannot be created.
 
 Goal: the media node survives reboot and exposes expected storage before applications do useful work.
 
+MediaCenter appliance policy as of 2026-07-25:
+
+- `sleep.target`, `suspend.target`, `hibernate.target`, and `hybrid-sleep.target` are masked.
+- Automatic system sleep, suspend, hibernate, and hybrid sleep are intentionally blocked.
+- Manual shutdown and reboot remain available.
+- The July 25 approximately 15:20 reboot was manually initiated during troubleshooting and should not be treated as an unexplained spontaneous reboot.
+
 Validate:
 
-- `/mnt/core` is mounted before Docker-dependent service state is needed.
+- `/mnt/core` is mounted as NFSv4 from `192.168.0.75:/mnt/core` before Docker-dependent service state is needed.
 - `/media` is mounted or otherwise backed by the intended media storage before acquisition/playback containers start.
 - Docker starts after required mounts are available.
 - Containers with restart policies recover cleanly after reboot.
@@ -57,6 +68,18 @@ Validate:
 - SMART visibility exists for internal disks, with USB limitations documented.
 
 Pass condition: after one reboot, `/mnt/core`, `/media`, Docker, and existing media containers recover without manual intervention.
+
+July 25 boot-order validation:
+
+```text
+/mnt/core mounted:             16:25:58
+docker.service began starting: 16:25:58
+docker.service active:         16:26:01
+```
+
+The NFS filesystem was available before Docker workloads used it. Do not confuse earlier `docker.socket` activation with `docker.service` startup.
+
+Mountpoint safety: do not rely on the existence of `/mnt/core`; verify with `findmnt -T /mnt/core`. MediaCenter previously created a ghost local `/mnt/core/services` tree while NFS was absent. That ghost tree was backed up to `/var/backups/mediacenter/core-ghost-2026-07-25.tar.gz`, validated, and removed before the real NFS tree was restored.
 
 July 9 note: `/mnt/core` is mounted from `192.168.0.75:/mnt/core`, but the captured `df` output does not show `/media` as a separate filesystem. Root is 89% used and `sda` is visible without a mountpoint. Resolve this before large imports or downloads.
 
@@ -108,10 +131,12 @@ Pass condition: one controlled movie import and one controlled TV/anime import l
 Jellyfin:
 
 - Libraries point to `/media/library/movies`, `/media/library/tv`, `/media/library/anime`, `/media/library/music`, and `/media/library/home-videos` as applicable.
-- Persistent state stays under `/mnt/core/services/media/serving/jellyfin`.
-- Replaceable transcodes/cache use `/media/cache/transcode` or another documented `/media/cache` subpath.
+- Persistent state stays under `/mnt/core/services/media/serving/jellyfin -> /config`.
+- Media library is mounted as `/media/library -> /media`.
+- Replaceable transcodes/cache use `/media/cache/transcode -> /transcode`.
 - Direct play works for a known-good file.
 - Intel QuickSync transcoding works before GTX 1060 optimization.
+- Active Jellyfin/Firefox playback does not trigger X11 screensaver blanking or DPMS display power-off.
 
 Kodi:
 
@@ -121,13 +146,15 @@ Kodi:
 
 Pass condition: direct play and Intel QuickSync transcoding both succeed for controlled samples.
 
+July 25 display note: after disabling X11 screensaver and DPMS in the live graphical session with `xset s off` and `xset -dpms`, Jellyfin/Firefox playback continued without the display going dark. Verify whether this survives logout and reboot; if not, make it persistent for the `mediacenter` X11 session.
+
 ## Phase 5: Backups And Restore
 
 Back up:
 
 - Compose files and `.env` files.
 - qBittorrent config/category state.
-- Prowlarr, Sonarr, Radarr, and Jellyfin config/databases.
+- Prowlarr, Sonarr, Radarr, Seerr, and Jellyfin config/databases.
 - Kodi configuration where part of the workflow.
 - Operational docs and checkpoint exports.
 
@@ -146,6 +173,7 @@ Required visibility:
 - SMART status or documented SMART limitation per disk.
 - Disk usage for root, `/mnt/core`, and `/media`.
 - Docker container state and restart counts.
+- Restart loops, especially Seerr `exitCode=1` or repeated restarts.
 - Backup job status and latest successful run.
 - Jellyfin direct play/transcode status.
 - qBittorrent category/download location behavior.
@@ -155,6 +183,17 @@ Pass condition: an operator can answer "is the media stack healthy?" from docume
 
 ## Baseline Result And Continued Use
 
-As of 2026-07-09, the core qBittorrent, Prowlarr, Sonarr, Radarr, Jellyfin, Kodi, and Seerr pipeline is operational. The original expansion gate has been satisfied, but `/media` backing storage should be confirmed before larger expansion work.
+As of 2026-07-09, the core qBittorrent, Prowlarr, Sonarr, Radarr, Jellyfin, Kodi, and Seerr pipeline was operational. The original expansion gate was satisfied, but `/media` backing storage still needed confirmation before larger expansion work.
+
+During 2026-07-25 maintenance, Seerr was found in a crash/restart loop with `exitCode=1` and more than 21,000 restarts. After the `/mnt/core` mount repair and media-stack restart, Seerr returned successfully with restart count 0, reported `Server ready on port 5055`, and HTTP returned `307 -> /login`.
+
+Normal media-stack update procedure:
+
+```bash
+cd /mnt/core/services/media
+docker compose pull
+docker compose up -d
+docker compose ps
+```
 
 Retain this runbook for regression checks, rebuild validation, permission audits, backup testing, and controlled changes to legacy media paths. Current expansion priorities are tracked in [Media Backlog](../04_Backlog/Media%20Backlog.md).

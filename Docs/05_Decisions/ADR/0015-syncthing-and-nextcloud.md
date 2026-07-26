@@ -13,9 +13,24 @@ Use Syncthing for actively edited files where direct peer-to-peer synchronizatio
 
 Use Nextcloud for user-facing storage, mobile access, sharing, WebDAV, collaboration, photo uploads, and browser-based file access.
 
+Syncthing's canonical deployment runs on VM100 `services`.
+
+Current Syncthing path contract:
+
+| Host / NFS path | Container / Syncthing path |
+| --- | --- |
+| `/mnt/core/data/sync/github` | `/sync/github` |
+| `/mnt/core/data/sync/obsidian` | `/sync/obsidian` |
+| `/mnt/core/data/sync/school` | `/sync/school` |
+| `/mnt/core/data/sync/config` | `/config` |
+
+`SirBranteSaves` is obsolete and should be removed from Syncthing configuration.
+
 ## Consequences
 
 Both services can coexist without competing, as long as they do not become two sources of truth for the same dataset.
+
+Syncthing must be configured with container-visible paths. Docker writable layers are not a valid persistence location for synced data.
 
 ## Alternatives Considered
 

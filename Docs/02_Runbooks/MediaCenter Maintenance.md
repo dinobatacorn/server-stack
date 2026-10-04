@@ -1,13 +1,13 @@
 # MediaCenter Maintenance
 
 Status: Current maintenance record
-Last reviewed: 2026-07-25
+Last reviewed: 2026-09-30
 Source docs:
 - MediaCenter maintenance/update summary, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
 - Media Node Inventory.md
 - Media Stack Stabilization.md
-Next action: Verify that X11 screensaver/DPMS disablement survives logout and reboot, then continue media expansion only after `/media` backing storage is confirmed.
+Next action: Review root storage before image pulls, confirm `/media` backing storage, and check a migrated RustDesk client connection.
 
 ## Purpose
 
@@ -512,3 +512,12 @@ Media stack:
 Known outstanding issue:
 
 - X11 screensaver/DPMS persistence across reboot/login still needs explicit verification or configuration.
+
+## 2026-09-28/29 Fleet Maintenance Addendum
+
+- Debian packages were updated; the user subsequently ran `apt-get dist-upgrade` and rebooted. The running kernel was verified as `6.12.107+deb13-amd64`.
+- Docker images were refreshed separately for Jellyfin, Sonarr, Radarr, qBittorrent, Prowlarr, and Seerr. The six containers were restarted and each configured local web port returned its expected response: Jellyfin `302`, Sonarr `200`, Radarr `200`, qBittorrent `200`, Prowlarr `200`, and Seerr `307`.
+- Jellyfin moved to the 12.x major line. Jellyfin Enhanced was replaced with the compatible 12 ABI build `12.9.0.0`. The owner reports that the full library scan completed and the service appears good; no scan log was supplied.
+- Root storage after image refresh was 216 GB total, 195 GB used, 11 GB available (95%). A consistent 232 MB appdata archive was created with the Compose project stopped and passed `zstd -t`; this and other recovery archives are on PVE's `/mnt/core`, not offsite. Do not pull further images until root storage is reviewed and the old-image rollback window is cleared.
+- A post-reboot host inventory and post-image appdata archive are summarized in [Fleet Update Report 2026-09-28](../06_Operations/Update%20Reports/2026-09-28.md). The package preflight did not update Docker images; the OS and image workflows remain separate steps.
+- Self-hosted RustDesk Server is in PVE LXC 103. MediaCenter's last inspected RustDesk client configuration showing `rs-ny.rustdesk.com:21116` predates the owner's report of client migration and successful sessions; see [RustDesk Server Maintenance](RustDesk%20Server%20Maintenance.md).

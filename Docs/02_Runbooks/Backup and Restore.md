@@ -1,7 +1,7 @@
 # Backup And Restore
 
 Status: Draft
-Last reviewed: 2026-07-25
+Last reviewed: 2026-09-29
 Source docs:
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md
@@ -15,6 +15,10 @@ Next action: Document current Restic configuration, retain July 25 validated rec
 Backups should prove rebuildability. A backup is not trusted until at least one restore has been tested to a temporary location.
 
 ## Backup Priorities
+
+Backup archives can contain complete service databases, user data, API credentials, SSH keys, and RustDesk identity keys. Keep the backup directory restricted and set sensitive archive files to mode `600`; do not leave guest archives readable by every local account. The PVE `vzdump` files in `/mnt/core/backups/snapshots/dump/` were restricted to root-only access on 2026-09-29.
+
+The `/mnt/core/backups` tree is on PVE infrastructure storage. A copy there is useful for guest or service recovery but is not an offsite or independent-host copy. Record that limitation until an offsite backup is configured and validated.
 
 Back up first:
 
@@ -88,6 +92,16 @@ TOC entries: 19,757
 ```
 
 Retain this dump according to the backup-retention policy.
+
+## September 2026 Fleet Recovery Artifacts
+
+The dated [2026-09-28 fleet report](../06_Operations/Update%20Reports/2026-09-28.md) records the PVE/guest archives and RustDesk LXC backup; the [2026-09-29 follow-up](../06_Operations/Update%20Reports/2026-09-29.md) records the endpoint outcomes.
+
+- PVE host/cluster config archive: `/mnt/core/backups/snapshots/2026-09-29/post/pve/pve_host_config_2026-09-29.tar.zst`; `zstd -t` passed.
+- Fresh VM100 snapshot-mode backup: `/mnt/core/backups/snapshots/dump/vzdump-qemu-100-2026_09_29-10_39_11.vma.zst`; guest-agent freeze/thaw and backup log succeeded; `zstd -t` passed.
+- RustDesk CT 103: PVE `vzdump` archives were validated, but they do not include its `/mnt/core/appdata/security/rustdesk-server` and `rustdesk-api` bind mounts. Separate appdata archive `/mnt/core/backups/snapshots/2026-09-28/post/rustdesk/rustdesk_appdata_2026-09-28.tar.zst` passed `zstd -t`.
+- MediaCenter: pre-image and post-image appdata archives were made with the Compose project stopped and passed `zstd -t`; the current post-image archive is `/mnt/core/backups/media/2026-09-29/post/media-appdata-after-image-refresh.tar.zst`.
+- These copies are on the PVE `/mnt/core` SSD. They are not offsite or independent-host copies. No restore drill was performed, and scheduled PVE guest backup retention has not been defined.
 
 ## Syncthing Recovery Artifacts
 

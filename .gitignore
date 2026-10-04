@@ -9,3 +9,9 @@ exports/
 *.crt
 *.db
 *.sqlite
+# Local tooling and generated fleet snapshots
+scripts/output/
+tools/HWiNFO64.exe
+tools/hwinfo.xml
+tools/*.xml
+tools/HWiNFO64.INI

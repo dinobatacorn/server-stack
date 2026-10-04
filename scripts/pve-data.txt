@@ -1,0 +1,287 @@
+#!/usr/bin/env bash
+#
+# Proxmox Homelab Inventory Script
+# Generates a comprehensive inventory of the PVE node.
+#
+
+set -Eeuo pipefail
+
+REPORT="pve_inventory_$(hostname)_$(date +%Y-%m-%d_%H-%M-%S).txt"
+
+exec > >(tee "$REPORT") 2>&1
+
+section () {
+    echo
+    echo "======================================================================"
+    echo "$1"
+    echo "======================================================================"
+}
+
+section "REPORT INFORMATION"
+
+echo "Generated: $(date)"
+echo "Hostname: $(hostname)"
+echo
+
+################################################################################
+
+section "HOST INFORMATION"
+
+hostnamectl
+echo
+
+cat /etc/os-release
+echo
+
+uname -a
+echo
+
+pveversion
+echo
+
+################################################################################
+
+section "CPU"
+
+lscpu
+
+################################################################################
+
+section "MEMORY"
+
+free -h
+echo
+grep MemTotal /proc/meminfo
+
+################################################################################
+
+section "UPTIME"
+
+uptime
+
+################################################################################
+
+section "FILESYSTEMS"
+
+df -hT
+
+################################################################################
+
+section "BLOCK DEVICES"
+
+lsblk -o NAME,SIZE,FSTYPE,TYPE,MOUNTPOINT,MODEL
+
+################################################################################
+
+section "PVE STORAGE"
+
+pvesm status
+
+echo
+echo "----- /etc/pve/storage.cfg -----"
+cat /etc/pve/storage.cfg
+
+################################################################################
+
+section "ZFS"
+
+zpool status 2>/dev/null || echo "No ZFS pools."
+echo
+zfs list 2>/dev/null || true
+
+################################################################################
+
+section "LVM"
+
+pvs 2>/dev/null || true
+echo
+vgs 2>/dev/null || true
+echo
+lvs 2>/dev/null || true
+
+################################################################################
+
+section "NETWORK"
+
+ip -br addr
+echo
+
+ip route
+echo
+
+bridge link 2>/dev/null || true
+
+echo
+echo "----- /etc/network/interfaces -----"
+cat /etc/network/interfaces
+
+################################################################################
+
+section "PCI DEVICES"
+
+lspci
+
+################################################################################
+
+section "USB DEVICES"
+
+lsusb
+
+################################################################################
+
+section "RUNNING SERVICES"
+
+systemctl --type=service --state=running
+
+################################################################################
+
+section "PVE CLUSTER STATUS"
+
+pvecm status 2>/dev/null || echo "Standalone node."
+
+################################################################################
+
+section "PVE TASKS"
+
+pvesh get /nodes/$(hostname)/tasks --limit 10 2>/dev/null || true
+
+################################################################################
+
+section "LXC CONTAINERS"
+
+pct list
+
+echo
+
+for id in $(pct list | awk 'NR>1 {print $1}'); do
+    echo
+    echo "##################################################################"
+    echo "LXC $id"
+    echo "##################################################################"
+
+    pct config "$id"
+
+    echo
+    echo "--- Status ---"
+    pct status "$id"
+
+    echo
+done
+
+################################################################################
+
+section "VIRTUAL MACHINES"
+
+qm list
+
+echo
+
+for id in $(qm list | awk 'NR>1 {print $1}'); do
+    echo
+    echo "##################################################################"
+    echo "VM $id"
+    echo "##################################################################"
+
+    qm config "$id"
+
+    echo
+    echo "--- Status ---"
+    qm status "$id"
+
+    echo
+done
+
+################################################################################
+
+section "AUTOSTART"
+
+echo "LXCs"
+
+for id in $(pct list | awk 'NR>1 {print $1}'); do
+    echo
+    echo "LXC $id"
+    pct config "$id" | grep -E '^(hostname|description|onboot|startup)'
+done
+
+echo
+echo "VMs"
+
+for id in $(qm list | awk 'NR>1 {print $1}'); do
+    echo
+    echo "VM $id"
+    qm config "$id" | grep -E '^(name|description|onboot|startup)'
+done
+
+################################################################################
+
+section "BACKUP JOBS"
+
+grep -R "vzdump" /etc/pve 2>/dev/null || echo "No backup jobs configured."
+
+################################################################################
+
+section "SNIPPETS"
+
+find /var/lib/vz/snippets -maxdepth 1 -type f 2>/dev/null
+
+################################################################################
+
+section "CRON"
+
+crontab -l 2>/dev/null || true
+
+echo
+
+ls -al /etc/cron.daily
+echo
+ls -al /etc/cron.weekly
+echo
+ls -al /etc/cron.monthly
+
+################################################################################
+
+section "MOUNTS"
+
+mount
+
+################################################################################
+
+section "NFS"
+
+cat /etc/fstab
+
+################################################################################
+
+section "SMART (if available)"
+
+for d in /dev/sd?; do
+    echo
+    echo "===== $d ====="
+    smartctl -H "$d" 2>/dev/null || true
+done
+
+################################################################################
+
+section "SUMMARY"
+
+echo
+echo "LXC Containers"
+pct list
+
+echo
+echo "Virtual Machines"
+qm list
+
+echo
+echo "Storage"
+pvesm status
+
+echo
+echo "Filesystem Usage"
+df -h
+
+################################################################################
+
+echo
+echo "Inventory written to:"
+echo "  $REPORT"

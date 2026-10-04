@@ -1,7 +1,7 @@
 # Nginx Proxy Manager
 
 Status: Current
-Last reviewed: 2026-07-25
+Last reviewed: 2026-09-29
 Source docs:
 - ADR 0016: Docker Networking Strategy
 - to-do list 17.05.26.md
@@ -14,6 +14,12 @@ Next action: Apply this standard as new user-facing services are deployed or exi
 Nginx Proxy Manager is the primary reverse proxy for user-facing homelab services.
 
 It provides HTTP(S) entrypoints, central TLS certificate handling, and proxy routing to containers attached to the shared Docker `proxy` network.
+
+## Network Access Policy
+
+Nginx Proxy Manager and its Proxy Hosts are private-network services. Every service except WireGuard itself is reachable only from the home LAN or a WireGuard-connected client. Do not configure router WAN port forwards or public reverse-proxy routes for internal services. A future portal is the only planned public exception and is not deployed.
+
+Cloudflare DNS records do not provide private access control. For LAN/VPN-only hostnames, use Pi-hole local records and ensure the client actually uses Pi-hole. A public Cloudflare record is not required for the local name to resolve. Do not treat an A record pointing at an RFC1918 address as a substitute for verifying routing or firewall policy.
 
 ## Deployment Standard
 
@@ -130,6 +136,10 @@ After adding or changing a Proxy Host:
 - Confirm Nginx Proxy Manager can reach the service by container name on the `proxy` network.
 - Confirm HTTPS uses the wildcard `*.dustynest.com` certificate.
 - Confirm the service remains internal-first unless public exposure has been explicitly approved.
+
+### LAN/VPN DNS troubleshooting record: 2026-09-29
+
+The user reported that all proxy hostnames returned “server not found” while the Windows desktop's VPN was disconnected. The Nginx Proxy Manager UI remained reachable directly at `http://192.168.0.125:81`; enabling the VPN restored hostname access. The user also reported renewing a certificate; the exact certificate and its resulting state were not independently checked. This points to name resolution on that client path, not a confirmed NPM outage or certificate failure. The LAN client's resolver/DHCP settings and actual router policy were not independently inspected. For LAN hostname access, verify the client uses Pi-hole (`192.168.0.120`) for local records; otherwise use the VPN as the known-working path. A DNS record is not an access-control rule.
 
 July 25 update validation:
 

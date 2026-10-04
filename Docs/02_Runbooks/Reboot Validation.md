@@ -1,7 +1,7 @@
 # Reboot Validation
 
 Status: Draft
-Last reviewed: 2026-07-25
+Last reviewed: 2026-09-29
 Source docs:
 - Media Stack Stabilization 23.05.26.md
 - to-do list 17.05.26.md
@@ -45,7 +45,10 @@ Validate:
 - Sleep, suspend, hibernate, and hybrid sleep targets remain masked if the appliance always-on policy still applies.
 - X11 screensaver timeout remains `0` and DPMS remains disabled if the no-display-blanking policy has been made persistent.
 - RustDesk remains enabled and active.
+- On PVE, LXC 103 `rustdeskserver` services and its persistent bind mounts recover; API/UI responds on port `21114` from a trusted LAN client.
 - Seerr is not in a repeated `exitCode=1` restart loop.
+
+The 2026-09-28 PVE update reboot recovered VM100, VM200, LXC101, and LXC102. RustDesk LXC 103 was created later that day and its services/mounts were verified after its own restart; a subsequent PVE-host reboot with CT103 present has not been recorded. MediaCenter's 2026-09-29 post-reboot checks verified the Debian kernel, Docker, six media containers, and local web ports. See the dated fleet reports for backup and current disk-use evidence. These pass records do not replace the future scheduled backup/restore validation.
 
 Known July 25 boot-order result:
 

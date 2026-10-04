@@ -1,0 +1,7 @@
+docker ps -a
+docker network ls
+docker volume ls
+tree -L 3 /mnt/core/services/media
+tree -L 3 /media
+df -h
+lsblk

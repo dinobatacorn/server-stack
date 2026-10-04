@@ -1,0 +1,5 @@
+docker ps -a
+docker network ls
+docker volume ls
+find /mnt/core/services -maxdepth 3 \( -name "docker-compose.yml" -o -name "compose.yml" \)
+tree -L 3 /mnt/core/services

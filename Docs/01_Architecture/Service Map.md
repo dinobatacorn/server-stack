@@ -1,7 +1,7 @@
 # Service Map
 
 Status: Current
-Last reviewed: 2026-07-25
+Last reviewed: 2026-09-29
 Source docs:
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md
@@ -13,7 +13,8 @@ Source docs:
 - Syncthing Recovery and Architecture Update, 2026-07-25
 - MediaCenter maintenance/update summary, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
-Next action: Remove obsolete Syncthing folder, verify MediaCenter display-blanking persistence, then continue Baserow organization and media/knowledge-service expansion.
+- Fleet Update Reports, 2026-09-28 through 2026-09-30
+Next action: Verify RustDesk LXC 103's router reservation and VPN route, validate LAN DNS behavior, and finish pending endpoint checks before service expansion.
 
 Reference: [IP, Port, And Proxy Assignments](IP%20Port%20Proxy%20Assignments.md) records documented IPs, service ports, proxy hostnames, and open assignment gaps.
 
@@ -33,6 +34,7 @@ Rebuild and validation order:
 
 - Pi-hole LXC depends on Proxmox networking and stable host startup.
 - WireGuard LXC depends on Proxmox networking and is the VPN-first access entrypoint.
+- RustDesk Server LXC 103 depends on Proxmox networking and persistent `/mnt/core/appdata/security` bind mounts; clients are intended to connect only from LAN or WireGuard. No WAN forward was added.
 - WireGuard is operational and is the preferred remote administration path.
 - VPN and selected LAN clients depend on Pi-hole (`192.168.0.120`) for local `*.dustynest.com` resolution.
 - The Windows desktop Wi-Fi adapter uses Pi-hole directly because Windows may prefer that adapter's DNS over WireGuard DNS.
@@ -137,6 +139,12 @@ MediaCenter appliance policy:
 - Verify X11 display policy persistence across logout and reboot.
 - `/mnt/core` is an NFSv4 mount from `192.168.0.75:/mnt/core`; verify with `findmnt -T /mnt/core` before starting or recreating containers.
 - Boot-order verification showed `/mnt/core` mounted before `docker.service` became active. Do not confuse earlier `docker.socket` activation with Docker workloads starting.
+
+RustDesk server/client split:
+
+- Self-hosted server components `hbbs`, `hbbr`, and API/UI run in PVE LXC 103 at the observed address `192.168.0.189`; its storage and client rollout are documented in [RustDesk Server Maintenance](../02_Runbooks/RustDesk%20Server%20Maintenance.md).
+- The MediaCenter client was configured for `rs-ny.rustdesk.com:21116` at its last inspection, before the owner reported migrating RustDesk clients during maintenance. Current client settings and real sessions remain unverified.
+- The owner reports multiple successful client sessions, most recently phone-to-desktop after connecting the phone to the network; the LAN or WireGuard path was not specified.
 
 Proven media flow:
 

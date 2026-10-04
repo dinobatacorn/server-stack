@@ -1,7 +1,7 @@
 # Media Backlog
 
 Status: Current
-Last reviewed: 2026-07-25
+Last reviewed: 2026-09-29
 Source docs:
 - Media Stack Stabilization 23.05.26.md
 - Current State of the Homelab (July 2026)
@@ -25,6 +25,8 @@ Next action: Verify display-blanking settings persist, then confirm `/media` bac
 - Jellyfin, Prowlarr, qBittorrent, Radarr, Sonarr, and Seerr returned successfully with zero restart counts.
 - Seerr reported `Server ready on port 5055` and HTTP returned `307 -> /login`.
 - RustDesk upgraded to 1.4.9, enabled, active, and configured for unattended access from the laptop.
+- RustDesk Server now runs separately in PVE LXC 103. The owner reports pointing clients to it during maintenance and multiple successful sessions, including phone-to-desktop. MediaCenter's earlier public-server config predates that report. See [RustDesk Server Maintenance](../02_Runbooks/RustDesk%20Server%20Maintenance.md) and the [2026-09-30 fleet report](../06_Operations/Update%20Reports/2026-09-30.md).
+- The owner reports that Jellyfin's full library scan completed successfully after the 12.x update.
 - Onboard installed as local on-screen keyboard fallback.
 - System sleep, suspend, hibernate, and hybrid sleep targets masked for always-on appliance behavior.
 - X11 screensaver and DPMS disabled in the live session after Jellyfin/Firefox display blanking was confirmed.

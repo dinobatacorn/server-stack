@@ -1,7 +1,7 @@
 # Docker Compose Operations
 
 Status: Draft operational standard
-Last reviewed: 2026-07-25
+Last reviewed: 2026-09-28
 Source docs:
 - Homelab Documentation Update Handoff, 2026-07-25
 - Syncthing Recovery and Architecture Update, 2026-07-25
@@ -120,6 +120,16 @@ identify canonical host
 ```
 
 Do not prune previous Docker images immediately after successful updates. Preserve a rollback window and perform cleanup separately.
+
+`docker compose pull` downloads images but does not replace running containers. Follow it with `docker compose up -d` for the project, then confirm the container is using the new image ID and application version. OS package transactions do not refresh Docker images; include a separate image-update pass in each fleet update.
+
+Before updating a floating `latest` tag, review the upstream application release notes for major-version migrations, plugin/extension compatibility, required backups, and mandatory post-upgrade work. Container health and HTTP responses alone do not confirm that a data migration or required library scan has finished. Do not proceed when required recovery steps cannot be performed in the maintenance window.
+
+For each Docker host, inventory every running container and active Compose project before and after the update. VM100 and MediaCenter are separate canonical Docker hosts; MediaCenter's OS sudo preflight does not update its media stack images. Verify health, restart counts, recent errors, local ports, and user-facing routes after recreation. Record skipped or inaccessible hosts explicitly.
+
+Nginx Proxy Manager state includes its `/data` SQLite database/configuration and `/etc/letsencrypt` certificates. Back up both persistent mounts before upgrading NPM, and verify proxy routes and the active certificate after startup.
+
+After image refreshes, check free space on the Docker host. MediaCenter's maintenance gate requires at least 8 GB available and no more than 95% root filesystem use; stop further image pulls if either condition fails. Keep old images during the rollback window and defer cleanup to a separate maintenance action.
 
 On failed validation, stop further maintenance, preserve recovery material, collect diagnostics, and alert the administrator. Do not attempt increasingly invasive automatic repairs.
 

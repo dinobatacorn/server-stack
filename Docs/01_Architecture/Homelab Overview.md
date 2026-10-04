@@ -1,7 +1,7 @@
 # Homelab Overview
 
 Status: Current
-Last reviewed: 2026-07-25
+Last reviewed: 2026-09-29
 Source docs:
 - Server Plan 21.05.26.md
 - Archive_Plan 05.05.26.txt
@@ -12,7 +12,8 @@ Source docs:
 - Syncthing Recovery and Architecture Update, 2026-07-25
 - MediaCenter maintenance/update summary, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
-Next action: Verify display-blanking disablement persists, then create or update diagrams after the service dependency chart is stable.
+- Fleet Update Reports, 2026-09-28 through 2026-09-30
+Next action: Confirm RustDesk LXC 103's DHCP reservation and VPN route; finish MediaCenter checks and keep the proposed game-services VM in planning until storage and network access are approved.
 
 Reference: [IP, Port, And Proxy Assignments](IP%20Port%20Proxy%20Assignments.md) records documented IPs, ports, proxy hostnames, and open assignment gaps.
 
@@ -67,7 +68,9 @@ Known layout:
 
 - LXC 101: Pi-hole for DNS filtering and local DNS management.
 - LXC 102: WireGuard for the operational VPN entrypoint and secure remote access.
+- LXC 103: RustDesk Server (`hbbs`, `hbbr`, API/UI); private persistent state on `/mnt/core/appdata/security`.
 - VM 100: Core Services Docker Host.
+- VM 200: `infra-proxy` was destroyed per owner report on 2026-09-30 after the partner moved to Super Productivity. An older comprehensive backup is reported to exist; restoreability is unverified. See [Main Node Inventory](../03_Inventories/Main%20Node%20Inventory.md).
 - VM 104: Home Assistant OS.
 
 ## VM100 Core Services Platform
@@ -156,6 +159,7 @@ Known hardware and current storage notes:
 - `/mnt/core` is an NFSv4 mount from `192.168.0.75:/mnt/core`; verify with `findmnt -T /mnt/core`.
 - `/media` exists but was not shown as a separate mount in the July 9 `df` output.
 - OS: Debian GNU/Linux 13 Trixie
+- Kernel after the 2026-09-29 reboot: `6.12.107+deb13-amd64`.
 
 Deployed media services:
 
@@ -166,6 +170,7 @@ Deployed media services:
 - Jellyfin
 - Kodi with Arctic Fuse 3
 - Seerr
+- RustDesk client 1.4.9, native Debian package. The owner reports pointing clients to LXC 103 and multiple successful sessions, including a recent phone-to-desktop test after the phone joined the network.
 
 The Seerr-to-Sonarr/Radarr-to-qBittorrent-to-Jellyfin-to-Kodi pipeline was proven during the July 9 baseline and restored during the July 25 MediaCenter mount repair. Seerr reported `Server ready on port 5055` and HTTP returned `307 -> /login` after repair. Music, reading, and preservation services remain expansion milestones.
 
@@ -189,5 +194,7 @@ Do not troubleshoot applications before confirming their network and storage dep
 - The router must retain ISP DNS and cannot provide homelab DNS to LAN clients.
 - Pi-hole at `192.168.0.120` owns local DNS records, including `*.dustynest.com` names.
 - WireGuard is operational and remains the preferred remote-access path.
+- RustDesk Server LXC 103 is also intended for LAN/WireGuard-only access; no WAN port forwards were added. Its router DHCP reservation and VPN route are not verified.
+- User observation on 2026-09-29: proxy hostnames returned “server not found” from the Windows desktop when VPN was off; direct NPM UI access at `192.168.0.125:81` worked, and turning VPN on restored hostname access. The desktop's LAN DNS path still needs verification if LAN-only hostname use is expected.
 - The AtlasOS Windows desktop uses Pi-hole directly on its Wi-Fi adapter. Windows can otherwise prefer the Wi-Fi adapter's ISP DNS over WireGuard DNS, even while the tunnel is connected.
 - See [Windows Desktop DNS](../02_Runbooks/Windows%20Desktop%20DNS.md) for configuration and validation.

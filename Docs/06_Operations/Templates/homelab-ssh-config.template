@@ -1,0 +1,92 @@
+# Homelab Codex SSH aliases template
+# Copy values into C:\Users\raven\.ssh\config and adjust User/HostName as credentials are confirmed.
+# Keep this file redacted; never commit private keys, passwords, tokens, or one-time codes.
+
+Host pve
+  HostName 192.168.0.75
+  User root
+  IdentityFile ~/.ssh/id_ed25519_codex_homelab
+  IdentitiesOnly yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+
+Host pihole
+  HostName 192.168.0.120
+  User root
+  IdentityFile ~/.ssh/id_ed25519_codex_homelab
+  IdentitiesOnly yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+
+Host wireguard
+  HostName 192.168.0.110
+  User root
+  IdentityFile ~/.ssh/id_ed25519_codex_homelab
+  IdentitiesOnly yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+
+Host services
+  HostName 192.168.0.125
+  User raven
+  IdentityFile ~/.ssh/id_ed25519_codex_homelab
+  IdentitiesOnly yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+
+Host media
+  HostName 192.168.0.143
+  User mediacenter
+  IdentityFile ~/.ssh/id_ed25519_codex_homelab
+  IdentitiesOnly yes
+  HostKeyAlias 192.168.0.143
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+
+Host ravenstower
+  HostName RavensTower
+  User raven
+  IdentityFile ~/.ssh/id_ed25519_codex_homelab
+  IdentitiesOnly yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+
+Host lockbox
+  HostName LockBox
+  User raven
+  IdentityFile ~/.ssh/id_ed25519_codex_homelab
+  IdentitiesOnly yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+
+Host steamdeck
+  HostName steamdeck
+  User deck
+  IdentityFile ~/.ssh/id_ed25519_codex_homelab
+  IdentitiesOnly yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+
+Host ravenssteamdeck
+  HostName RavensSteamDeck
+  User deck
+  IdentityFile ~/.ssh/id_ed25519_codex_homelab
+  IdentitiesOnly yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+
+Host atlasos-ravenst
+  HostName ATLASOS-RAVENST
+  User raven
+  IdentityFile ~/.ssh/id_ed25519_codex_homelab
+  IdentitiesOnly yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+
+Host laptop-f96a9ft3
+  HostName LAPTOP-F96A9FT3
+  User raven
+  IdentityFile ~/.ssh/id_ed25519_codex_homelab
+  IdentitiesOnly yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3

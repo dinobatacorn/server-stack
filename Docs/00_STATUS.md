@@ -1,7 +1,7 @@
 # Homelab Status
 
 Status: Current
-Last reviewed: 2026-07-25
+Last reviewed: 2026-09-30
 Source docs:
 - Current State of the Homelab (July 2026)
 - pve-output_09072026.txt
@@ -11,8 +11,9 @@ Source docs:
 - Syncthing Recovery and Architecture Update, 2026-07-25
 - MediaCenter maintenance/update summary, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
+- Fleet Update Reports, 2026-09-28 through 2026-09-30
 - Canonical architecture, runbook, inventory, and backlog documents in this repository
-Next action: Remove obsolete Syncthing `SirBranteSaves`, verify MediaCenter display-blanking persistence, and plan remaining technical-debt items from the July 25 maintenance.
+Next action: Capture AtlasOS post-update inventory when ready; confirm RustDesk LXC 103's router reservation and VPN route; continue guarded fleet-automation planning.
 
 ## How To Read This Status
 
@@ -20,11 +21,26 @@ Next action: Remove obsolete Syncthing `SirBranteSaves`, verify MediaCenter disp
 - **Deployed state** records what is actually running and verified now.
 - **Next milestones** lists work that has not yet been completed.
 
+## 2026-09-29 Maintenance State
+
+The dated [2026-09-28 fleet report](06_Operations/Update%20Reports/2026-09-28.md) records PVE, Pi-hole, WireGuard, VM100, MediaCenter, and RustDesk LXC 103 maintenance. The [2026-09-29 report](06_Operations/Update%20Reports/2026-09-29.md) records endpoint checks and remaining gaps.
+
+- **PVE:** Updated and reboot-validated on 2026-09-28. On 2026-09-29, a PVE host/config snapshot and a fresh VM100 backup were validated. Guest backup scheduling/retention remains undefined.
+- **RustDesk Server:** Runs in unprivileged Debian LXC 103 at `192.168.0.189`; `hbbs`, `hbbr`, and API/UI were active, and the user confirmed API login. A Cloudflare DNS-only A record to the RFC1918 address was shown in a user screenshot. No WAN forwards were added. The owner reports pointing clients to the server during maintenance and multiple successful sessions, most recently phone-to-desktop after connecting the phone to the network. The specific LAN or WireGuard path is unstated; router DHCP reservation and VPN route remain unverified. See [RustDesk Server Maintenance](02_Runbooks/RustDesk%20Server%20Maintenance.md).
+- **VM100:** Debian and Docker platform packages updated; active Compose projects were pulled/recreated and checked. NPM was verified at `2.16.0`; all five containers were running and Baserow/PostgreSQL were healthy.
+- **MediaCenter:** Debian updated and rebooted to `6.12.107+deb13-amd64`. Six media containers were refreshed, app-data archive validated, and all six local web-port checks passed after restart. Root is at 95% use with about 11 GB available; do not pull more images until storage is reviewed. The owner reports Jellyfin's full-library scan completed successfully.
+- **LockBox:** The 2026-09-29 post inventory records Garuda Linux kernel `7.2.7-zen1-1-zen`, zero pending repository updates, and root Btrfs at 77% use. The pre inventory recorded kernel `7.1.4-zen1-1-zen` and the dependency conflict. The post snapshot confirms current state, but no package transaction log was supplied; exact package changes are not verified. Snapper pre-update snapshot `260` was confirmed before the update.
+- **Nobara:** Pre/post local records identify Nobara 44; post-check found no package updates or failed units, with kernel `7.2.6-201.nobara.fc44.x86_64` unchanged. The transaction log and reboot status were not captured, so exact update and reboot outcomes remain unverified.
+- **AtlasOS:** Screenshots show Sunshine's Virtual HID driver unlicensed and ViGEmBus `1.21.442.0` installed; Sunshine reports fallback to ViGEmBus. The owner prefers leaving the current Sunshine configuration as-is. AtlasOS post-update inventory remains pending; no further Sunshine driver change is planned.
+- **Proxy DNS:** User observed that all proxy hostnames returned “server not found” with VPN off; direct NPM access at `192.168.0.125:81` worked, and enabling VPN restored hostname access. This is recorded as a client DNS-path issue; the router/DHCP DNS configuration has not been verified.
+
+Raw endpoint inventories are ignored under `scripts/output/`; keep them private and do not commit them. Commit only reviewed summaries without secrets or unnecessary personal/network detail.
+
 ## Settled Architecture
 
 - Containers are disposable; persistent data is sacred.
 - Rebuildability is preferred over patching unclear state.
-- Access is VPN-first and services are internal-first.
+- Access policy: every service except WireGuard is restricted to the home LAN or WireGuard-connected clients. No service is intended to be reachable from the public internet. A future public portal is the only planned exception and is not yet deployed.
 - Services remain modular; Kubernetes and HA are out of scope without a demonstrated need.
 - User-facing Docker services should join the shared `proxy` bridge network for reverse proxy access and internal service discovery.
 - Nginx Proxy Manager uses the shared wildcard `*.dustynest.com` certificate for routine service Proxy Hosts.
@@ -133,15 +149,15 @@ Seerr
 
 Immediate:
 
-1. Remove obsolete `SirBranteSaves` from Syncthing.
-2. Verify or persist MediaCenter X11 screensaver/DPMS disablement.
-3. Retain validated Syncthing rescue and Baserow dump until rollback/retention requirements are met.
-4. Normalize VM100 deployment definitions from `/mnt/core/stacks` to `/mnt/core/services`.
-5. Deploy Lidarr.
-6. Deploy Bazarr.
-7. Deploy Readarr.
-8. Deploy Audiobookshelf.
-9. Deploy Kavita.
+1. Capture AtlasOS post-update inventory when ready; leave Sunshine's current driver configuration unchanged.
+2. Confirm the DHCP reservation and VPN route for RustDesk LXC 103; successful client sessions are reported.
+3. Review MediaCenter disk usage before any more image pulls; root is currently recorded at 95% used.
+4. Confirm LAN DNS on the Windows desktop; proxy hostnames currently have only been verified while VPN is on.
+5. Resolve VM200's stale CD-ROM APT source and verify partner Affine use before guest maintenance.
+6. Review LockBox's `mirrorlist.pacnew`; keep its 2026-09-29 raw snapshots private and note that the update transaction log was not captured.
+7. Remove obsolete `SirBranteSaves` from Syncthing and verify display-blanking persistence.
+8. Retain validated recovery material and define backup retention/restore checks.
+9. Normalize VM100 definitions from `/mnt/core/stacks` to `/mnt/core/services` and continue planned service expansion only after storage and backup gates.
 
 After core deployment:
 
@@ -163,7 +179,7 @@ Longer term:
 
 ## DNS Constraint
 
-The router must retain ISP DNS. Pi-hole provides local `*.dustynest.com` records to VPN clients and explicitly configured LAN clients. The Windows desktop Wi-Fi adapter uses Pi-hole directly because Windows may prefer Wi-Fi DNS over WireGuard DNS while the VPN is connected. See [Windows Desktop DNS](02_Runbooks/Windows%20Desktop%20DNS.md).
+The router must retain ISP DNS. Pi-hole provides local `*.dustynest.com` records to VPN clients and explicitly configured LAN clients. A LAN client should not need WireGuard to reach a LAN service, but its DNS must resolve the local record through Pi-hole. The Windows desktop's Wi-Fi adapter was previously configured to use Pi-hole, but on 2026-09-29 the user observed that all proxy hostnames failed to resolve while VPN was off and worked when VPN was enabled. The current adapter/router DNS configuration was not rechecked; confirm it before assuming LAN hostname access works. Direct NPM UI access at `192.168.0.125:81` worked during the report. See [Windows Desktop DNS](02_Runbooks/Windows%20Desktop%20DNS.md).
 
 ## Maturity
 

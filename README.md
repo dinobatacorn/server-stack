@@ -1,7 +1,7 @@
 # Ops Vault Start Here
 
 Status: Current
-Last reviewed: 2026-07-25
+Last reviewed: 2026-10-04
 Canonical entrypoint: this file
 
 Source docs:
@@ -14,9 +14,9 @@ Source docs:
 - medianode-output_09072026.txt
 - Syncthing Recovery and Architecture Update, 2026-07-25
 - MediaCenter maintenance/update summary, 2026-07-25
-- Homelab Documentation Update Handoff, 2026-07-25
+- MediaCenter maintenance record, 2026-10-04
 
-Next action: Remove obsolete Syncthing `SirBranteSaves`, verify MediaCenter display-blanking persistence, and continue planned service normalization/automation work.
+Next action: Remove obsolete Syncthing `SirBranteSaves`, verify MediaCenter display-blanking persistence, and continue planned service normalization/automation work. See the Media Backlog for the current media host follow-ups.
 
 ## Purpose
 
@@ -38,6 +38,7 @@ This vault is the operational memory for the homelab and media ecosystem. It sho
 - Baserow deployment: [Baserow](Docs/02_Runbooks/Baserow.md)
 - Syncthing deployment and recovery: [Syncthing](Docs/02_Runbooks/Syncthing.md)
 - MediaCenter maintenance: [MediaCenter Maintenance](Docs/02_Runbooks/MediaCenter%20Maintenance.md)
+- MediaCenter controller and WireGuard/DNS repair (2026-10-04): [Maintenance record](Docs/02_Runbooks/MediaCenter%20Maintenance%202026-10-04.md)
 - Docker and Compose safety: [Docker Compose Operations](Docs/02_Runbooks/Docker%20Compose%20Operations.md)
 - VPN validation: [VPN External Access Validation](Docs/02_Runbooks/VPN%20External%20Access%20Validation.md)
 - Windows desktop DNS: [Windows Desktop DNS](Docs/02_Runbooks/Windows%20Desktop%20DNS.md)

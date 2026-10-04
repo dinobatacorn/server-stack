@@ -1,14 +1,15 @@
 # Media Backlog
 
 Status: Current
-Last reviewed: 2026-09-29
+Last reviewed: 2026-10-04
 Source docs:
 - Media Stack Stabilization 23.05.26.md
 - Current State of the Homelab (July 2026)
 - medianode-output_09072026.txt
 - MediaCenter maintenance/update summary, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
-Next action: Verify display-blanking settings persist, then confirm `/media` backing storage before expansion.
+- MediaCenter maintenance record, 2026-10-04
+Next action: Rotate the exposed WireGuard private key with the peer configuration coordinated; investigate the extra `192.168.0.0/24` AllowedIPs entry separately.
 
 ## Completed Foundation
 
@@ -30,9 +31,13 @@ Next action: Verify display-blanking settings persist, then confirm `/media` bac
 - Onboard installed as local on-screen keyboard fallback.
 - System sleep, suspend, hibernate, and hybrid sleep targets masked for always-on appliance behavior.
 - X11 screensaver and DPMS disabled in the live session after Jellyfin/Firefox display blanking was confirmed.
+- DualShock 4 verified working over Bluetooth for Kodi navigation; see [MediaCenter maintenance record, 2026-10-04](../02_Runbooks/MediaCenter%20Maintenance%202026-10-04.md).
+- MediaCenter WireGuard IPv4, route, and internal DNS repair verified; NetworkManager remains authoritative for `wg0`. See the dated maintenance record for diagnosis and expected split-tunnel settings.
 
 ## Immediate Repair Or Verification
 
+- Rotate the exposed MediaCenter WireGuard private key and coordinate the change with the peer configuration. Do not put the key in repository documentation.
+- Investigate the source and intended purpose of the extra `192.168.0.0/24` WireGuard AllowedIPs entry before changing the working configuration.
 - Verify `xset s off` and `xset -dpms` persist across MediaCenter logout and reboot; make them autostart for the X11 session if needed.
 - Retain `/var/backups/mediacenter/core-ghost-2026-07-25.tar.gz` until rollback requirements have passed.
 - Continue verifying media-stack restart counts after the mount repair.

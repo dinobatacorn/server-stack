@@ -1,7 +1,7 @@
 # Homelab Status
 
 Status: Current
-Last reviewed: 2026-09-30
+Last reviewed: 2026-10-04
 Source docs:
 - Current State of the Homelab (July 2026)
 - pve-output_09072026.txt
@@ -12,8 +12,9 @@ Source docs:
 - MediaCenter maintenance/update summary, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
 - Fleet Update Reports, 2026-09-28 through 2026-09-30
+- MediaCenter maintenance record, 2026-10-04
 - Canonical architecture, runbook, inventory, and backlog documents in this repository
-Next action: Capture AtlasOS post-update inventory when ready; confirm RustDesk LXC 103's router reservation and VPN route; continue guarded fleet-automation planning.
+Next action: Capture AtlasOS post-update inventory when ready; confirm RustDesk LXC 103's router reservation and VPN route; continue guarded fleet-automation planning; rotate the exposed MediaCenter WireGuard private key with peer configuration coordinated; investigate the extra `192.168.0.0/24` AllowedIPs entry separately.
 
 ## How To Read This Status
 
@@ -109,6 +110,8 @@ Operational media services:
 - Seerr returned successfully with restart count 0, logged `Server ready on port 5055`, and HTTP returned the expected `307 -> /login`.
 - Jellyfin is fully configured and running with established libraries, verified imports, and playback.
 - Kodi is installed with Arctic Fuse 3 and serves as the living-room frontend to Jellyfin.
+- A Bluetooth DualShock 4 is verified working for Kodi navigation; see [MediaCenter maintenance record, 2026-10-04](02_Runbooks/MediaCenter%20Maintenance%202026-10-04.md).
+- MediaCenter internal DNS and WireGuard IPv4 routing were repaired on 2026-10-04. NetworkManager is authoritative for `wg0`; its verified configuration keeps Wi-Fi/LAN as the default route and uses WireGuard as a split tunnel. The exposed private key still requires rotation, and the extra `192.168.0.0/24` AllowedIPs entry needs separate investigation; see the dated maintenance record.
 - RustDesk 1.4.9 is enabled and active as a native Debian package on `media`, with unattended permanent-password access configured.
 - Onboard is installed as the emergency on-screen keyboard for local mouse-only operation.
 

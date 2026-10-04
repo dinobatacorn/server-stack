@@ -1,7 +1,7 @@
 # Ops Vault Start Here
 
 Status: Current
-Last reviewed: 2026-09-30
+Last reviewed: 2026-10-04
 Canonical entrypoint: this file
 
 Source docs:
@@ -16,8 +16,9 @@ Source docs:
 - MediaCenter maintenance/update summary, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
 - Fleet Update Reports, 2026-09-28 through 2026-09-30
+- MediaCenter maintenance record, 2026-10-04
 
-Next action: Capture AtlasOS post-update inventory when ready; confirm RustDesk LXC 103's router reservation and VPN route; use the staged fleet runbook to prepare future update automation.
+Next action: Capture AtlasOS post-update inventory when ready; confirm RustDesk LXC 103's router reservation and VPN route; use the staged fleet runbook to prepare future update automation. Remove obsolete Syncthing `SirBranteSaves`, verify MediaCenter display-blanking persistence, and continue planned service normalization/automation work. See the Media Backlog for the current media host follow-ups.
 
 ## Purpose
 
@@ -39,6 +40,10 @@ This vault is the operational memory for the homelab and media ecosystem. It sho
 - Baserow deployment: [Baserow](Docs/02_Runbooks/Baserow.md)
 - Syncthing deployment and recovery: [Syncthing](Docs/02_Runbooks/Syncthing.md)
 - MediaCenter maintenance: [MediaCenter Maintenance](Docs/02_Runbooks/MediaCenter%20Maintenance.md)
+- Baserow deployment: [Baserow](Docs/02_Runbooks/Baserow.md)
+- Syncthing deployment and recovery: [Syncthing](Docs/02_Runbooks/Syncthing.md)
+- MediaCenter maintenance: [MediaCenter Maintenance](Docs/02_Runbooks/MediaCenter%20Maintenance.md)
+- MediaCenter controller and WireGuard/DNS repair (2026-10-04): [Maintenance record](Docs/02_Runbooks/MediaCenter%20Maintenance%202026-10-04.md)
 - LockBox maintenance: [LockBox Maintenance](Docs/02_Runbooks/LockBox%20Maintenance.md)
 - Nobara maintenance: [Nobara Maintenance](Docs/02_Runbooks/Nobara%20Maintenance.md)
 - RustDesk server maintenance: [RustDesk Server Maintenance](Docs/02_Runbooks/RustDesk%20Server%20Maintenance.md)

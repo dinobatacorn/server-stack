@@ -121,6 +121,20 @@ Knowledge architecture:
 
 ## Deferred
 
+### Homelab Storage and Digital Archive Reconnaissance
+
+Status: Not started (recorded 2026-10-14 at the owner's request).
+
+The owner-provided proposal is to establish an evidence-based map of distributed storage and personal archives as a read-only discovery and documentation phase. Codex's role is “the archivist, not the housekeeper”: investigate, inventory, cross-reference, and document without deciding what to discard or rearranging files. No reconnaissance has been performed as part of this backlog entry, and the storage details in the proposal are not verified repository state.
+
+Proposed documentation section: `Docs/07_Data_Archive/`, with an overview, storage inventory, data source register, collection inventory, duplication analysis, backup coverage, and migration planning notes. Detailed machine-readable manifests should remain outside the public repository; do not commit personal filenames, sensitive paths, credentials, tokens, or private archive contents.
+
+The proposed first pass is read-only and layered: physical storage; data distribution; overlap and redundancy; preservation risk. The proposal names Ravens Tower, the Expansion HDD, a rugged 1 TB LaCie, Proxmox, MediaCenter, other computers, an iPhone, Google Drive, and Proton Drive as possible investigation targets, subject to authorized access. It calls for no recursive hashing of large media collections during the first pass and no file, mount, permission, configuration, or service changes.
+
+When this work is started, read current status, architecture, storage contracts, inventories, backup runbook, and relevant ADRs first. Record verified facts separately from historical documentation, inference, and unknowns. The first reconnaissance should stop after documentation and provide an ecosystem overview, verified storage locations, unknowns and risks, measured capacity needs where available, small follow-up investigations, and one best next action. Keep the backlog to one manageable next task at a time; the owner retains decisions about their data.
+
+Next action when ready: begin the read-only first reconnaissance on Ravens Tower while the Expansion HDD is connected, then extend the inventory to server and cloud sources only where access is authorized. Until then, this initiative remains deferred.
+
 - Complete the Homepage administrative dashboard.
 - Deploy Uptime Kuma, Grafana, and Prometheus.
 - Disk alerts.

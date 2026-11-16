@@ -24,7 +24,7 @@ Use Codex Worktree mode for normal repo edits. Use Local mode only when intentio
 Dedicated key:
 
 ```text
-C:\Users\raven\.ssh\id_ed25519_codex_homelab
+C:\Users\raven\.ssh\id_ed25519_codex_pve_runtime
 ```
 
 Real aliases live in:
@@ -43,9 +43,9 @@ Do not commit private keys, passwords, tokens, one-time codes, or full sensitive
 
 ## Codex Remote Host Policy
 
-Full Codex remote-host capability is for stable admin/development hosts only. Current maintenance evidence confirms dedicated-key SSH access to PVE by direct IP and to MediaCenter `media`. The `pve` alias is not configured. LockBox remains a local/manual endpoint; do not force SSH enablement just for automation.
+Full Codex remote-host capability is for stable admin/development hosts only. On 2026-10-23, dedicated-key SSH access was verified for PVE (`pve`), Pi-hole (`pihole`), WireGuard (`wireguard`), RustDesk (`rustdesk`), MediaCenter (`media`), and VM100 (`services`). VM100's documented `raven` account was absent, so the owner approved setup on its existing root account, which permits SSH. LockBox remains excluded from SSH setup at the owner's direction.
 
-Other devices may use plain SSH for inventory and update checks without installing or authenticating Codex on them.
+Other devices may use plain SSH for inventory and update checks without installing or authenticating Codex on them. The current client key fingerprint is `SHA256:EBT4cZ0g2tdeSKHQBejYQeNbOEf9BUDEzhYaWi/AImY` (`codex-pve-runtime-2026-09`).
 
 The 2026-09-28/29 fleet pass used PVE as the management path for Pi-hole, WireGuard, and RustDesk LXC 103; VM100 maintenance used its QEMU guest agent. VM200's SSH key access and host-key trust remain unverified, and its QEMU guest agent is not configured. See [Reachability Inventory](Reachability%20Inventory.md) before assuming any target can be managed remotely.
 

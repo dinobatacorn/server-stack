@@ -1,7 +1,7 @@
 # Reachability Inventory
 
 Status: In progress
-Last reviewed: 2026-09-29
+Last reviewed: 2026-10-23
 
 ## Status Meanings
 
@@ -18,13 +18,13 @@ Last reviewed: 2026-09-29
 
 | Alias | Device | HostName/IP | Expected user | Role | SSH status | Sudo/admin status | Update method | Codex remote capable | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `pve` | Proxmox host | `192.168.0.75` | `root` | infrastructure | ready by direct IP with dedicated key; `pve` alias absent | root shell | `apt` / Proxmox | yes by direct SSH | Updated and reboot-validated 2026-09-28; 2026-09-29 host/config snapshots and a fresh VM100 backup validated. RustDesk Server is isolated in LXC 103 rather than installed on PVE. |
-| `pihole` | Pi-hole LXC | `192.168.0.120` | `root` | DNS | maintained through PVE `pct exec`; direct SSH still needs host-key verification | unknown | `apt` / Pi-hole updater | no | Debian packages updated 2026-09-28; FTL active, DNS query passed, post snapshot saved. Set up direct SSH only if needed. |
-| `wireguard` | WireGuard LXC | `192.168.0.110` | `root` | VPN | maintained through PVE `pct exec`; direct SSH still needs host-key verification | unknown | `apt` | no | Debian packages updated 2026-09-28; `wg0` active, UDP 51820 listening, post snapshot saved. Set up direct SSH only if needed. |
-| `rustdesk` | RustDesk Server LXC 103 | `192.168.0.189` (DHCP) | `root` | RustDesk ID/rendezvous and relay | managed through PVE `pct exec`; SSH not enabled/tested | root in guest | Community Scripts update function / `apt` | no | `hbbs`, `hbbr`, and API active; persistent state is under `/mnt/core/appdata/security`. User confirmed API UI password set and successful login. Screenshot shows a DNS A record to `192.168.0.189`; router DHCP reservation and VPN route remain unverified. No WAN port forwards were added. |
-| `services` | VM100 Core Services | `192.168.0.125` | `raven` | Docker/core services | maintained through PVE QEMU guest agent; direct SSH still needs host-key verification | unknown | `apt`, Docker Compose | yes by PVE guest agent | OS and five active containers refreshed 2026-09-28; NPM 2.16.0, all containers running, Baserow/PostgreSQL healthy. Fresh VM/database/NPM backups validated. |
+| `pve` | Proxmox host | `192.168.0.75` | `root` | infrastructure | ready by alias `pve` with dedicated key | root shell | `apt` / Proxmox | yes by direct SSH | Updated and reboot-validated 2026-09-28; 2026-09-29 host/config snapshots and a fresh VM100 backup validated. RustDesk Server is isolated in LXC 103 rather than installed on PVE. |
+| `pihole` | Pi-hole LXC | `192.168.0.120` | `root` | DNS | ready by alias `pihole`; key installed, host key verified through PVE, direct login tested 2026-10-23 | root shell | `apt` / Pi-hole updater | no | Debian packages updated 2026-09-28; FTL active, DNS query passed, post snapshot saved. |
+| `wireguard` | WireGuard LXC | `192.168.0.110` | `root` | VPN | ready by alias `wireguard`; key installed, host key verified through PVE, direct login tested 2026-10-23 | root shell | `apt` | no | Debian packages updated 2026-09-28; `wg0` active, UDP 51820 listening, post snapshot saved. |
+| `rustdesk` | RustDesk Server LXC 103 | `192.168.0.189` (DHCP) | `root` | RustDesk ID/rendezvous and relay | ready by alias `rustdesk`; key installed, host key verified through PVE, direct login tested 2026-10-23 | root shell | Community Scripts update function / `apt` | no | `hbbs`, `hbbr`, and API active; persistent state is under `/mnt/core/appdata/security`. User confirmed API UI password set and successful login. Screenshot shows a DNS A record to `192.168.0.189`; router DHCP reservation and VPN route remain unverified. No WAN port forwards were added. |
+| `services` | VM100 Core Services | `192.168.0.125` | `root` (`raven` listed in prior inventory but absent on VM) | Docker/core services | ready by alias `services`; root key installed, host key verified through QEMU guest agent, direct login tested 2026-10-23 | root shell | `apt`, Docker Compose | yes by PVE guest agent and direct SSH | PVE guest agent remains available. Direct SSH uses the existing dedicated key after owner approval on 2026-10-23. |
 | `infra-proxy` (retired) | VM200 | `192.168.0.131` (historical) | `raven` | Retired VM | Not applicable; VM reported destroyed 2026-09-30 | Not applicable | Not applicable | no | Owner reports partner moved to Super Productivity and an older comprehensive backup exists; backup contents and restoreability are unverified. |
-| `media` | MediaCenter | `192.168.0.143` | `mediacenter` | media host | ready by direct IP with dedicated key; live host key matched saved record | sudo group, password required; Docker group | `apt`, Docker Compose | yes by direct SSH | Debian/kernel updated and rebooted; post snapshot/appdata archive validated; all six containers restarted and ports responded. Root is 95% used (11 GB free); complete library scan and review storage before further image pulls. |
+| `media` | MediaCenter | `192.168.0.143` | `mediacenter` | media host | ready by alias `media` with dedicated key; direct login tested 2026-10-23 | sudo group, password required; Docker group | `apt`, Docker Compose | yes by direct SSH | Debian/kernel updated and rebooted; post snapshot/appdata archive validated; all six containers restarted and ports responded. Root is 95% used (11 GB free); complete library scan and review storage before further image pulls. |
 | `ravenstower` | Linux tower / Nobara boot | `RavensTower` | `raven` | endpoint | manual/local; SSH not tested | local owner | `nobara-sync`, Flatpak separately | no | 2026-09-29 pre/post records; verify actual package transaction and reboot outcome before automated maintenance. |
 | `lockbox` | Partner's LockBox | `LockBox` | `dustinl` | gaming endpoint | reachable but SSH refused; manual/local | local owner | `garuda-update`; Flatpak separately | no | 2026-09-29 post inventory reports kernel `7.2.7-zen1-1-zen` and 0 pending repo updates. Review `mirrorlist.pacnew`; transaction log and post-Snapper list were not captured. |
 | `steamdeck` | Steam Deck | `steamdeck` | `deck` | endpoint | offline or DNS missing | unknown | SteamOS / Discover / flatpak as applicable | no | Confirm current hostname/IP and whether SSH is enabled. |
@@ -92,6 +92,14 @@ Proxmox web UI is reachable from the current Windows host at `https://192.168.0.
 A follow-up host-key scan also reached the same core hosts, but this Windows OpenSSH 9.5p2 `ssh-keyscan` failed against the Debian OpenSSH 10.0p2 servers with unsupported key exchange `sntrup761x25519-sha512@openssh.com`. Treat this as a local scan-tool limitation, not a server outage. Use interactive `ssh <alias>` plus console fingerprint verification instead of blindly writing `known_hosts`.
 
 Endpoint results are mixed: some aliases do not resolve yet, and some devices answer but are not running normal SSH on port 22.
+
+### SSH Access Setup: 2026-10-23
+
+- The Windows SSH config now has tested aliases `pve`, `media`, `pihole`, `wireguard`, `rustdesk`, and `services`, all using `id_ed25519_codex_pve_runtime`.
+- PVE and MediaCenter accepted the existing key. The key was installed on the root accounts of Pi-hole, WireGuard, and RustDesk LXC 103. Each guest host key was read through authenticated PVE access, its ED25519 fingerprint matched the guest's reported fingerprint, and direct SSH login succeeded.
+- VM100's SSH service is active, but its documented `raven` account does not exist. Its SSH configuration permits root login. After owner approval, the existing key was installed on root with mode `600`; the host key was matched to the QEMU guest-agent result; direct SSH via `services` succeeded.
+- The current workstation reports hostname `AtlasOS-RavensTower`; `RavensTower` and `ATLASOS-RAVENST` are the Nobara and AtlasOS entries for its dual-boot setup. The separate `steamdeck`, `RavensSteamDeck`, and `LAPTOP-F96A9FT3` names did not resolve from the workstation or PVE during this pass, so their current addresses and SSH state remain unknown.
+- LockBox was excluded from this setup at the owner's direction.
 
 ## Next Pass
 

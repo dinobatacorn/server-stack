@@ -1,7 +1,7 @@
 # Fleet Update Runbook
 
 Status: Draft
-Last reviewed: 2026-09-29
+Last reviewed: 2026-11-25
 
 ## Purpose
 
@@ -9,15 +9,19 @@ Run staged updates across all devices that can be reached and authenticated. Thi
 
 ## Storage Contract
 
-Raw snapshots stay on infrastructure storage:
+Keep lightweight fleet inventories separate from recovery archives:
 
-```text
-/mnt/core/backups/snapshots/<date>/<phase>/<host>/
-```
+| Data | Authoritative location | Purpose |
+|---|---|---|
+| Proxmox VM/LXC archives | `/mnt/core/backups/snapshots/dump/` | Proxmox `vzdump` recovery archives under storage ID `snapshots` |
+| Application and host recovery archives | `/mnt/core/backups/<service>/<date>/` | Database dumps, appdata archives, host configuration backups |
+| Fleet inventory JSON | `scripts/output/YYYY-MM-DD/{pre,post}/` | Lightweight system state snapshots; collectors also support `snapshot` phase |
 
-Redacted summaries and scripts live in this repository. Do not commit raw snapshots unless they have been reviewed for secrets and sensitive local details.
+The inventory output is in the synced server-stack checkout at `/mnt/core/data/sync/github/server-stack/scripts/output/` on PVE. Hostname, phase, and timestamp belong in the filename; do not create a host subdirectory. `.gitignore` excludes `scripts/output/`. The directory is synchronized through Syncthing, so inventory JSON must be treated as private operational data and kept out of Git. Syncthing replication is not an independent recovery backup.
 
-Raw inventory snapshots and recovery archives stay owner-only (`600` files, `700` directories) because they can expose network details, service configuration, or credentials. The Linux collector uses `umask 077` (script version `2026-09-29.3`) to enforce those permissions at creation.
+Redacted summaries and scripts live in this repository. Linux collection uses `umask 077` (script version `2026-09-29.3`) for owner-only files. Check Windows ACLs separately if sensitive data is collected; do not assume the Linux permissions apply there. Do not confuse an inventory JSON with a recovery archive or a restore test.
+
+The 2026-11-25 filesystem cleanup and its unresolved inventory quarantine are recorded in [Backup and Inventory Layout Cleanup](Maintenance%20History/2026-11-25-backup-and-inventory-layout-cleanup.md). Its initial migration count was 43 JSON files; final reconciliation and Syncthing peer convergence remain unverified.
 
 ## Stages
 
@@ -51,7 +55,9 @@ If `/mnt/core` is not verified, the wrapper refuses to write there. For non-home
 ./scripts/collect_linux.sh --role linux-endpoint --phase pre --output-base ./output
 ```
 
-The Linux collector is inventory-only. It does not update the OS, Docker images, Flatpak apps, or firmware. It validates JSON before writing and prints the saved filename; a created directory alone is not proof that a snapshot was written.
+The Linux collector is inventory-only. It does not update the OS, Docker images, Flatpak apps, or firmware. It validates the collected JSON values before writing and prints the saved filename; a created directory alone is not proof that a snapshot was written. It writes directly to the final filename rather than atomically renaming a validated temporary file, so an interrupted write may leave a partial file. This reliability improvement is still pending.
+
+`collect_update_baseline.sh` defaults to `scripts/output` and supports `pre`, `post`, and `snapshot`. `collect_linux.sh` defaults to the same root and supports `--output-base` and `--output-file`; custom overrides may intentionally write elsewhere. The wrapper launches the collector through Bash. Linux syntax and a runtime PVE capture through the wrapper were reported validated on 2026-11-25.
 
 ## Windows Snapshot Command
 
@@ -64,6 +70,8 @@ Run the collector from an elevated PowerShell session so Windows hardware, stora
 Use `-OutputBase` to place output in a dated local folder. Review before committing or syncing.
 
 This collector creates an inventory snapshot; it is not a disk image or a full recovery backup. Before applying Windows or driver updates, confirm a usable recovery path. A Windows System Restore point covers system settings and files, not personal files or a complete disk image. If the machine needs full-disk recovery, make and verify an image backup to independent storage first. Do not count a successful JSON collector run as proof of recoverability.
+
+`collect_windows.ps1` defaults to `scripts/output/YYYY-MM-DD/PHASE/HOST_PHASE_TIMESTAMP.json`; `-OutputBase` and `-Output` override that location. Laptop JSON generation and winget parsing were reported validated on 2026-11-25, including 20 parsed upgrades. AtlasOS collection has not been tested. The current collector still attempts HWiNFO unless `-SkipHWiNFO` is supplied; command-line collection on the laptop hit a license dialog requiring HWiNFO64 Pro, so use `-SkipHWiNFO` when collecting without that license. JSON collection and temporary XML cleanup succeeded despite the HWiNFO timeout. Libre Hardware Monitor integration has not been implemented. Windows JSON is written directly to its final path; atomic file replacement is not implemented.
 
 For Windows endpoint maintenance:
 
@@ -96,12 +104,12 @@ For each active Compose project:
 1. Verify the canonical host and required storage mounts.
 2. Record current container names, configured image tags, running image IDs/digests, versions, health, and restart counts.
 3. Review upstream release notes for major application upgrades, database migrations, plugin compatibility, and any required post-upgrade tasks. Defer an update if required recovery steps cannot be completed in the maintenance window.
-4. Back up persistent data. Create and validate application-level database dumps for databases before image pulls/recreation.
+4. Back up persistent data. Create and validate application-level database dumps for databases before image pulls/recreation. Baserow production PostgreSQL 17 is reported on CT104 (`192.168.0.139`), separately from VM100 Docker; validate CT104 identity and backup prerequisites before maintenance. Its recurring backup and restore procedure remain pending.
    For a consistent MediaCenter recovery archive, stop its active Compose project, archive `/mnt/core/services/media`, validate the archive, then restart the project and recheck all containers and local web ports.
 5. Pull images, then run `docker compose up -d` so containers use the pulled images. `docker compose pull` by itself does not update running containers.
 6. Verify the running image IDs/versions changed where an update was available; wait for startup and health checks.
 7. Check recent logs, restart counts, local service ports, and at least one user-facing route for proxy-backed services. Complete application-specific post-upgrade steps such as library scans when required by the upstream release.
-8. Check disk usage after pulling and recreating containers. On MediaCenter, stop further image updates if root use exceeds 95% or available space falls below 8 GB; schedule image cleanup separately after the rollback window.
+8. Check disk usage after pulling and recreating containers. On MediaCenter, stop further image updates if root use exceeds 95% or available space falls below 8 GB; schedule image cleanup separately after the rollback window. The 2026-11-25 cleanup reduced documented root use to 18%; see the incident record. Confirm both `/mnt/core` and `/media` backing mounts before Docker operations.
 9. Save post-update snapshots and document versions, backup locations, and any skipped hosts/projects.
 
 The MediaCenter sudo preflight checks the existing media containers but does not pull or recreate images. Run this image-update pass separately after the preflight gates succeed. Preserve old images during the rollback window; do not prune them during the update pass.

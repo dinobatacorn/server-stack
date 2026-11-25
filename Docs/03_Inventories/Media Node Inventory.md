@@ -1,7 +1,7 @@
 # Media Node Inventory
 
 Status: Current
-Last reviewed: 2026-09-30
+Last reviewed: 2026-11-25
 Source docs:
 - media_2026-05-17_12-44-07.json
 - MediaCenter-Archetecture 17.05.26.txt
@@ -11,15 +11,17 @@ Source docs:
 - Homelab Documentation Update Handoff, 2026-07-25
 - Fleet Update Reports, 2026-09-28 through 2026-09-30
 - User-provided MediaCenter BIOS/baseboard dmidecode excerpt, 2026-07-26
-Next action: Investigate the 95%-used root filesystem before any further image pulls, confirm `/media` backing storage, and check a migrated RustDesk client connection.
+- MediaCenter hidden media cleanup and Docker mount protection handoff, 2026-11-25
+- Fleet post-collection JSON, `scripts/output/2026-11-25/post/media_post_2026-11-25_12-24-45.json`; summarized in [2026-11-25 Fleet Update Report](../06_Operations/Update%20Reports/2026-11-25.md)
+Next action: Functionally verify all six media services and verify Docker mount-guard behavior on reboot and failed mounts; collector confirms the mounts and containers were present at its post capture.
 
 ## Host
 
 - Hostname: `media`
 - Primary user: `mediacenter`
 - OS: Debian GNU/Linux 13 Trixie
-- Kernel observed after the 2026-09-29 reboot: `6.12.107+deb13-amd64`.
-- Latest host inventory timestamp: `2026-09-29 11:01:43` (post-image-refresh capture; see fleet report).
+- Kernel observed in the 2026-11-25 post capture: `6.12.118+deb13-amd64`.
+- Latest host inventory timestamp: `2026-11-25T12:24:45-06:00` (post capture; see fleet report).
 - Earlier inventory timestamp: `2026-05-17T12:44:07-05:00`
 - Role: dedicated living-room media node, Jellyfin playback host, and media services host.
 
@@ -45,7 +47,7 @@ Storage from the older May inventory:
 | `sdb` | WDC WD20EFAX-68FB5N0 | 1863 GB | HDD |
 | `sdc` | Expansion HDD | 4657 GB | HDD |
 
-Storage from the July 9 snapshot:
+Historical storage from the July 9 snapshot (later mount verification and cleanup supersede its open questions):
 
 | Device or mount | Size | Mountpoint | Note |
 | --- | ---: | --- | --- |
@@ -54,13 +56,13 @@ Storage from the July 9 snapshot:
 | `192.168.0.75:/mnt/core` | 916 GB | `/mnt/core` | NFS mount from Proxmox host |
 | `sda` | 1.8 TB | none shown | Present but not mounted in captured `lsblk` output |
 
-Current storage concern:
+Historical July 9 storage notes (superseded by the 2026-11-25 verification below):
 
 - `/media` exists and contains the intended taxonomy, but it is not shown as a separate filesystem in the July 9 `df` output.
 - The root filesystem is already 89% used.
 - Confirm whether `sda` should back `/media` before large downloads, imports, or external-drive normalization.
 
-Latest post-image-refresh check, 2026-09-29: root filesystem `/dev/sdb2` was 216 GB total, 195 GB used, and 11 GB available (95%); `/mnt/core` had about 819 GB available. Stop further image pulls until storage has been reviewed and the rollback window is no longer needed. The post-refresh app-data archive passed `zstd -t`; it is stored on the same PVE `/mnt/core` storage path, not offsite.
+Historical post-image-refresh check, 2026-09-29: `/dev/sdb2` was 216 GB total, 195 GB used, 11 GB available (95%). This was the pre-cleanup state, not the latest documented measurement. After the 2026-11-25 hidden-file cleanup, root use was 36 GB (18%). The Debian/package and Docker image update/reboot outcomes after this measurement are pending.
 
 Current critical NFS mount:
 
@@ -76,6 +78,16 @@ findmnt -T /mnt/core
 ```
 
 Do not trust the existence of `/mnt/core` as proof that NFS is mounted.
+
+## 2026-11-25 Storage Incident and Startup Guard
+
+Current figures reported after cleanup: `/dev/sdb2` root filesystem, 216 GB total, 36 GB used, 169 GB available (18%); `/dev/sda1` mounted at `/media`, ext4, 1.8 TB; `/mnt/core` is NFSv4 from `192.168.0.75:/mnt/core`.
+
+Approximately 161 GB of media files were found under the active `/media` mountpoint on the root filesystem. The hidden completed downloads and library files were compared with the mounted media filesystem using rsync dry-run size/mtime comparisons; no full checksums were taken. The owner accepted that limitation, approved deletion, and the hidden files were removed after verifying the underlying filesystem. Root use fell from 197 GB (97%) to 36 GB (18%). The active media filesystem was not deleted. The cause of the hidden copies remains undetermined.
+
+Docker’s systemd override now requires and orders both `/mnt/core` and `/media` mounts before startup and checks each with `/usr/bin/mountpoint -q`. The override was reloaded and recognized; both checks passed during the session. It does not check source/device or writeability, stop already-running containers after mount loss, or prevent manual writes beneath mountpoints. Failed-mount behavior has not been tested.
+
+The 2026-11-25 post capture reported zero pending apt updates, root at 20% used, `/media` as a mounted filesystem, `/mnt/core` as NFSv4, and all six expected containers running. Host uptime was about 22 minutes at capture; this supports that the host had recently booted, but does not identify the cause or validate service functionality. The Docker startup mount guard's failed-mount behavior remains untested. See [incident record](../06_Operations/Incidents/2026-11-25-mediacenter-hidden-media-cleanup.md) and [fleet report](../06_Operations/Update%20Reports/2026-11-25.md).
 
 ## Health Visibility
 
@@ -241,19 +253,19 @@ docker compose up -d
 docker compose ps
 ```
 
-2026-09-28 image refresh:
+Historical 2026-09-28 image refresh:
 
 - All six active media containers were pulled and recreated after verifying `/mnt/core` as the expected NFSv4 mount and `/media` as ext4.
 - Jellyfin is now on the LinuxServer image reporting Jellyfin `12.1.0`. Its pre-update plugin/config tree is archived at `/mnt/core/backups/media/2026-09-28/pre/media-appdata-before-image-refresh.tar.zst` (220 MB; archive integrity passed).
 - Jellyfin Enhanced was replaced with the maintainer's verified 12.0 ABI build `12.9.0.0`; startup logs no longer report a build/host mismatch. The owner reports the full library scan completed successfully after this major upgrade.
-- After the image refresh, `/` was 96% used with 11 GB available. A post-update snapshot is saved at `/mnt/core/backups/media/2026-09-28/post/media-docker-post-update.txt`. Keep old images during the rollback window; do not perform another image refresh until root use is 95% or lower and at least 8 GB is available.
+- At the time of the September image refresh, `/` was 96% used with 11 GB available. A post-update snapshot is saved at `/mnt/core/backups/media/2026-09-28/post/media-docker-post-update.txt`. The image-pull gate blocked further refreshes while root use exceeded 95%; the 2026-11-25 cleanup later reduced documented root use to 18%. Keep prior images through their rollback window and verify post-update reboot state before another maintenance pass.
 
-### 2026-09-29 Recovery Snapshot
+### 2026-09-29 Recovery Snapshot (Historical)
 
-- Current host snapshot: `/mnt/core/backups/snapshots/2026-09-29/post/media/media_post_2026-09-29_11-01-43.json`, valid JSON, mode `600`. The health section records a disconnected RustDesk clipboard FUSE path warning; it was left untouched.
+- Historical 2026-09-29 host inventory: valid JSON, mode `600`; it recorded a disconnected RustDesk clipboard FUSE path warning, which was left untouched. Fleet JSON inventories were later moved out of Proxmox backup storage into `scripts/output/`; final mapping of each migrated file has not been reconciled.
 - Current app-data archive: `/mnt/core/backups/media/2026-09-29/post/media-appdata-after-image-refresh.tar.zst`, 232 MB, mode `600`; created with all six media containers stopped, `zstd -t` passed, and the archive contains the active Compose file.
 - After the archive, all six containers were running and local ports returned Jellyfin `302`, Sonarr `200`, Radarr `200`, qBittorrent `200`, Prowlarr `200`, and Seerr `307`.
-- Root filesystem was 95% used with 11 GB available at the check. Do not pull more images until storage is reviewed and there is a clear need.
+- Root filesystem was 95% used with 11 GB available at the time. The 2026-11-25 cleanup later reduced documented root use to 18%; updates and reboot checks after that cleanup are pending.
 - The pre-update archive at `/mnt/core/backups/media/2026-09-28/pre/media-appdata-before-image-refresh.tar.zst` remains the rollback point for the previous image/plugin state and passed `zstd -t` again on 2026-09-29.
 - All six expected local service ports responded after the refresh; each container restart count was 0 at verification.
 

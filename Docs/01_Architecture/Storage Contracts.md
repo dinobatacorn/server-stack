@@ -1,7 +1,7 @@
 # Storage Contracts
 
 Status: Current
-Last reviewed: 2026-07-25
+Last reviewed: 2026-11-25
 Source docs:
 - Server Plan 21.05.26.md
 - Media Stack Stabilization 23.05.26.md
@@ -11,7 +11,8 @@ Source docs:
 - medianode-output_09072026.txt
 - Syncthing Recovery and Architecture Update, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
-Next action: Normalize legacy `/mnt/core/stacks` service definitions into `/mnt/core/services` and document workload ownership for shared Compose files.
+- MediaCenter hidden media cleanup and Docker mount protection handoff, 2026-11-25
+Next action: Complete Baserow PostgreSQL 17 backup and restore procedures; complete MediaCenter post-update reboot verification.
 
 ## Hard Rule
 
@@ -63,6 +64,16 @@ Responsibilities:
 - `/mnt/core/backups`: backups, dumps, snapshots, and restore inputs.
 - `/mnt/core/docs`: checked-out operational documentation.
 - `/mnt/core/exports`: manual exports, migrations, and one-time extraction output.
+
+Recovery and inventory records use separate layouts:
+
+```text
+/mnt/core/backups/snapshots/dump/       Proxmox VM/LXC recovery archives
+/mnt/core/backups/<service>/<date>/     Application and host recovery archives
+server-stack/scripts/output/<date>/     Fleet inventory JSON, not a recovery backup
+```
+
+The Proxmox storage ID `snapshots` points to `/mnt/core/backups/snapshots` and remains configured for backup content. Fleet JSON output is Git-ignored and synchronized through Syncthing per the 2026-11-25 handoff; treat it as private and do not mistake replication for a tested backup. See the [backup/inventory cleanup record](../06_Operations/Maintenance%20History/2026-11-25-backup-and-inventory-layout-cleanup.md).
 
 Service deployment definitions should live under `/mnt/core/services`, grouped by category:
 
@@ -162,7 +173,7 @@ Recovery note: `/var/backups/syncthing-rescue/misplaced-data-2026-07-25.tar.gz` 
 
 Role: active media-node storage layout.
 
-Current July 9 note: `/media` exists on the media node, but the captured `df` output does not show it as a separate mount. The media node root filesystem is 89% used, and a 1.8 TB disk is visible but not mounted in the captured `lsblk` output. Confirm the backing device before large imports or downloads.
+Verified 2026-11-25: `/media` is mounted from `/dev/sda1` (ext4, 1.8 TB). Root is `/dev/sdb2` (ext4, 216 GB). About 161 GB of hidden files beneath the `/media` mountpoint on root were removed after comparison with the active media filesystem. Final documented root use was 36 GB (18%). See [MediaCenter Hidden Media Cleanup](../06_Operations/Incidents/2026-11-25-mediacenter-hidden-media-cleanup.md).
 
 Use for:
 
@@ -218,7 +229,7 @@ The fundamental storage split remains:
 
 ```text
 /mnt/core = critical persistent application state
-/storage  = bulk/media data
+/storage  = bulk/media data (implemented as /media on MediaCenter)
 ```
 
 On the current MediaCenter deployment, the active media service paths are exposed under `/media`. Treat `/media` as the current implementation path for bulk libraries, downloads, and cache unless a future migration explicitly creates or restores `/storage`.

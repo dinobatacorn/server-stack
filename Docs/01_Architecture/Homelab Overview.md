@@ -1,7 +1,7 @@
 # Homelab Overview
 
 Status: Current
-Last reviewed: 2026-09-29
+Last reviewed: 2026-11-25
 Source docs:
 - Server Plan 21.05.26.md
 - Archive_Plan 05.05.26.txt
@@ -13,6 +13,8 @@ Source docs:
 - MediaCenter maintenance/update summary, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
 - Fleet Update Reports, 2026-09-28 through 2026-09-30
+- Baserow PostgreSQL 16 to 17 migration handoff, 2026-11-24/25
+- MediaCenter hidden media cleanup and Docker mount protection handoff, 2026-11-25
 Next action: Confirm RustDesk LXC 103's DHCP reservation and VPN route; finish MediaCenter checks and keep the proposed game-services VM in planning until storage and network access are approved.
 
 Reference: [IP, Port, And Proxy Assignments](IP%20Port%20Proxy%20Assignments.md) records documented IPs, ports, proxy hostnames, and open assignment gaps.
@@ -71,7 +73,8 @@ Known layout:
 - LXC 103: RustDesk Server (`hbbs`, `hbbr`, API/UI); private persistent state on `/mnt/core/appdata/security`.
 - VM 100: Core Services Docker Host.
 - VM 200: `infra-proxy` was destroyed per owner report on 2026-09-30 after the partner moved to Super Productivity. An older comprehensive backup is reported to exist; restoreability is unverified. See [Main Node Inventory](../03_Inventories/Main%20Node%20Inventory.md).
-- VM 104: Home Assistant OS.
+- Home Assistant OS VM; an older plan assigns it guest ID 104, which conflicts with the 2026-11-24/25 migration handoff's CT104 PostgreSQL host. Verify current PVE guest IDs before treating either ID assignment as current.
+- CT104 `postgresql` (`192.168.0.139`) is reported as the PostgreSQL 17 host for Baserow; its production restore was verified, while its recurring backup and restore procedure remain pending. See [Main Node Inventory](../03_Inventories/Main%20Node%20Inventory.md).
 
 ## VM100 Core Services Platform
 
@@ -87,13 +90,13 @@ Purpose:
 - Monitoring
 - Personal cloud services
 
-Deployed containers:
+Documented VM100 containers at the 2026-09-28 inventory (historical snapshot; Baserow database moved afterward):
 
 - Nginx Proxy Manager
 - Syncthing, with `/mnt/core/data/sync` mounted as `/sync`
 - iSponsorBlockTV
 - Baserow
-- Baserow PostgreSQL
+- PostgreSQL 16 for Baserow (pre-migration only; production moved to the separately managed CT104 PostgreSQL 17 host per the 2026-11-24/25 handoff)
 
 The following groups describe the intended service architecture. Consult [Homelab Status](../00_STATUS.md) for what is running.
 
@@ -174,7 +177,7 @@ Deployed media services:
 
 The Seerr-to-Sonarr/Radarr-to-qBittorrent-to-Jellyfin-to-Kodi pipeline was proven during the July 9 baseline and restored during the July 25 MediaCenter mount repair. Seerr reported `Server ready on port 5055` and HTTP returned `307 -> /login` after repair. Music, reading, and preservation services remain expansion milestones.
 
-Current caution: verify the media node's `/media` backing device before large imports or normalization work. The July 9 inventory shows the root filesystem at 89% used and does not show `/media` as its own mounted filesystem.
+The July 9 inventory's open question about `/media` backing storage was resolved on 2026-11-25: `/media` is mounted from `/dev/sda1` and root use fell to 18% after cleanup of hidden files. Debian update and post-update reboot checks remain pending; see [MediaCenter incident record](../06_Operations/Incidents/2026-11-25-mediacenter-hidden-media-cleanup.md).
 
 Mount caution: MediaCenter previously wrote a local ghost `/mnt/core/services` tree while NFS was absent. Do not rely on the existence of `/mnt/core`; verify the mounted filesystem before Docker or cleanup operations.
 

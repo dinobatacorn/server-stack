@@ -14,8 +14,8 @@ usage() {
 Usage: collect_linux.sh [--role ROLE] [--phase PHASE] [--output-base DIR] [--output-file FILE]
 
 Collects a read-only JSON system snapshot for Linux, Proxmox, VM, LXC,
-media, and SteamOS hosts. Use --output-base /mnt/core/backups/snapshots
-for homelab maintenance runs.
+media, and SteamOS hosts. By default, snapshots are written under
+scripts/output/[date]/[phase]. Use --output-base to choose another root.
 USAGE
 }
 
@@ -83,7 +83,7 @@ if [ -z "$OUTPUT_FILE" ]; then
   if [ -z "$OUTPUT_BASE" ]; then
     OUTPUT_BASE="$SCRIPT_DIR/output"
   fi
-  OUTPUT_DIR="$OUTPUT_BASE/$RUN_DATE/$PHASE/$HOST"
+  OUTPUT_DIR="$OUTPUT_BASE/$RUN_DATE/$PHASE"
   mkdir -p "$OUTPUT_DIR"
   OUTPUT_FILE="$OUTPUT_DIR/${HOST}_${PHASE}_${FILE_TS}.json"
 else

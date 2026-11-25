@@ -1,7 +1,7 @@
 # Service Map
 
 Status: Current
-Last reviewed: 2026-09-29
+Last reviewed: 2026-11-25
 Source docs:
 - Server Plan 21.05.26.md
 - to-do list 17.05.26.md
@@ -14,6 +14,9 @@ Source docs:
 - MediaCenter maintenance/update summary, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
 - Fleet Update Reports, 2026-09-28 through 2026-09-30
+- Baserow PostgreSQL 16 to 17 migration handoff, 2026-11-24/25
+- MediaCenter hidden media cleanup and Docker mount protection handoff, 2026-11-25
+- Fleet post-collection JSON captures, `scripts/output/2026-11-25/post/`; summarized in [2026-11-25 Fleet Update Report](../06_Operations/Update%20Reports/2026-11-25.md)
 Next action: Verify RustDesk LXC 103's router reservation and VPN route, validate LAN DNS behavior, and finish pending endpoint checks before service expansion.
 
 Reference: [IP, Port, And Proxy Assignments](IP%20Port%20Proxy%20Assignments.md) records documented IPs, service ports, proxy hostnames, and open assignment gaps.
@@ -53,15 +56,17 @@ Shared `/mnt/core` visibility does not imply workload ownership. Before running 
 
 ## VM100 Core Services
 
-Currently running after 2026-07-25 maintenance:
+Documented running at the 2026-09-28/29 checks (historical; Baserow database topology changed on 2026-11-24/25):
 
 - `syncthing`
 - `baserow`
-- `baserow-postgres`
+- PostgreSQL 16 was part of the VM100 Baserow Compose project at the 2026-09-28 check; it is now legacy and not the production database.
 - `npm`
 - `isponsorblocktv`
 
 All were running with restart count 0 at final verification.
+
+The 2026-11-25 post collector snapshot reported `syncthing`, `baserow`, `npm`, `isponsorblocktv`, and `actual-budget` running on VM100; Baserow and Actual Budget had Docker health status `healthy`. Actual Budget's captured Compose path is `/mnt/core/services/core/actual-budget/compose.yml`. This is a point-in-time container observation, not an application functionality test. The former PostgreSQL 16 container was absent from that snapshot; its Compose definition and retained data still require separate cleanup validation. See the [2026-11-25 Fleet Update Report](../06_Operations/Update%20Reports/2026-11-25.md).
 
 Planned or pending groups:
 
@@ -99,15 +104,18 @@ The canonical Syncthing runtime belongs on VM100 `services`, not MediaCenter. `S
 Baserow deployment path:
 
 ```text
-Client -> Pi-hole -> Nginx Proxy Manager -> proxy Docker network -> Baserow -> PostgreSQL
+Client -> Pi-hole -> Nginx Proxy Manager -> proxy Docker network -> Baserow on VM100
+                                                        -> PostgreSQL 17.12 on PVE LXC 104
 ```
 
 Baserow/PostgreSQL persistent mounts:
 
 ```text
-/mnt/core/appdata/knowledge/baserow/media    -> /baserow/data
-/mnt/core/appdata/knowledge/baserow/postgres -> /var/lib/postgresql/data
+/mnt/core/appdata/knowledge/baserow/media -> /baserow/data (Baserow on VM100)
+PVE /mnt/core/appdata/postgresql         -> /var/lib/postgresql/17/main (CT104 per migration handoff)
 ```
+
+Baserow connects to `192.168.0.139:5432` using the protected `BASEROW_DB_PASSWORD` environment variable. The legacy PostgreSQL 16 data path `/mnt/core/appdata/knowledge/baserow/postgres` is retained but is not synchronized with production. See the [migration record](../06_Operations/Incidents/2026-11-24-baserow-postgresql-migration.md).
 
 Nginx Proxy Manager persistent mounts:
 
@@ -181,8 +189,6 @@ Longer-term planned architecture:
 - RetroArch, standalone emulators, preservation assets, and Kodi launcher integration.
 - Recyclarr and Tdarr if their operational value justifies them.
 
-## Current Media-Node Storage Caution
+## MediaCenter Storage and Docker Startup
 
-The July 9 media-node snapshot showed `/mnt/core` mounted from the Proxmox host and the `/media` taxonomy present, but it did not show `/media` as a separate mounted filesystem. The root filesystem was 89% used and a 1.8 TB disk appeared as `sda` without a mountpoint in the captured `lsblk` output.
-
-Before large downloads, imports, or external-drive normalization, confirm where `/media` is physically backed and whether the 1.8 TB disk should be mounted there.
+The 2026-11-25 investigation verified `/media` on `/dev/sda1` (ext4, 1.8 TB), `/mnt/core` on NFSv4, and root on `/dev/sdb2` (ext4, 216 GB). A systemd Docker override retains `RequiresMountsFor=/mnt/core /media`, orders Docker after both mounts, and runs `mountpoint -q` checks for each path before Docker starts. The guard is configured and its commands passed; failed-mount behavior and successful post-update reboot recovery remain unverified. The historical hidden-file cause remains undetermined. See the [incident record](../06_Operations/Incidents/2026-11-25-mediacenter-hidden-media-cleanup.md).

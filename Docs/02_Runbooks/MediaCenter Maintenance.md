@@ -1,13 +1,14 @@
 # MediaCenter Maintenance
 
 Status: Current maintenance record
-Last reviewed: 2026-09-30
+Last reviewed: 2026-11-25
 Source docs:
 - MediaCenter maintenance/update summary, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
+- MediaCenter hidden media cleanup and Docker mount protection handoff, 2026-11-25
 - Media Node Inventory.md
 - Media Stack Stabilization.md
-Next action: Review root storage before image pulls, confirm `/media` backing storage, and check a migrated RustDesk client connection.
+Next action: Complete Debian/Docker updates and reboot; verify `/media`, `/mnt/core`, Docker, and all six media services after restart.
 
 ## Purpose
 
@@ -512,6 +513,12 @@ Media stack:
 Known outstanding issue:
 
 - X11 screensaver/DPMS persistence across reboot/login still needs explicit verification or configuration.
+
+## 2026-11-25 Hidden Media Cleanup and Docker Startup Guard
+
+The `/media` storage incident, safe cleanup evidence, current mount paths, Docker override, protection limits, and pending reboot verification are documented in the [dated incident record](../06_Operations/Incidents/2026-11-25-mediacenter-hidden-media-cleanup.md). Current documented root use after cleanup is 18%; this supersedes the September 2026 high-usage observation.
+
+Before Docker maintenance or reboot verification, confirm both mount sources with `findmnt -T /mnt/core` and `findmnt -T /media`. The systemd guard checks only that both paths are mountpoints; confirm actual sources and service health separately. A failed-mount simulation has not been performed.
 
 ## 2026-09-28/29 Fleet Maintenance Addendum
 

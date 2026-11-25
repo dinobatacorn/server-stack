@@ -1,7 +1,7 @@
 # Homelab Status
 
 Status: Current
-Last reviewed: 2026-10-04
+Last reviewed: 2026-11-25
 Source docs:
 - Current State of the Homelab (July 2026)
 - pve-output_09072026.txt
@@ -13,8 +13,21 @@ Source docs:
 - Homelab Documentation Update Handoff, 2026-07-25
 - Fleet Update Reports, 2026-09-28 through 2026-09-30
 - MediaCenter maintenance record, 2026-10-04
+- Baserow PostgreSQL 16 to 17 migration handoff, 2026-11-24/25
+- MediaCenter hidden media cleanup and Docker mount protection handoff, 2026-11-25
+- Fleet Inventory Scripts Development Checkpoint, 2026-11-25
+- Proxmox Backup and Fleet Inventory Cleanup handoff, 2026-11-25
+- Fleet post-collection JSON captures, 2026-11-25; see [Fleet Update Report](06_Operations/Update%20Reports/2026-11-25.md)
 - Canonical architecture, runbook, inventory, and backlog documents in this repository
-Next action: Capture AtlasOS post-update inventory when ready; confirm RustDesk LXC 103's router reservation and VPN route; continue guarded fleet-automation planning; rotate the exposed MediaCenter WireGuard private key with peer configuration coordinated; investigate the extra `192.168.0.0/24` AllowedIPs entry separately.
+Next action: Functionally verify MediaCenter services and Docker mount-guard failure behavior; establish and test independent PostgreSQL 17 backups for Baserow; reconcile the fleet inventory quarantine and Syncthing peers; verify recovery jobs target the organized folders; confirm legacy PostgreSQL 16 Compose cleanup and data retention; obtain post captures for Windows endpoints and unrepresented guests; continue AtlasOS, RustDesk route, and WireGuard follow-ups.
+
+## 2026-11-25 Current State Addendum
+
+This dated addendum supersedes older deployed-state observations where they conflict. Earlier maintenance sections remain historical records. See [Baserow PostgreSQL Migration](06_Operations/Incidents/2026-11-24-baserow-postgresql-migration.md) and [MediaCenter Hidden Media Cleanup](06_Operations/Incidents/2026-11-25-mediacenter-hidden-media-cleanup.md) for evidence and limits.
+
+- **Baserow:** The 2026-11-24/25 migration handoff reports the application on VM100 and production PostgreSQL 17.12 in unprivileged Debian 13 CT104 (`postgresql`, `192.168.0.139`); the production database is `baserow`. The production restore and application cutover were verified in that handoff. The legacy PostgreSQL 16 data and Compose service are retained pending cleanup; the old database is not a synchronized rollback. PostgreSQL 17 scheduled/independent backups, retention, and restore testing remain pending. **Inventory conflict:** the older plan assigns VM104 to Home Assistant OS. Reconcile guest IDs against a current PVE inventory before treating the CT104 ID as live-verified.
+- **MediaCenter:** On 2026-11-25, approximately 161 GB of hidden media beneath `/media` was removed from root after size/mtime rsync comparisons and explicit user approval; the cleanup incident records root at 18% used immediately afterward. A later post capture showed root at 20%, `/media` mounted, `/mnt/core` on NFSv4, kernel `6.12.118+deb13-amd64`, zero pending apt updates, and all six expected containers running. Functional service checks and Docker mount-guard failure behavior remain open. The historical cause of the hidden files is undetermined.
+- **Fleet post capture (2026-11-25):** PVE's later capture reported kernel `7.0.14-30-pve` and zero pending apt updates after an earlier same-day capture reported 28 updates and kernel `7.0.14-25-pve`. Pi-hole, WireGuard, RustDesk, PostgreSQL, and VM100 captures each reported zero pending apt updates. VM100 showed Baserow and Actual Budget healthy and five containers running. These collector snapshots do not replace service tests or transaction logs; endpoints and some guests have no capture. See [the fleet report](06_Operations/Update%20Reports/2026-11-25.md).
 
 ## How To Read This Status
 
@@ -22,20 +35,20 @@ Next action: Capture AtlasOS post-update inventory when ready; confirm RustDesk 
 - **Deployed state** records what is actually running and verified now.
 - **Next milestones** lists work that has not yet been completed.
 
-## 2026-09-29 Maintenance State
+## 2026-09-29 Maintenance State (Historical)
 
 The dated [2026-09-28 fleet report](06_Operations/Update%20Reports/2026-09-28.md) records PVE, Pi-hole, WireGuard, VM100, MediaCenter, and RustDesk LXC 103 maintenance. The [2026-09-29 report](06_Operations/Update%20Reports/2026-09-29.md) records endpoint checks and remaining gaps.
 
 - **PVE:** Updated and reboot-validated on 2026-09-28. On 2026-09-29, a PVE host/config snapshot and a fresh VM100 backup were validated. Guest backup scheduling/retention remains undefined.
 - **RustDesk Server:** Runs in unprivileged Debian LXC 103 at `192.168.0.189`; `hbbs`, `hbbr`, and API/UI were active, and the user confirmed API login. A Cloudflare DNS-only A record to the RFC1918 address was shown in a user screenshot. No WAN forwards were added. The owner reports pointing clients to the server during maintenance and multiple successful sessions, most recently phone-to-desktop after connecting the phone to the network. The specific LAN or WireGuard path is unstated; router DHCP reservation and VPN route remain unverified. See [RustDesk Server Maintenance](02_Runbooks/RustDesk%20Server%20Maintenance.md).
-- **VM100:** Debian and Docker platform packages updated; active Compose projects were pulled/recreated and checked. NPM was verified at `2.16.0`; all five containers were running and Baserow/PostgreSQL were healthy.
-- **MediaCenter:** Debian updated and rebooted to `6.12.107+deb13-amd64`. Six media containers were refreshed, app-data archive validated, and all six local web-port checks passed after restart. Root is at 95% use with about 11 GB available; do not pull more images until storage is reviewed. The owner reports Jellyfin's full-library scan completed successfully.
+- **VM100 (2026-09-28 historical):** Debian and Docker platform packages were updated; active Compose projects were pulled/recreated and checked. NPM was verified at `2.16.0`; all five containers, including the then-local Baserow/PostgreSQL pair, were running and healthy. Baserow PostgreSQL 16 is no longer the production database after the 2026-11-24/25 cutover.
+- **MediaCenter (2026-09-29 historical):** Debian was updated and rebooted to `6.12.107+deb13-amd64`. Six media containers were refreshed and checked. The then-observed root usage was 95%; see the 2026-11-25 incident addendum above for subsequent cleanup and current documented disk figures.
 - **LockBox:** The 2026-09-29 post inventory records Garuda Linux kernel `7.2.7-zen1-1-zen`, zero pending repository updates, and root Btrfs at 77% use. The pre inventory recorded kernel `7.1.4-zen1-1-zen` and the dependency conflict. The post snapshot confirms current state, but no package transaction log was supplied; exact package changes are not verified. Snapper pre-update snapshot `260` was confirmed before the update.
 - **Nobara:** Pre/post local records identify Nobara 44; post-check found no package updates or failed units, with kernel `7.2.6-201.nobara.fc44.x86_64` unchanged. The transaction log and reboot status were not captured, so exact update and reboot outcomes remain unverified.
 - **AtlasOS:** Screenshots show Sunshine's Virtual HID driver unlicensed and ViGEmBus `1.21.442.0` installed; Sunshine reports fallback to ViGEmBus. The owner prefers leaving the current Sunshine configuration as-is. AtlasOS post-update inventory remains pending; no further Sunshine driver change is planned.
 - **Proxy DNS:** User observed that all proxy hostnames returned “server not found” with VPN off; direct NPM access at `192.168.0.125:81` worked, and enabling VPN restored hostname access. This is recorded as a client DNS-path issue; the router/DHCP DNS configuration has not been verified.
 
-Raw endpoint inventories are ignored under `scripts/output/`; keep them private and do not commit them. Commit only reviewed summaries without secrets or unnecessary personal/network detail.
+Fleet inventory JSON is excluded from Git under `scripts/output/` and is synchronized through Syncthing according to the 2026-11-25 cleanup handoff. Treat it as private operational data. The migration initially confirmed 43 files in the new tree, while 12 records remained unmatched in quarantine; final count, content reconciliation, and peer convergence are unverified. See [Backup and Inventory Layout Cleanup](06_Operations/Maintenance%20History/2026-11-25-backup-and-inventory-layout-cleanup.md). Commit only reviewed summaries without secrets or unnecessary personal/network detail.
 
 ## Settled Architecture
 
@@ -68,7 +81,7 @@ Raw endpoint inventories are ignored under `scripts/output/`; keep them private 
 
 Infrastructure:
 
-- Proxmox host `pve`, Debian 13 / Proxmox VE 9.2.4, at `192.168.0.75`.
+- Proxmox host `pve`, Debian 13, at `192.168.0.75`; the 2026-11-25 post capture reports kernel `7.0.14-30-pve`. The exact current Proxmox VE package version is not in that capture.
 - Pi-hole LXC at `192.168.0.120`.
 - WireGuard LXC at `192.168.0.110` with working split tunneling.
 - VM100 `services`, Debian 13 Core Services Docker host at `192.168.0.125`.
@@ -79,7 +92,7 @@ Operational VM100 containers:
 
 - `syncthing`, image `lscr.io/linuxserver/syncthing:latest`, Syncthing v2.1.2 / LinuxServer v2.1.2-ls226.
 - `baserow`, image `baserow/baserow:latest`, healthy.
-- `baserow-postgres`, image `postgres:16`, healthy.
+- `baserow-postgres`, image `postgres:16`, healthy at the 2026-09-28 inventory; this was the pre-migration deployment and is not current production state.
 - `npm`, image `jc21/nginx-proxy-manager:latest`.
 - `isponsorblocktv`, image `ghcr.io/dmunozv04/isponsorblocktv:latest`.
 
@@ -99,10 +112,10 @@ VM100 layout notes:
 
 Operational knowledge services:
 
-- Baserow is deployed on VM100 at `/mnt/core/services/knowledge/baserow`, proxied as `db.dustynest.com`, and uses persistent bind mounts under `/mnt/core/appdata/knowledge/baserow`.
-- A Baserow PostgreSQL dump was created before the July 25 update at `/mnt/core/backups/baserow/2026-07-25/baserow.dump`, approximately 12 MB, and validated with `pg_restore --list`.
-- Baserow/PostgreSQL were updated and remained healthy; PostgreSQL used the existing database directory and Baserow completed `157/157` template sync tasks.
-- Baserow pgvector support is currently missing from the `postgres:16` image; this is an optional capability/future decision, not a current outage.
+- Baserow is deployed on VM100 at `/mnt/core/services/knowledge/baserow`, proxied as `db.dustynest.com`, with application media under `/mnt/core/appdata/knowledge/baserow/media`.
+- The migration handoff reports production PostgreSQL 17.12 in Proxmox CT104 at `192.168.0.139`; its data is stored on PVE `/mnt/core/appdata/postgresql` and mounted inside the guest at `/var/lib/postgresql/17/main`. The guest ID conflict noted above remains unresolved.
+- The 2026-11-25 cutover dump and media archive were validated and production restore/application operation was verified. Scheduled independent PostgreSQL 17 backups and a restore drill remain pending.
+- The PostgreSQL 16 Docker data directory and service definition are preserved legacy material, not the production database. See the migration record for cleanup and recovery constraints.
 
 Operational media services:
 
@@ -121,10 +134,7 @@ Media node storage notes:
 - A local ghost `/mnt/core/services` tree was discovered under the mountpoint after Docker had run while the real NFS mount was absent.
 - The ghost tree was backed up to `/var/backups/mediacenter/core-ghost-2026-07-25.tar.gz`, the backup was tested, and the local ghost source was removed only after validation.
 - Real `/mnt/core/services/media` became visible again after the NFS mount was restored; observed size was approximately 238 MB.
-- `/media` taxonomy exists, but the July 9 `df` output does not show `/media` as a separate mount.
-- The media node root filesystem is 89% used in the July 9 snapshot.
-- A 1.8 TB disk is visible as `sda` but is not shown mounted in the July 9 `lsblk` output.
-- Confirm `/media` backing storage before large imports, downloads, or external-drive normalization.
+- The July 2026 mount uncertainty was resolved by the 2026-11-25 investigation: `/media` is mounted from `/dev/sda1` (ext4, 1.8 TB). The root filesystem is `/dev/sdb2` (ext4, 216 GB). Approximately 161 GB of hidden duplicate files beneath `/media` on root were removed; final documented root use was 36 GB (18%). See the dated incident record.
 
 Media node appliance notes:
 
@@ -154,7 +164,7 @@ Immediate:
 
 1. Capture AtlasOS post-update inventory when ready; leave Sunshine's current driver configuration unchanged.
 2. Confirm the DHCP reservation and VPN route for RustDesk LXC 103; successful client sessions are reported.
-3. Review MediaCenter disk usage before any more image pulls; root is currently recorded at 95% used.
+3. Complete post-update reboot verification on MediaCenter, including `/media`, `/mnt/core`, Docker, and all six media applications; current reboot verification is pending.
 4. Confirm LAN DNS on the Windows desktop; proxy hostnames currently have only been verified while VPN is on.
 5. Resolve VM200's stale CD-ROM APT source and verify partner Affine use before guest maintenance.
 6. Review LockBox's `mirrorlist.pacnew`; keep its 2026-09-29 raw snapshots private and note that the update transaction log was not captured.

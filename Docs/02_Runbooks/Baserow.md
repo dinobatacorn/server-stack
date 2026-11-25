@@ -1,14 +1,15 @@
 # Baserow
 
-Status: Completed and operational
-Last reviewed: 2026-07-25
+Status: Production cutover verified; operational hardening in progress
+Last reviewed: 2026-11-25
 Source docs:
 - User-provided Baserow deployment summary, 2026-07-10
+- Baserow PostgreSQL 16 to 17 migration handoff, 2026-11-24/25
 - Homelab Documentation Update Handoff, 2026-07-25
 - ADR 0009: Knowledge Ecosystem Roles
 - ADR 0016: Docker Networking Strategy
 - Nginx Proxy Manager.md
-Next action: Create a personal non-administrator account, organize workspaces and permissions, then decide whether pgvector support is needed.
+Next action: Establish scheduled PostgreSQL 17 backups with retention and a tested restore; remove the obsolete PostgreSQL 16 Compose service after validating the active project; then verify restart and VM100 reboot behavior.
 
 ## Purpose
 
@@ -27,7 +28,9 @@ Baserow is a foundational knowledge service rather than a miscellaneous utility.
 
 ## Deployment Location
 
-VM: VM100, Platform Services.
+Application VM: VM100 (`services`).
+Database guest: CT104 per the migration handoff, unprivileged Debian 13 (`postgresql`, `192.168.0.139`); the numeric ID conflicts with an older VM104 assignment and needs current PVE verification.
+Production PostgreSQL: 17.12, database `baserow`, role `baserow`, port `5432`.
 
 Service definition:
 
@@ -40,35 +43,9 @@ Contains:
 - `docker-compose.yml`.
 - `.env`.
 
-Persistent data:
+Baserow application media persists at `/mnt/core/appdata/knowledge/baserow/media` on PVE and is mounted into the application as `/baserow/data`. PostgreSQL 17 data persists on PVE at `/mnt/core/appdata/postgresql`, bind-mounted into CT104 at `/var/lib/postgresql/17/main`, per the migration handoff. VM100 continues to mount `/mnt/core` over NFSv4. The CT104 identifier conflicts with an older plan assigning VM104 to Home Assistant OS; confirm the guest IDs from current PVE inventory.
 
-```text
-/mnt/core/appdata/knowledge/baserow/
-```
-
-Contains:
-
-```text
-postgres/
-media/
-redis/   reserved if used later
-```
-
-Application state resides under `/mnt/core`. No Docker named volumes are used.
-
-Bind mounts:
-
-```text
-/mnt/core/appdata/knowledge/baserow/media    -> /baserow/data
-/mnt/core/appdata/knowledge/baserow/postgres -> /var/lib/postgresql/data
-```
-
-Current images:
-
-```text
-baserow/baserow:latest
-postgres:16
-```
+The old PostgreSQL 16 data remains at `/mnt/core/appdata/knowledge/baserow/postgres` as a historical recovery copy. It is not production and is not synchronized with PostgreSQL 17. Do not present it as a current standby or lossless rollback.
 
 ## Architecture
 
@@ -83,18 +60,18 @@ proxy Docker network
     |
 Baserow
     |
-PostgreSQL
+PostgreSQL 17.12 (CT104)
 ```
 
 ## Docker Networking
 
 Baserow joins the shared Docker `proxy` network.
 
-The internal PostgreSQL connection remains on the Compose-managed network.
+Baserow connects over the private network to `192.168.0.139:5432`; PostgreSQL runs independently of the VM100 Compose project. The application password is supplied through `BASEROW_DB_PASSWORD` in the protected Compose `.env`; never copy secrets here. The reported PostgreSQL host authentication rule allows the `baserow` role from `192.168.0.0/24` with SCRAM. Narrowing it to the actual VM100 source address is a security follow-up.
 
 This follows the Docker networking strategy:
 
-- Internal service communication remains isolated.
+- PostgreSQL is outside the Compose network and is reached over the private network; it is not exposed through the reverse proxy.
 - User-facing services join the shared `proxy` network.
 - Reverse proxy uses Docker DNS instead of host IPs whenever possible.
 
@@ -164,7 +141,7 @@ Baserow attempted:
 CREATE EXTENSION IF NOT EXISTS vector;
 ```
 
-The current `postgres:16` image does not provide pgvector, so PostgreSQL logged:
+The historical `postgres:16` image did not provide pgvector, so PostgreSQL logged:
 
 ```text
 extension "vector" is not available
@@ -174,7 +151,21 @@ Baserow also reported assistant knowledge-base synchronization was skipped becau
 
 The core Baserow deployment remained healthy. Treat pgvector as an optional missing capability and future architecture decision, not a current outage.
 
-Do not change the PostgreSQL image merely to eliminate the warning without first planning and backing up the database migration.
+The production server is now PostgreSQL 17.12 on CT104. Whether to enable pgvector remains a separate future decision; plan and back up any extension/image change.
+
+## PostgreSQL 17 Migration and Recovery State
+
+The 2026-11-24/25 migration used a validated custom-format dump and media archive, restored production with `pg_restore --transaction-size=500`, and verified table counts, ownership, the required Baserow migration, application access, and a table creation while the old PostgreSQL 16 container was stopped. See the [full migration record](../06_Operations/Incidents/2026-11-24-baserow-postgresql-migration.md) for commands and evidence.
+
+Still pending:
+
+- Establish scheduled PostgreSQL 17 dumps on persistent `/mnt/core` storage, archive validation, retention, and an independent copy where available.
+- Perform a temporary restore test against the new backup procedure.
+- Remove the obsolete PostgreSQL 16 service from Compose and validate the project configuration without restarting it inadvertently.
+- Verify Baserow survives Docker restart and VM100 reboot while CT104 is available.
+- Review whether PostgreSQL network access can be narrowed from the full private subnet to VM100.
+
+The November 25 cutover dump and media archive remain essential recovery material until the new backup path is established and tested.
 
 ## Operational Standard Established
 

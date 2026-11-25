@@ -1,7 +1,7 @@
 # Infrastructure Backlog
 
 Status: Current
-Last reviewed: 2026-09-29
+Last reviewed: 2026-11-25
 Source docs:
 - to-do list 17.05.26.md
 - Server Plan 21.05.26.md
@@ -12,7 +12,11 @@ Source docs:
 - MediaCenter maintenance/update summary, 2026-07-25
 - Homelab Documentation Update Handoff, 2026-07-25
 - Fleet Update Reports, 2026-09-28 through 2026-09-30
-Next action: Verify RustDesk LXC 103's router reservation and VPN route; define per-host prerequisites for guarded maintenance automation.
+- Baserow PostgreSQL 16 to 17 migration handoff, 2026-11-24/25
+- MediaCenter hidden media cleanup and Docker mount protection handoff, 2026-11-25
+- Fleet Inventory Scripts Development Checkpoint, 2026-11-25
+- Proxmox Backup and Fleet Inventory Cleanup handoff, 2026-11-25
+Next action: Reconcile fleet inventory quarantine and peer convergence; establish and test PostgreSQL 17 backups; complete MediaCenter post-update reboot verification; verify the reported CT104 ID against current PVE inventory; then continue existing network and automation work.
 
 ## Active Blockers
 
@@ -24,7 +28,7 @@ Next action: Verify RustDesk LXC 103's router reservation and VPN route; define 
 - Observe Syncthing recovery for several days and verify peer synchronization before cleanup.
 - Retain `/var/backups/syncthing-rescue/overlay-direct` and old OverlayFS evidence until the Syncthing recovery is confirmed stable.
 - Retain `/var/backups/mediacenter/core-ghost-2026-07-25.tar.gz` until MediaCenter rollback requirements have passed.
-- Retain `/mnt/core/backups/baserow/2026-07-25/baserow.dump` according to backup-retention policy.
+- Retain the validated Baserow 2026-11-25 cutover database dump and media archive until PostgreSQL 17 backup and restore procedures are established and tested.
 - Remove obsolete `SirBranteSaves` from Syncthing configuration.
 - Audit UID/GID mappings, including Syncthing's current `PUID=0`/`PGID=0` and NPM's UID/GID 0 deployment.
 - Document ownership standards.
@@ -32,7 +36,12 @@ Next action: Verify RustDesk LXC 103's router reservation and VPN route; define 
 - Test full and partial restore workflows.
 - Verify the DHCP reservation and WireGuard route for RustDesk LXC 103; the owner reports successful client sessions.
 - Configure and verify LAN DNS for the Windows desktop; VPN currently restores proxy-hostname resolution when the VPN is on.
-- Review MediaCenter root storage before any further Docker image pull; the owner reports the Jellyfin library scan completed successfully.
+- Complete MediaCenter post-update reboot verification for `/media`, `/mnt/core`, Docker startup, and six media services. Current documented root use after the 2026-11-25 cleanup is 18%; reboot verification remains pending.
+- Reconcile the fleet inventory quarantine: 12 JSON records were missing from the new output tree in the filename comparison; verify content, establish the final inventory count, and retain quarantine until reconciled.
+- Verify Syncthing peer convergence for the new `scripts/output/` contents, especially AtlasOS after reconnect; synchronization was resumed, not left paused.
+- Verify whether current backup jobs write to the organized `/mnt/core/backups/<service>/<date>/` destinations; relocation alone does not prove scheduled destinations.
+- Improve Linux and Windows collectors to publish JSON atomically after validation; current scripts write directly to their final filenames, so interruption may leave a partial inventory.
+- Resolve the Windows HWiNFO command-line licensing limitation or consistently use `-SkipHWiNFO`; Libre Hardware Monitor exploration is paused and no integration exists.
 - Capture AtlasOS post-update inventory when ready, leaving Sunshine's current configuration unchanged; record Nobara transaction/reboot uncertainty and inspect LockBox `mirrorlist.pacnew`.
 - Verify the contents/date and restoreability of the older VM200 backup if recovery is needed; VM200 was reported destroyed on 2026-09-30.
 
@@ -57,7 +66,7 @@ Completed:
 - SSL/certificate strategy documented.
 - Syncthing deployed.
 - Syncthing recovered on 2026-07-25 after container-path misconfiguration; data was restored to `/mnt/core/data/sync`, checksum-verified, and reconfigured to `/sync/...` container paths.
-- Baserow deployed on VM100 with PostgreSQL, bind-mounted persistence, reverse proxy, wildcard TLS, and restart persistence validation.
+- Baserow initially deployed on VM100 with PostgreSQL 16, bind-mounted persistence, reverse proxy, wildcard TLS, and restart persistence validation; PostgreSQL migrated to a separate PostgreSQL 17 guest in November 2026.
 - VM100 containers updated on 2026-07-25; `syncthing`, `baserow`, `baserow-postgres`, `npm`, and `isponsorblocktv` were running with restart count 0.
 - MediaCenter `/mnt/core` ghost tree repaired and media stack restored with zero restart counts.
 - PVE, Pi-hole, WireGuard, VM100, and MediaCenter maintenance/update passes recorded for 2026-09-28/29; PVE config archive, guest backups, database/appdata archives, and post inventories are detailed in the fleet reports.
@@ -98,10 +107,14 @@ Productivity/knowledge:
 
 Baserow follow-up:
 
+- Establish scheduled PostgreSQL 17 dumps from CT104, persistent `/mnt/core` storage, archive validation, retention, and an independent copy where available.
+- Perform a temporary restore test and document the procedure.
+- Remove the obsolete PostgreSQL 16 service from the active Compose project after validating the configuration; retain its divergent data snapshot until recovery needs are reviewed.
+- Verify Baserow survives Docker restart and VM100 reboot while the database guest is available.
+- Review whether PostgreSQL access can be narrowed to VM100's source address.
 - Create a personal non-administrator account.
 - Organize workspaces and permissions.
 - Migrate relevant databases from the hosted Baserow instance.
-- Add routine PostgreSQL dumps to the backup workflow.
 - Decide whether to use PostgreSQL with pgvector support for optional assistant/embedding functionality.
 
 Utilities:

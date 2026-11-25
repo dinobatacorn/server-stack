@@ -19,7 +19,7 @@ if (-not $Output) {
     $hostname = $env:COMPUTERNAME
     $runDate = (Get-Date).ToString("yyyy-MM-dd")
     $ts = (Get-Date).ToString("yyyy-MM-dd_HH-mm-ss")
-    $outDir = Join-Path $OutputBase (Join-Path $runDate (Join-Path $Phase $hostname))
+    $outDir = Join-Path $OutputBase (Join-Path $runDate $Phase)
     New-Item -ItemType Directory -Path $outDir -Force | Out-Null
     $Output = Join-Path $outDir "$hostname`_$Phase`_$ts.json"
 }
@@ -28,7 +28,14 @@ $outParent = Split-Path -Parent $Output
 if ($outParent) { New-Item -ItemType Directory -Path $outParent -Force | Out-Null }
 
 if (-not $HWiNFOPath) { $HWiNFOPath = Join-Path $RepoRoot "tools\HWiNFO64.exe" }
-if (-not $HWiNFOReport) { $HWiNFOReport = Join-Path $outParent "hwinfo.xml" }
+$cleanupHWiNFOReport = $false
+
+if (-not $HWiNFOReport) {
+    $HWiNFOReport = Join-Path ([System.IO.Path]::GetTempPath()) (
+        "fleet-hwinfo-{0}.xml" -f [guid]::NewGuid().ToString("N")
+    )
+    $cleanupHWiNFOReport = $true
+}
 
 $warnings = New-Object System.Collections.Generic.List[string]
 
@@ -106,7 +113,7 @@ $dmi = @{ raw = if ($cs) { (($cs.Manufacturer, $cs.Model) -join " ").Trim() } el
 $hwinfoSensors = @{}
 $hwinfoBoard = $null
 
-if (Test-Path $HWiNFOReport) {
+if (-not $SkipHWiNFO -and (Test-Path -LiteralPath $HWiNFOReport -PathType Leaf)) {
     try {
         [xml]$xml = Get-Content $HWiNFOReport
         if ($xml.HWiNFO64.Sensors.Sensor) {
@@ -123,20 +130,129 @@ if (Test-Path $HWiNFOReport) {
 }
 
 $wingetUpdates = @()
+$wingetStatus = "failed"
+
 if (Get-Command winget -ErrorAction SilentlyContinue) {
-    try { $wingetUpdates = @(winget upgrade --accept-source-agreements 2>$null | Select-Object -Skip 1) } catch { $warnings.Add("winget upgrade listing failed: $($_.Exception.Message)") }
-} else {
+    try {
+        $wingetOutput = @(
+            winget upgrade --accept-source-agreements 2>&1 |
+                ForEach-Object { [string]$_ }
+        )
+        $wingetExitCode = $LASTEXITCODE
+
+        if ($wingetExitCode -ne 0) {
+            throw "winget exited with code $wingetExitCode"
+        }
+
+        $header = $wingetOutput |
+            Where-Object {
+                $_ -match '^\s*Name\s+Id\s+Version\s+Available\s+Source\s*$'
+            } |
+            Select-Object -First 1
+
+        if ($header) {
+            $idStart = $header.IndexOf("Id")
+            $versionStart = $header.IndexOf("Version")
+            $availableStart = $header.IndexOf("Available")
+            $sourceStart = $header.IndexOf("Source")
+
+            foreach ($line in $wingetOutput) {
+                if ($line.Length -le $sourceStart) {
+                    continue
+                }
+
+                $name = $line.Substring(0, $idStart).Trim()
+                $id = $line.Substring(
+                    $idStart, $versionStart - $idStart
+                ).Trim()
+                $installed = $line.Substring(
+                    $versionStart, $availableStart - $versionStart
+                ).Trim()
+                $available = $line.Substring(
+                    $availableStart, $sourceStart - $availableStart
+                ).Trim()
+                $source = $line.Substring($sourceStart).Trim()
+
+                if (
+                    $id -and
+                    $id -ne "Id" -and
+                    $installed -and
+                    $available -and
+                    $source -and
+                    $line -notmatch '^\s*-+\s*$'
+                ) {
+                    $wingetUpdates += [ordered]@{
+                        name = $name
+                        id = $id
+                        installed_version = $installed
+                        available_version = $available
+                        source = $source
+                    }
+                }
+            }
+
+            $wingetStatus = "success"
+
+            $summary = $wingetOutput |
+                Where-Object { $_ -match '^\s*\d+\s+upgrades?\s+available\.' } |
+                Select-Object -First 1
+
+            if ($summary -match '^\s*(\d+)') {
+                $reportedCount = [int]$Matches[1]
+
+                if ($reportedCount -ne $wingetUpdates.Count) {
+                    $wingetStatus = "partial"
+                    $warnings.Add(
+                        "winget reported $reportedCount upgrades but parsed $($wingetUpdates.Count)"
+                    )
+                }
+            }
+        }
+        elseif (
+            $wingetOutput -match 'No available upgrades' -or
+            $wingetOutput -match 'No applicable upgrade found'
+        ) {
+            $wingetStatus = "success"
+        }
+        else {
+            $warnings.Add("winget output format not recognized")
+        }
+    }
+    catch {
+        $warnings.Add(
+            "winget upgrade listing failed: $($_.Exception.Message)"
+        )
+    }
+}
+else {
     $warnings.Add("winget not found")
 }
 
 $data = [ordered]@{
     meta = [ordered]@{ schema = "fleet-windows-v1"; script_version = $ScriptVersion; role = $Role; phase = $Phase; hostname = $env:COMPUTERNAME; os = if ($osInfo.Caption) { $osInfo.Caption } else { "unknown" }; kernel = if ($osInfo.Version) { $osInfo.Version } else { "unknown" }; timestamp = $timestamp }
     hardware = [ordered]@{ cpu = $cpu; memory = $memory; gpu = $gpu; storage = $storage; motherboard = if ($hwinfoBoard) { $hwinfoBoard } else { $dmi } }
-    system = [ordered]@{ uptime_seconds = $uptimeSeconds; loadavg = @{ "1m" = 0; "5m" = 0; "15m" = 0 }; volumes = $volumes; package_manager = "winget"; pending_updates = @{ items = $wingetUpdates; count = $wingetUpdates.Count } }
+    system = [ordered]@{ uptime_seconds = $uptimeSeconds; loadavg = @{ "1m" = 0; "5m" = 0; "15m" = 0 }; volumes = $volumes; package_manager = "winget"; pending_updates = @{
+    items = $wingetUpdates
+    count = $(if ($wingetStatus -eq "success") {
+        $wingetUpdates.Count
+    } else {
+        $null
+    })
+    status = $wingetStatus
+} }
     peripherals = [ordered]@{ pci = $pci; usb = $usb }
     network = $network
     health = [ordered]@{ smart = @(); sensors = if ($hwinfoSensors.Count -gt 0) { $hwinfoSensors } else { @{} }; warnings = @($warnings) }
 }
 
-$data | ConvertTo-Json -Depth 8 | Out-File -Encoding UTF8 $Output
-Write-Host "Saved: $Output"
+try {
+    $data | ConvertTo-Json -Depth 8 |
+        Out-File -LiteralPath $Output -Encoding UTF8 -ErrorAction Stop
+
+    Write-Host "Saved: $Output"
+}
+finally {
+    if ($cleanupHWiNFOReport -and (Test-Path -LiteralPath $HWiNFOReport)) {
+        Remove-Item -LiteralPath $HWiNFOReport -Force -ErrorAction SilentlyContinue
+    }
+}
